@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { CustomersModule } from './customers/customers.module';
 import { IssuesModule } from './issues/issues.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { IssuesModule } from './issues/issues.module';
     AuthModule,
     CustomersModule,
     IssuesModule,
+    DashboardModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
