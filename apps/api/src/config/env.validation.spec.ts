@@ -21,9 +21,10 @@ describe('validateEnv', () => {
       validateEnv({
         DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
         JWT_SECRET: '12345678901234567890123456789012',
+        HOST: '127.0.0.1',
         PORT: '3100',
         COOKIE_SECURE: 'true',
       }),
-    ).toMatchObject({ PORT: 3100, COOKIE_SECURE: true });
+    ).toMatchObject({ HOST: '127.0.0.1', PORT: 3100, COOKIE_SECURE: true });
   });
 });
