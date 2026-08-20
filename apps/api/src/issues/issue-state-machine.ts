@@ -2,7 +2,11 @@ import { IssueStatus } from '../generated/prisma/enums';
 
 const transitions: Record<IssueStatus, IssueStatus[]> = {
   PENDING: [IssueStatus.IN_PROGRESS],
-  IN_PROGRESS: [IssueStatus.WAITING_CUSTOMER, IssueStatus.WAITING_INTERNAL, IssueStatus.RESOLVED],
+  IN_PROGRESS: [
+    IssueStatus.WAITING_CUSTOMER,
+    IssueStatus.WAITING_INTERNAL,
+    IssueStatus.RESOLVED,
+  ],
   WAITING_CUSTOMER: [IssueStatus.IN_PROGRESS],
   WAITING_INTERNAL: [IssueStatus.IN_PROGRESS],
   RESOLVED: [IssueStatus.CLOSED, IssueStatus.IN_PROGRESS],

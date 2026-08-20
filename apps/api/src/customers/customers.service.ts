@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomerQueryDto } from './dto/customer-query.dto';
@@ -24,7 +28,16 @@ export class CustomersService {
         orderBy: { updatedAt: 'desc' },
         include: {
           owner: { select: { id: true, name: true } },
-          _count: { select: { issues: { where: { deletedAt: null, status: { notIn: ['RESOLVED', 'CLOSED'] } } } } },
+          _count: {
+            select: {
+              issues: {
+                where: {
+                  deletedAt: null,
+                  status: { notIn: ['RESOLVED', 'CLOSED'] },
+                },
+              },
+            },
+          },
         },
       }),
       this.prisma.customer.count({ where }),
@@ -48,7 +61,11 @@ export class CustomersService {
       where: { id, deletedAt: null },
       include: {
         owner: { select: { id: true, name: true, email: true } },
-        issues: { where: { deletedAt: null }, orderBy: { updatedAt: 'desc' }, take: 10 },
+        issues: {
+          where: { deletedAt: null },
+          orderBy: { updatedAt: 'desc' },
+          take: 10,
+        },
         consumptions: { orderBy: { date: 'desc' }, take: 30 },
       },
     });
@@ -70,7 +87,10 @@ export class CustomersService {
 
   async remove(id: string) {
     await this.findOne(id);
-    await this.prisma.customer.update({ where: { id }, data: { deletedAt: new Date() } });
+    await this.prisma.customer.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
     return { success: true };
   }
 }

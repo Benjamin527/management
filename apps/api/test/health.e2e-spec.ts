@@ -21,6 +21,8 @@ describe('HealthController (e2e)', () => {
   });
 
   it('returns service status', async () => {
+    // Supertest accepts Nest's underlying HTTP server, whose adapter type is intentionally opaque.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     await request(app.getHttpServer())
       .get('/api/health')
       .expect(200)

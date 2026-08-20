@@ -15,7 +15,10 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(@Body() input: LoginDto, @Res({ passthrough: true }) response: Response) {
+  async login(
+    @Body() input: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     const result = await this.auth.login(input.email, input.password);
     response.cookie('access_token', result.token, {
       httpOnly: true,

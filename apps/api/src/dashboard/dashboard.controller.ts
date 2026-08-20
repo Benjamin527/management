@@ -6,5 +6,7 @@ import { DashboardService } from './dashboard.service';
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
   constructor(private readonly dashboard: DashboardService) {}
-  @Get() summary() { return this.dashboard.summary(); }
+  @Get() summary() {
+    return this.dashboard.summary();
+  }
 }

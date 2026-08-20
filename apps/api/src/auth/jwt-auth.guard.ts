@@ -18,7 +18,9 @@ export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwt: JwtService) {}
 
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest<Request & { user?: SessionUser }>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: SessionUser }>();
     const token = request.cookies?.access_token as string | undefined;
     if (!token) throw new UnauthorizedException('请先登录');
 

@@ -13,7 +13,12 @@ describe('CustomersService', () => {
     const service = new CustomersService(prisma as never);
 
     await expect(
-      service.list({ page: 2, pageSize: 10, keyword: '太保', status: CustomerStatus.ACTIVE }),
+      service.list({
+        page: 2,
+        pageSize: 10,
+        keyword: '太保',
+        status: CustomerStatus.ACTIVE,
+      }),
     ).resolves.toEqual({ items: [], page: 2, pageSize: 10, total: 0 });
     expect(prisma.customer.findMany).toHaveBeenCalledWith(
       expect.objectContaining({

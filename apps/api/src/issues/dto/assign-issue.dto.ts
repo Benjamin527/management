@@ -1,2 +1,4 @@
 import { IsString } from 'class-validator';
-export class AssignIssueDto { @IsString() assigneeId!: string; }
+export class AssignIssueDto {
+  @IsString() assigneeId!: string;
+}

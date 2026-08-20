@@ -5,13 +5,17 @@ export interface AppEnvironment {
   COOKIE_SECURE: boolean;
 }
 
+function stringValue(value: unknown, fallback = '') {
+  return typeof value === 'string' ? value : fallback;
+}
+
 export function validateEnv(input: Record<string, unknown>): AppEnvironment {
-  const databaseUrl = String(input.DATABASE_URL ?? '');
+  const databaseUrl = stringValue(input.DATABASE_URL);
   if (!databaseUrl.startsWith('mysql://')) {
     throw new Error('DATABASE_URL must be a MySQL connection string');
   }
 
-  const jwtSecret = String(input.JWT_SECRET ?? '');
+  const jwtSecret = stringValue(input.JWT_SECRET);
   if (jwtSecret.length < 32) {
     throw new Error('JWT_SECRET must contain at least 32 characters');
   }
@@ -21,7 +25,7 @@ export function validateEnv(input: Record<string, unknown>): AppEnvironment {
     throw new Error('PORT must be a valid TCP port');
   }
 
-  const secureValue = String(input.COOKIE_SECURE ?? 'false').toLowerCase();
+  const secureValue = stringValue(input.COOKIE_SECURE, 'false').toLowerCase();
   if (!['true', 'false'].includes(secureValue)) {
     throw new Error('COOKIE_SECURE must be true or false');
   }

@@ -18,7 +18,9 @@ describe('AuthService', () => {
   it('returns a signed session for valid credentials', async () => {
     const passwordHash = await bcrypt.hash('correct-password', 4);
     const prisma = {
-      user: { findUnique: jest.fn().mockResolvedValue({ ...user, passwordHash }) },
+      user: {
+        findUnique: jest.fn().mockResolvedValue({ ...user, passwordHash }),
+      },
     };
     const jwt = { signAsync: jest.fn().mockResolvedValue('signed-token') };
     const service = new AuthService(prisma as never, jwt as never);
@@ -44,9 +46,9 @@ describe('AuthService', () => {
     const jwt = { signAsync: jest.fn() };
     const service = new AuthService(prisma as never, jwt as never);
 
-    await expect(service.login('missing@example.com', 'wrong')).rejects.toBeInstanceOf(
-      UnauthorizedException,
-    );
+    await expect(
+      service.login('missing@example.com', 'wrong'),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
     expect(jwt.signAsync).not.toHaveBeenCalled();
   });
 });
