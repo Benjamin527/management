@@ -33,8 +33,8 @@ type QueryRow = Record<string, unknown>;
 
 const latestSql = `
 SELECT
-  (SELECT MAX(query_date) FROM daily_consumption_report) AS domesticMax,
-  (SELECT MAX(query_date) FROM guance_abroad_consumption) AS overseasMax
+  (SELECT DATE_FORMAT(MAX(query_date), '%Y-%m-%d') FROM daily_consumption_report) AS domesticMax,
+  (SELECT DATE_FORMAT(MAX(query_date), '%Y-%m-%d') FROM guance_abroad_consumption) AS overseasMax
 `;
 
 const domesticSql = `
@@ -42,7 +42,7 @@ SELECT
   customer_id AS externalId,
   MAX(customer_name) AS displayName,
   MAX(tam_real_name) AS managerName,
-  consume_time_of_day AS date,
+  DATE_FORMAT(consume_time_of_day, '%Y-%m-%d') AS date,
   COALESCE(NULLIF(product_detail, ''), '未分类') AS product,
   CAST(SUM(origin_amount) AS CHAR) AS amount
 FROM daily_usage_details
@@ -56,7 +56,7 @@ SELECT
   detail.gc_account AS externalId,
   COALESCE(NULLIF(MAX(customer.company_name), ''), detail.gc_account) AS displayName,
   NULL AS managerName,
-  detail.consume_time_of_day AS date,
+  DATE_FORMAT(detail.consume_time_of_day, '%Y-%m-%d') AS date,
   COALESCE(NULLIF(detail.product_detail, ''), '未分类') AS product,
   CAST(SUM(detail.origin_amount) AS CHAR) AS amount
 FROM guance_abroad_consumption_detail detail
@@ -68,7 +68,7 @@ GROUP BY detail.gc_account, detail.consume_time_of_day,
 `;
 
 const domesticCoverageSql = `
-SELECT query_date AS date, COUNT(*) AS recordCount,
+SELECT DATE_FORMAT(query_date, '%Y-%m-%d') AS date, COUNT(*) AS recordCount,
   CAST(SUM(origin_amount) AS CHAR) AS amount
 FROM daily_consumption_report
 WHERE query_date BETWEEN ? AND ?
@@ -76,7 +76,7 @@ GROUP BY query_date
 `;
 
 const overseasCoverageSql = `
-SELECT query_date AS date, COUNT(*) AS recordCount,
+SELECT DATE_FORMAT(query_date, '%Y-%m-%d') AS date, COUNT(*) AS recordCount,
   CAST(SUM(all_amount) AS CHAR) AS amount
 FROM guance_abroad_consumption
 WHERE query_date BETWEEN ? AND ?

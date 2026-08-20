@@ -17,6 +17,8 @@ describe('ConsumptionSourceClient', () => {
     await expect(client.latestBusinessDate()).resolves.toEqual(
       new Date('2026-08-19T00:00:00.000Z'),
     );
+    const latestCall = query.mock.calls[0] as unknown as [string];
+    expect(latestCall[0]).toContain("DATE_FORMAT(MAX(query_date), '%Y-%m-%d')");
   });
 
   it('maps domestic and overseas aggregates independently', async () => {
@@ -70,6 +72,9 @@ describe('ConsumptionSourceClient', () => {
     const firstCall = query.mock.calls[0] as unknown as [string, string[]];
     expect(firstCall[1]).toEqual(['2026-08-06', '2026-08-19']);
     expect(firstCall[0]).toContain('MAX(customer_name) AS displayName');
+    expect(firstCall[0]).toContain(
+      "DATE_FORMAT(consume_time_of_day, '%Y-%m-%d') AS date",
+    );
     expect(firstCall[0]).not.toContain('GROUP BY customer_id, customer_name');
   });
 
@@ -101,6 +106,14 @@ describe('ConsumptionSourceClient', () => {
         amount: '5.66',
       },
     ]);
+    const domesticCall = query.mock.calls[0] as unknown as [string];
+    const overseasCall = query.mock.calls[1] as unknown as [string];
+    expect(domesticCall[0]).toContain(
+      "DATE_FORMAT(query_date, '%Y-%m-%d') AS date",
+    );
+    expect(overseasCall[0]).toContain(
+      "DATE_FORMAT(query_date, '%Y-%m-%d') AS date",
+    );
   });
 
   it('rejects malformed rows without leaking source credentials', async () => {
