@@ -7,5 +7,7 @@ coverage/
 .worktrees/
 playwright-report/
 test-results/
+output/
+.playwright-cli/
 *.log
 .DS_Store
