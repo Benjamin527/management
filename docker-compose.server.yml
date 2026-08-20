@@ -1,0 +1,12 @@
+services:
+  api:
+    network_mode: host
+    expose: !reset []
+    extra_hosts: !reset []
+
+  web:
+    network_mode: host
+    ports: !reset []
+    build:
+      args:
+        NGINX_CONFIG: deploy/nginx-host.conf

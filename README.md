@@ -56,6 +56,12 @@ curl http://127.0.0.1/api/health
 docker compose exec api npm run prisma:seed -w apps/api
 ```
 
+当 MySQL 仅监听服务器 `127.0.0.1` 时，使用 host 网络覆盖配置：
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --build
+```
+
 查看日志和停止：
 
 ```bash
