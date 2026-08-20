@@ -223,7 +223,6 @@ export type CustomerWhereInput = {
     Prisma.UserWhereInput
   > | null;
   issues?: Prisma.ServiceIssueListRelationFilter;
-  consumptions?: Prisma.ConsumptionDailyListRelationFilter;
   serviceRecords?: Prisma.FeishuServiceRecordListRelationFilter;
 };
 
@@ -239,7 +238,6 @@ export type CustomerOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   owner?: Prisma.UserOrderByWithRelationInput;
   issues?: Prisma.ServiceIssueOrderByRelationAggregateInput;
-  consumptions?: Prisma.ConsumptionDailyOrderByRelationAggregateInput;
   serviceRecords?: Prisma.FeishuServiceRecordOrderByRelationAggregateInput;
   _relevance?: Prisma.CustomerOrderByRelevanceInput;
 };
@@ -265,7 +263,6 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<
       Prisma.UserWhereInput
     > | null;
     issues?: Prisma.ServiceIssueListRelationFilter;
-    consumptions?: Prisma.ConsumptionDailyListRelationFilter;
     serviceRecords?: Prisma.FeishuServiceRecordListRelationFilter;
   },
   'id' | 'name'
@@ -324,7 +321,6 @@ export type CustomerCreateInput = {
   deletedAt?: Date | string | null;
   owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
   issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
-  consumptions?: Prisma.ConsumptionDailyCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
 };
 
@@ -339,7 +335,6 @@ export type CustomerUncheckedCreateInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
-  consumptions?: Prisma.ConsumptionDailyUncheckedCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
 };
 
@@ -356,7 +351,6 @@ export type CustomerUpdateInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
   issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
 };
 
@@ -373,7 +367,6 @@ export type CustomerUncheckedUpdateInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUncheckedUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
 };
 
@@ -636,32 +629,6 @@ export type CustomerUpdateOneRequiredWithoutIssuesNestedInput = {
   >;
 };
 
-export type CustomerCreateNestedOneWithoutConsumptionsInput = {
-  create?: Prisma.XOR<
-    Prisma.CustomerCreateWithoutConsumptionsInput,
-    Prisma.CustomerUncheckedCreateWithoutConsumptionsInput
-  >;
-  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutConsumptionsInput;
-  connect?: Prisma.CustomerWhereUniqueInput;
-};
-
-export type CustomerUpdateOneRequiredWithoutConsumptionsNestedInput = {
-  create?: Prisma.XOR<
-    Prisma.CustomerCreateWithoutConsumptionsInput,
-    Prisma.CustomerUncheckedCreateWithoutConsumptionsInput
-  >;
-  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutConsumptionsInput;
-  upsert?: Prisma.CustomerUpsertWithoutConsumptionsInput;
-  connect?: Prisma.CustomerWhereUniqueInput;
-  update?: Prisma.XOR<
-    Prisma.XOR<
-      Prisma.CustomerUpdateToOneWithWhereWithoutConsumptionsInput,
-      Prisma.CustomerUpdateWithoutConsumptionsInput
-    >,
-    Prisma.CustomerUncheckedUpdateWithoutConsumptionsInput
-  >;
-};
-
 export type CustomerCreateWithoutOwnerInput = {
   id?: string;
   name: string;
@@ -672,7 +639,6 @@ export type CustomerCreateWithoutOwnerInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
-  consumptions?: Prisma.ConsumptionDailyCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
 };
 
@@ -686,7 +652,6 @@ export type CustomerUncheckedCreateWithoutOwnerInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
-  consumptions?: Prisma.ConsumptionDailyUncheckedCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
 };
 
@@ -758,7 +723,6 @@ export type CustomerCreateWithoutServiceRecordsInput = {
   deletedAt?: Date | string | null;
   owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
   issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
-  consumptions?: Prisma.ConsumptionDailyCreateNestedManyWithoutCustomerInput;
 };
 
 export type CustomerUncheckedCreateWithoutServiceRecordsInput = {
@@ -772,7 +736,6 @@ export type CustomerUncheckedCreateWithoutServiceRecordsInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
-  consumptions?: Prisma.ConsumptionDailyUncheckedCreateNestedManyWithoutCustomerInput;
 };
 
 export type CustomerCreateOrConnectWithoutServiceRecordsInput = {
@@ -816,7 +779,6 @@ export type CustomerUpdateWithoutServiceRecordsInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
   issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUpdateManyWithoutCustomerNestedInput;
 };
 
 export type CustomerUncheckedUpdateWithoutServiceRecordsInput = {
@@ -832,7 +794,6 @@ export type CustomerUncheckedUpdateWithoutServiceRecordsInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUncheckedUpdateManyWithoutCustomerNestedInput;
 };
 
 export type CustomerCreateWithoutIssuesInput = {
@@ -845,7 +806,6 @@ export type CustomerCreateWithoutIssuesInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
-  consumptions?: Prisma.ConsumptionDailyCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
 };
 
@@ -859,7 +819,6 @@ export type CustomerUncheckedCreateWithoutIssuesInput = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  consumptions?: Prisma.ConsumptionDailyUncheckedCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
 };
 
@@ -903,7 +862,6 @@ export type CustomerUpdateWithoutIssuesInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
 };
 
@@ -919,95 +877,6 @@ export type CustomerUncheckedUpdateWithoutIssuesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
-  consumptions?: Prisma.ConsumptionDailyUncheckedUpdateManyWithoutCustomerNestedInput;
-  serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
-};
-
-export type CustomerCreateWithoutConsumptionsInput = {
-  id?: string;
-  name: string;
-  industry?: string | null;
-  level?: string | null;
-  status?: $Enums.CustomerStatus;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  deletedAt?: Date | string | null;
-  owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
-  issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
-  serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
-};
-
-export type CustomerUncheckedCreateWithoutConsumptionsInput = {
-  id?: string;
-  name: string;
-  industry?: string | null;
-  level?: string | null;
-  status?: $Enums.CustomerStatus;
-  ownerId?: string | null;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  deletedAt?: Date | string | null;
-  issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
-  serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
-};
-
-export type CustomerCreateOrConnectWithoutConsumptionsInput = {
-  where: Prisma.CustomerWhereUniqueInput;
-  create: Prisma.XOR<
-    Prisma.CustomerCreateWithoutConsumptionsInput,
-    Prisma.CustomerUncheckedCreateWithoutConsumptionsInput
-  >;
-};
-
-export type CustomerUpsertWithoutConsumptionsInput = {
-  update: Prisma.XOR<
-    Prisma.CustomerUpdateWithoutConsumptionsInput,
-    Prisma.CustomerUncheckedUpdateWithoutConsumptionsInput
-  >;
-  create: Prisma.XOR<
-    Prisma.CustomerCreateWithoutConsumptionsInput,
-    Prisma.CustomerUncheckedCreateWithoutConsumptionsInput
-  >;
-  where?: Prisma.CustomerWhereInput;
-};
-
-export type CustomerUpdateToOneWithWhereWithoutConsumptionsInput = {
-  where?: Prisma.CustomerWhereInput;
-  data: Prisma.XOR<
-    Prisma.CustomerUpdateWithoutConsumptionsInput,
-    Prisma.CustomerUncheckedUpdateWithoutConsumptionsInput
-  >;
-};
-
-export type CustomerUpdateWithoutConsumptionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string;
-  name?: Prisma.StringFieldUpdateOperationsInput | string;
-  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  level?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus;
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  deletedAt?:
-    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
-  owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
-  issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
-  serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
-};
-
-export type CustomerUncheckedUpdateWithoutConsumptionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string;
-  name?: Prisma.StringFieldUpdateOperationsInput | string;
-  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  level?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  status?:
-    Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus;
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  deletedAt?:
-    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
-  issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
 };
 
@@ -1034,7 +903,6 @@ export type CustomerUpdateWithoutOwnerInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
 };
 
@@ -1050,7 +918,6 @@ export type CustomerUncheckedUpdateWithoutOwnerInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
-  consumptions?: Prisma.ConsumptionDailyUncheckedUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
 };
 
@@ -1073,7 +940,6 @@ export type CustomerUncheckedUpdateManyWithoutOwnerInput = {
 
 export type CustomerCountOutputType = {
   issues: number;
-  consumptions: number;
   serviceRecords: number;
 };
 
@@ -1082,7 +948,6 @@ export type CustomerCountOutputTypeSelect<
     runtime.Types.Extensions.DefaultArgs,
 > = {
   issues?: boolean | CustomerCountOutputTypeCountIssuesArgs;
-  consumptions?: boolean | CustomerCountOutputTypeCountConsumptionsArgs;
   serviceRecords?: boolean | CustomerCountOutputTypeCountServiceRecordsArgs;
 };
 
@@ -1112,16 +977,6 @@ export type CustomerCountOutputTypeCountIssuesArgs<
 /**
  * CustomerCountOutputType without action
  */
-export type CustomerCountOutputTypeCountConsumptionsArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  where?: Prisma.ConsumptionDailyWhereInput;
-};
-
-/**
- * CustomerCountOutputType without action
- */
 export type CustomerCountOutputTypeCountServiceRecordsArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -1145,7 +1000,6 @@ export type CustomerSelect<
     deletedAt?: boolean;
     owner?: boolean | Prisma.Customer$ownerArgs<ExtArgs>;
     issues?: boolean | Prisma.Customer$issuesArgs<ExtArgs>;
-    consumptions?: boolean | Prisma.Customer$consumptionsArgs<ExtArgs>;
     serviceRecords?: boolean | Prisma.Customer$serviceRecordsArgs<ExtArgs>;
     _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>;
   },
@@ -1185,7 +1039,6 @@ export type CustomerInclude<
 > = {
   owner?: boolean | Prisma.Customer$ownerArgs<ExtArgs>;
   issues?: boolean | Prisma.Customer$issuesArgs<ExtArgs>;
-  consumptions?: boolean | Prisma.Customer$consumptionsArgs<ExtArgs>;
   serviceRecords?: boolean | Prisma.Customer$serviceRecordsArgs<ExtArgs>;
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>;
 };
@@ -1198,7 +1051,6 @@ export type $CustomerPayload<
   objects: {
     owner: Prisma.$UserPayload<ExtArgs> | null;
     issues: Prisma.$ServiceIssuePayload<ExtArgs>[];
-    consumptions: Prisma.$ConsumptionDailyPayload<ExtArgs>[];
     serviceRecords: Prisma.$FeishuServiceRecordPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
@@ -1714,17 +1566,6 @@ export interface Prisma__CustomerClient<
       >
     | Null
   >;
-  consumptions<T extends Prisma.Customer$consumptionsArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.Customer$consumptionsArgs<ExtArgs>>,
-  ): Prisma.PrismaPromise<
-    | runtime.Types.Result.GetResult<
-        Prisma.$ConsumptionDailyPayload<ExtArgs>,
-        T,
-        'findMany',
-        GlobalOmitOptions
-      >
-    | Null
-  >;
   serviceRecords<T extends Prisma.Customer$serviceRecordsArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.Customer$serviceRecordsArgs<ExtArgs>>,
   ): Prisma.PrismaPromise<
@@ -2234,37 +2075,6 @@ export type Customer$issuesArgs<
   skip?: number;
   distinct?:
     Prisma.ServiceIssueScalarFieldEnum | Prisma.ServiceIssueScalarFieldEnum[];
-};
-
-/**
- * Customer.consumptions
- */
-export type Customer$consumptionsArgs<
-  ExtArgs extends runtime.Types.Extensions.InternalArgs =
-    runtime.Types.Extensions.DefaultArgs,
-> = {
-  /**
-   * Select specific fields to fetch from the ConsumptionDaily
-   */
-  select?: Prisma.ConsumptionDailySelect<ExtArgs> | null;
-  /**
-   * Omit specific fields from the ConsumptionDaily
-   */
-  omit?: Prisma.ConsumptionDailyOmit<ExtArgs> | null;
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ConsumptionDailyInclude<ExtArgs> | null;
-  where?: Prisma.ConsumptionDailyWhereInput;
-  orderBy?:
-    | Prisma.ConsumptionDailyOrderByWithRelationInput
-    | Prisma.ConsumptionDailyOrderByWithRelationInput[];
-  cursor?: Prisma.ConsumptionDailyWhereUniqueInput;
-  take?: number;
-  skip?: number;
-  distinct?:
-    | Prisma.ConsumptionDailyScalarFieldEnum
-    | Prisma.ConsumptionDailyScalarFieldEnum[];
 };
 
 /**

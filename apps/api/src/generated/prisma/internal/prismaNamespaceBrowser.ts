@@ -60,7 +60,10 @@ export const ModelName = {
   ServiceSyncRun: 'ServiceSyncRun',
   ServiceIssue: 'ServiceIssue',
   IssueActivity: 'IssueActivity',
+  ConsumptionAccount: 'ConsumptionAccount',
   ConsumptionDaily: 'ConsumptionDaily',
+  ConsumptionSourceDay: 'ConsumptionSourceDay',
+  ConsumptionSyncRun: 'ConsumptionSyncRun',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -207,9 +210,22 @@ export const IssueActivityScalarFieldEnum = {
 export type IssueActivityScalarFieldEnum =
   (typeof IssueActivityScalarFieldEnum)[keyof typeof IssueActivityScalarFieldEnum];
 
+export const ConsumptionAccountScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  externalId: 'externalId',
+  displayName: 'displayName',
+  managerName: 'managerName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type ConsumptionAccountScalarFieldEnum =
+  (typeof ConsumptionAccountScalarFieldEnum)[keyof typeof ConsumptionAccountScalarFieldEnum];
+
 export const ConsumptionDailyScalarFieldEnum = {
   id: 'id',
-  customerId: 'customerId',
+  accountId: 'accountId',
   date: 'date',
   product: 'product',
   amount: 'amount',
@@ -220,6 +236,36 @@ export const ConsumptionDailyScalarFieldEnum = {
 
 export type ConsumptionDailyScalarFieldEnum =
   (typeof ConsumptionDailyScalarFieldEnum)[keyof typeof ConsumptionDailyScalarFieldEnum];
+
+export const ConsumptionSourceDayScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  date: 'date',
+  recordCount: 'recordCount',
+  amount: 'amount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type ConsumptionSourceDayScalarFieldEnum =
+  (typeof ConsumptionSourceDayScalarFieldEnum)[keyof typeof ConsumptionSourceDayScalarFieldEnum];
+
+export const ConsumptionSyncRunScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  rangeStart: 'rangeStart',
+  rangeEnd: 'rangeEnd',
+  readCount: 'readCount',
+  accountCount: 'accountCount',
+  rowCount: 'rowCount',
+  errorSummary: 'errorSummary',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt',
+} as const;
+
+export type ConsumptionSyncRunScalarFieldEnum =
+  (typeof ConsumptionSyncRunScalarFieldEnum)[keyof typeof ConsumptionSyncRunScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',
@@ -348,12 +394,37 @@ export const IssueActivityOrderByRelevanceFieldEnum = {
 export type IssueActivityOrderByRelevanceFieldEnum =
   (typeof IssueActivityOrderByRelevanceFieldEnum)[keyof typeof IssueActivityOrderByRelevanceFieldEnum];
 
+export const ConsumptionAccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  displayName: 'displayName',
+  managerName: 'managerName',
+} as const;
+
+export type ConsumptionAccountOrderByRelevanceFieldEnum =
+  (typeof ConsumptionAccountOrderByRelevanceFieldEnum)[keyof typeof ConsumptionAccountOrderByRelevanceFieldEnum];
+
 export const ConsumptionDailyOrderByRelevanceFieldEnum = {
   id: 'id',
-  customerId: 'customerId',
+  accountId: 'accountId',
   product: 'product',
   unit: 'unit',
 } as const;
 
 export type ConsumptionDailyOrderByRelevanceFieldEnum =
   (typeof ConsumptionDailyOrderByRelevanceFieldEnum)[keyof typeof ConsumptionDailyOrderByRelevanceFieldEnum];
+
+export const ConsumptionSourceDayOrderByRelevanceFieldEnum = {
+  id: 'id',
+} as const;
+
+export type ConsumptionSourceDayOrderByRelevanceFieldEnum =
+  (typeof ConsumptionSourceDayOrderByRelevanceFieldEnum)[keyof typeof ConsumptionSourceDayOrderByRelevanceFieldEnum];
+
+export const ConsumptionSyncRunOrderByRelevanceFieldEnum = {
+  id: 'id',
+  errorSummary: 'errorSummary',
+} as const;
+
+export type ConsumptionSyncRunOrderByRelevanceFieldEnum =
+  (typeof ConsumptionSyncRunOrderByRelevanceFieldEnum)[keyof typeof ConsumptionSyncRunOrderByRelevanceFieldEnum];

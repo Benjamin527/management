@@ -100,3 +100,20 @@ export const ServiceSyncStatus = {
 
 export type ServiceSyncStatus =
   (typeof ServiceSyncStatus)[keyof typeof ServiceSyncStatus];
+
+export const ConsumptionSource = {
+  DOMESTIC: 'DOMESTIC',
+  OVERSEAS: 'OVERSEAS',
+} as const;
+
+export type ConsumptionSource =
+  (typeof ConsumptionSource)[keyof typeof ConsumptionSource];
+
+export const ConsumptionSyncStatus = {
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+} as const;
+
+export type ConsumptionSyncStatus =
+  (typeof ConsumptionSyncStatus)[keyof typeof ConsumptionSyncStatus];

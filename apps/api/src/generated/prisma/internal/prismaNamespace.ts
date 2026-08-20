@@ -433,7 +433,10 @@ export const ModelName = {
   ServiceSyncRun: 'ServiceSyncRun',
   ServiceIssue: 'ServiceIssue',
   IssueActivity: 'IssueActivity',
+  ConsumptionAccount: 'ConsumptionAccount',
   ConsumptionDaily: 'ConsumptionDaily',
+  ConsumptionSourceDay: 'ConsumptionSourceDay',
+  ConsumptionSyncRun: 'ConsumptionSyncRun',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -462,7 +465,10 @@ export type TypeMap<
       | 'serviceSyncRun'
       | 'serviceIssue'
       | 'issueActivity'
-      | 'consumptionDaily';
+      | 'consumptionAccount'
+      | 'consumptionDaily'
+      | 'consumptionSourceDay'
+      | 'consumptionSyncRun';
     txIsolationLevel: TransactionIsolationLevel;
   };
   model: {
@@ -874,6 +880,74 @@ export type TypeMap<
         };
       };
     };
+    ConsumptionAccount: {
+      payload: Prisma.$ConsumptionAccountPayload<ExtArgs>;
+      fields: Prisma.ConsumptionAccountFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.ConsumptionAccountFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.ConsumptionAccountFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>;
+        };
+        findFirst: {
+          args: Prisma.ConsumptionAccountFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.ConsumptionAccountFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>;
+        };
+        findMany: {
+          args: Prisma.ConsumptionAccountFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>[];
+        };
+        create: {
+          args: Prisma.ConsumptionAccountCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>;
+        };
+        createMany: {
+          args: Prisma.ConsumptionAccountCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.ConsumptionAccountDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>;
+        };
+        update: {
+          args: Prisma.ConsumptionAccountUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>;
+        };
+        deleteMany: {
+          args: Prisma.ConsumptionAccountDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.ConsumptionAccountUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.ConsumptionAccountUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionAccountPayload>;
+        };
+        aggregate: {
+          args: Prisma.ConsumptionAccountAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConsumptionAccount>;
+        };
+        groupBy: {
+          args: Prisma.ConsumptionAccountGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.ConsumptionAccountGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.ConsumptionAccountCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.ConsumptionAccountCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
     ConsumptionDaily: {
       payload: Prisma.$ConsumptionDailyPayload<ExtArgs>;
       fields: Prisma.ConsumptionDailyFieldRefs;
@@ -938,6 +1012,142 @@ export type TypeMap<
           args: Prisma.ConsumptionDailyCountArgs<ExtArgs>;
           result:
             | runtime.Types.Utils.Optional<Prisma.ConsumptionDailyCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    ConsumptionSourceDay: {
+      payload: Prisma.$ConsumptionSourceDayPayload<ExtArgs>;
+      fields: Prisma.ConsumptionSourceDayFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.ConsumptionSourceDayFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.ConsumptionSourceDayFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>;
+        };
+        findFirst: {
+          args: Prisma.ConsumptionSourceDayFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.ConsumptionSourceDayFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>;
+        };
+        findMany: {
+          args: Prisma.ConsumptionSourceDayFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>[];
+        };
+        create: {
+          args: Prisma.ConsumptionSourceDayCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>;
+        };
+        createMany: {
+          args: Prisma.ConsumptionSourceDayCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.ConsumptionSourceDayDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>;
+        };
+        update: {
+          args: Prisma.ConsumptionSourceDayUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>;
+        };
+        deleteMany: {
+          args: Prisma.ConsumptionSourceDayDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.ConsumptionSourceDayUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.ConsumptionSourceDayUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSourceDayPayload>;
+        };
+        aggregate: {
+          args: Prisma.ConsumptionSourceDayAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConsumptionSourceDay>;
+        };
+        groupBy: {
+          args: Prisma.ConsumptionSourceDayGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.ConsumptionSourceDayGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.ConsumptionSourceDayCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.ConsumptionSourceDayCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    ConsumptionSyncRun: {
+      payload: Prisma.$ConsumptionSyncRunPayload<ExtArgs>;
+      fields: Prisma.ConsumptionSyncRunFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.ConsumptionSyncRunFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.ConsumptionSyncRunFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>;
+        };
+        findFirst: {
+          args: Prisma.ConsumptionSyncRunFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.ConsumptionSyncRunFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>;
+        };
+        findMany: {
+          args: Prisma.ConsumptionSyncRunFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>[];
+        };
+        create: {
+          args: Prisma.ConsumptionSyncRunCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>;
+        };
+        createMany: {
+          args: Prisma.ConsumptionSyncRunCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.ConsumptionSyncRunDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>;
+        };
+        update: {
+          args: Prisma.ConsumptionSyncRunUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>;
+        };
+        deleteMany: {
+          args: Prisma.ConsumptionSyncRunDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.ConsumptionSyncRunUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.ConsumptionSyncRunUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsumptionSyncRunPayload>;
+        };
+        aggregate: {
+          args: Prisma.ConsumptionSyncRunAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConsumptionSyncRun>;
+        };
+        groupBy: {
+          args: Prisma.ConsumptionSyncRunGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.ConsumptionSyncRunGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.ConsumptionSyncRunCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.ConsumptionSyncRunCountAggregateOutputType>
             | number;
         };
       };
@@ -1109,9 +1319,22 @@ export const IssueActivityScalarFieldEnum = {
 export type IssueActivityScalarFieldEnum =
   (typeof IssueActivityScalarFieldEnum)[keyof typeof IssueActivityScalarFieldEnum];
 
+export const ConsumptionAccountScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  externalId: 'externalId',
+  displayName: 'displayName',
+  managerName: 'managerName',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type ConsumptionAccountScalarFieldEnum =
+  (typeof ConsumptionAccountScalarFieldEnum)[keyof typeof ConsumptionAccountScalarFieldEnum];
+
 export const ConsumptionDailyScalarFieldEnum = {
   id: 'id',
-  customerId: 'customerId',
+  accountId: 'accountId',
   date: 'date',
   product: 'product',
   amount: 'amount',
@@ -1122,6 +1345,36 @@ export const ConsumptionDailyScalarFieldEnum = {
 
 export type ConsumptionDailyScalarFieldEnum =
   (typeof ConsumptionDailyScalarFieldEnum)[keyof typeof ConsumptionDailyScalarFieldEnum];
+
+export const ConsumptionSourceDayScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  date: 'date',
+  recordCount: 'recordCount',
+  amount: 'amount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type ConsumptionSourceDayScalarFieldEnum =
+  (typeof ConsumptionSourceDayScalarFieldEnum)[keyof typeof ConsumptionSourceDayScalarFieldEnum];
+
+export const ConsumptionSyncRunScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  rangeStart: 'rangeStart',
+  rangeEnd: 'rangeEnd',
+  readCount: 'readCount',
+  accountCount: 'accountCount',
+  rowCount: 'rowCount',
+  errorSummary: 'errorSummary',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt',
+} as const;
+
+export type ConsumptionSyncRunScalarFieldEnum =
+  (typeof ConsumptionSyncRunScalarFieldEnum)[keyof typeof ConsumptionSyncRunScalarFieldEnum];
 
 export const SortOrder = {
   asc: 'asc',
@@ -1250,15 +1503,40 @@ export const IssueActivityOrderByRelevanceFieldEnum = {
 export type IssueActivityOrderByRelevanceFieldEnum =
   (typeof IssueActivityOrderByRelevanceFieldEnum)[keyof typeof IssueActivityOrderByRelevanceFieldEnum];
 
+export const ConsumptionAccountOrderByRelevanceFieldEnum = {
+  id: 'id',
+  externalId: 'externalId',
+  displayName: 'displayName',
+  managerName: 'managerName',
+} as const;
+
+export type ConsumptionAccountOrderByRelevanceFieldEnum =
+  (typeof ConsumptionAccountOrderByRelevanceFieldEnum)[keyof typeof ConsumptionAccountOrderByRelevanceFieldEnum];
+
 export const ConsumptionDailyOrderByRelevanceFieldEnum = {
   id: 'id',
-  customerId: 'customerId',
+  accountId: 'accountId',
   product: 'product',
   unit: 'unit',
 } as const;
 
 export type ConsumptionDailyOrderByRelevanceFieldEnum =
   (typeof ConsumptionDailyOrderByRelevanceFieldEnum)[keyof typeof ConsumptionDailyOrderByRelevanceFieldEnum];
+
+export const ConsumptionSourceDayOrderByRelevanceFieldEnum = {
+  id: 'id',
+} as const;
+
+export type ConsumptionSourceDayOrderByRelevanceFieldEnum =
+  (typeof ConsumptionSourceDayOrderByRelevanceFieldEnum)[keyof typeof ConsumptionSourceDayOrderByRelevanceFieldEnum];
+
+export const ConsumptionSyncRunOrderByRelevanceFieldEnum = {
+  id: 'id',
+  errorSummary: 'errorSummary',
+} as const;
+
+export type ConsumptionSyncRunOrderByRelevanceFieldEnum =
+  (typeof ConsumptionSyncRunOrderByRelevanceFieldEnum)[keyof typeof ConsumptionSyncRunOrderByRelevanceFieldEnum];
 
 /**
  * Field references
@@ -1379,12 +1657,24 @@ export type EnumIssueActivityTypeFieldRefInput<$PrismaModel> =
   FieldRefInputType<$PrismaModel, 'IssueActivityType'>;
 
 /**
+ * Reference to a field of type 'ConsumptionSource'
+ */
+export type EnumConsumptionSourceFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'ConsumptionSource'>;
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'Decimal'
 >;
+
+/**
+ * Reference to a field of type 'ConsumptionSyncStatus'
+ */
+export type EnumConsumptionSyncStatusFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'ConsumptionSyncStatus'>;
 
 /**
  * Reference to a field of type 'Float'
@@ -1557,7 +1847,10 @@ export type GlobalOmitConfig = {
   serviceSyncRun?: Prisma.ServiceSyncRunOmit;
   serviceIssue?: Prisma.ServiceIssueOmit;
   issueActivity?: Prisma.IssueActivityOmit;
+  consumptionAccount?: Prisma.ConsumptionAccountOmit;
   consumptionDaily?: Prisma.ConsumptionDailyOmit;
+  consumptionSourceDay?: Prisma.ConsumptionSourceDayOmit;
+  consumptionSyncRun?: Prisma.ConsumptionSyncRunOmit;
 };
 
 /* Types for Logging */

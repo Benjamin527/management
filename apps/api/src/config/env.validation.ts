@@ -12,6 +12,9 @@ export interface AppEnvironment {
   FEISHU_SYNC_YEAR?: number;
   FEISHU_SYNC_CRON?: string;
   FEISHU_SERVICE_BASE_URL?: string;
+  CONSUMPTION_SYNC_ENABLED: boolean;
+  CONSUMPTION_SOURCE_DATABASE_URL?: string;
+  CONSUMPTION_SYNC_CRON?: string;
 }
 
 function stringValue(value: unknown, fallback = '') {
@@ -46,6 +49,13 @@ export function validateEnv(input: Record<string, unknown>): AppEnvironment {
   const feishuConfig = feishuEnabled
     ? validateFeishuConfig(input, feishuAppId)
     : {};
+  const consumptionSourceUrl = stringValue(
+    input.CONSUMPTION_SOURCE_DATABASE_URL,
+  ).trim();
+  const consumptionEnabled = consumptionSourceUrl.length > 0;
+  const consumptionConfig = consumptionEnabled
+    ? validateConsumptionConfig(input, consumptionSourceUrl)
+    : {};
 
   return {
     DATABASE_URL: databaseUrl,
@@ -54,7 +64,43 @@ export function validateEnv(input: Record<string, unknown>): AppEnvironment {
     PORT: port,
     COOKIE_SECURE: secureValue === 'true',
     FEISHU_SYNC_ENABLED: feishuEnabled,
+    CONSUMPTION_SYNC_ENABLED: consumptionEnabled,
     ...feishuConfig,
+    ...consumptionConfig,
+  };
+}
+
+function validateConsumptionConfig(
+  input: Record<string, unknown>,
+  source: string,
+): Pick<
+  AppEnvironment,
+  'CONSUMPTION_SOURCE_DATABASE_URL' | 'CONSUMPTION_SYNC_CRON'
+> {
+  let sourceUrl: URL;
+  try {
+    sourceUrl = new URL(source);
+  } catch {
+    throw new Error(
+      'CONSUMPTION_SOURCE_DATABASE_URL must be a MySQL connection string',
+    );
+  }
+  if (sourceUrl.protocol !== 'mysql:') {
+    throw new Error(
+      'CONSUMPTION_SOURCE_DATABASE_URL must be a MySQL connection string',
+    );
+  }
+
+  const cron = stringValue(input.CONSUMPTION_SYNC_CRON, '0 13 * * *').trim();
+  if (cron.split(/\s+/).length !== 5) {
+    throw new Error(
+      'CONSUMPTION_SYNC_CRON must be a five-field cron expression',
+    );
+  }
+
+  return {
+    CONSUMPTION_SOURCE_DATABASE_URL: sourceUrl.toString(),
+    CONSUMPTION_SYNC_CRON: cron,
   };
 }
 

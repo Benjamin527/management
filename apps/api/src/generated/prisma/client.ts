@@ -75,7 +75,22 @@ export type ServiceIssue = Prisma.ServiceIssueModel;
  */
 export type IssueActivity = Prisma.IssueActivityModel;
 /**
+ * Model ConsumptionAccount
+ *
+ */
+export type ConsumptionAccount = Prisma.ConsumptionAccountModel;
+/**
  * Model ConsumptionDaily
  *
  */
 export type ConsumptionDaily = Prisma.ConsumptionDailyModel;
+/**
+ * Model ConsumptionSourceDay
+ *
+ */
+export type ConsumptionSourceDay = Prisma.ConsumptionSourceDayModel;
+/**
+ * Model ConsumptionSyncRun
+ *
+ */
+export type ConsumptionSyncRun = Prisma.ConsumptionSyncRunModel;

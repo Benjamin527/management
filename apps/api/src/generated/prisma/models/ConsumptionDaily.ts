@@ -36,7 +36,7 @@ export type ConsumptionDailySumAggregateOutputType = {
 
 export type ConsumptionDailyMinAggregateOutputType = {
   id: string | null;
-  customerId: string | null;
+  accountId: string | null;
   date: Date | null;
   product: string | null;
   amount: runtime.Decimal | null;
@@ -47,7 +47,7 @@ export type ConsumptionDailyMinAggregateOutputType = {
 
 export type ConsumptionDailyMaxAggregateOutputType = {
   id: string | null;
-  customerId: string | null;
+  accountId: string | null;
   date: Date | null;
   product: string | null;
   amount: runtime.Decimal | null;
@@ -58,7 +58,7 @@ export type ConsumptionDailyMaxAggregateOutputType = {
 
 export type ConsumptionDailyCountAggregateOutputType = {
   id: number;
-  customerId: number;
+  accountId: number;
   date: number;
   product: number;
   amount: number;
@@ -78,7 +78,7 @@ export type ConsumptionDailySumAggregateInputType = {
 
 export type ConsumptionDailyMinAggregateInputType = {
   id?: true;
-  customerId?: true;
+  accountId?: true;
   date?: true;
   product?: true;
   amount?: true;
@@ -89,7 +89,7 @@ export type ConsumptionDailyMinAggregateInputType = {
 
 export type ConsumptionDailyMaxAggregateInputType = {
   id?: true;
-  customerId?: true;
+  accountId?: true;
   date?: true;
   product?: true;
   amount?: true;
@@ -100,7 +100,7 @@ export type ConsumptionDailyMaxAggregateInputType = {
 
 export type ConsumptionDailyCountAggregateInputType = {
   id?: true;
-  customerId?: true;
+  accountId?: true;
   date?: true;
   product?: true;
   amount?: true;
@@ -209,11 +209,11 @@ export type ConsumptionDailyGroupByArgs<
 
 export type ConsumptionDailyGroupByOutputType = {
   id: string;
-  customerId: string;
+  accountId: string;
   date: Date;
   product: string;
   amount: runtime.Decimal;
-  unit: string | null;
+  unit: string;
   createdAt: Date;
   updatedAt: Date;
   _count: ConsumptionDailyCountAggregateOutputType | null;
@@ -244,7 +244,7 @@ export type ConsumptionDailyWhereInput = {
   OR?: Prisma.ConsumptionDailyWhereInput[];
   NOT?: Prisma.ConsumptionDailyWhereInput | Prisma.ConsumptionDailyWhereInput[];
   id?: Prisma.StringFilter<'ConsumptionDaily'> | string;
-  customerId?: Prisma.StringFilter<'ConsumptionDaily'> | string;
+  accountId?: Prisma.StringFilter<'ConsumptionDaily'> | string;
   date?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
   product?: Prisma.StringFilter<'ConsumptionDaily'> | string;
   amount?:
@@ -253,38 +253,38 @@ export type ConsumptionDailyWhereInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.StringNullableFilter<'ConsumptionDaily'> | string | null;
+  unit?: Prisma.StringFilter<'ConsumptionDaily'> | string;
   createdAt?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
-  customer?: Prisma.XOR<
-    Prisma.CustomerScalarRelationFilter,
-    Prisma.CustomerWhereInput
+  account?: Prisma.XOR<
+    Prisma.ConsumptionAccountScalarRelationFilter,
+    Prisma.ConsumptionAccountWhereInput
   >;
 };
 
 export type ConsumptionDailyOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
-  customerId?: Prisma.SortOrder;
+  accountId?: Prisma.SortOrder;
   date?: Prisma.SortOrder;
   product?: Prisma.SortOrder;
   amount?: Prisma.SortOrder;
-  unit?: Prisma.SortOrderInput | Prisma.SortOrder;
+  unit?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
-  customer?: Prisma.CustomerOrderByWithRelationInput;
+  account?: Prisma.ConsumptionAccountOrderByWithRelationInput;
   _relevance?: Prisma.ConsumptionDailyOrderByRelevanceInput;
 };
 
 export type ConsumptionDailyWhereUniqueInput = Prisma.AtLeast<
   {
     id?: string;
-    customerId_date_product?: Prisma.ConsumptionDailyCustomerIdDateProductCompoundUniqueInput;
+    accountId_date_product?: Prisma.ConsumptionDailyAccountIdDateProductCompoundUniqueInput;
     AND?:
       Prisma.ConsumptionDailyWhereInput | Prisma.ConsumptionDailyWhereInput[];
     OR?: Prisma.ConsumptionDailyWhereInput[];
     NOT?:
       Prisma.ConsumptionDailyWhereInput | Prisma.ConsumptionDailyWhereInput[];
-    customerId?: Prisma.StringFilter<'ConsumptionDaily'> | string;
+    accountId?: Prisma.StringFilter<'ConsumptionDaily'> | string;
     date?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
     product?: Prisma.StringFilter<'ConsumptionDaily'> | string;
     amount?:
@@ -293,24 +293,24 @@ export type ConsumptionDailyWhereUniqueInput = Prisma.AtLeast<
       | runtime.DecimalJsLike
       | number
       | string;
-    unit?: Prisma.StringNullableFilter<'ConsumptionDaily'> | string | null;
+    unit?: Prisma.StringFilter<'ConsumptionDaily'> | string;
     createdAt?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
-    customer?: Prisma.XOR<
-      Prisma.CustomerScalarRelationFilter,
-      Prisma.CustomerWhereInput
+    account?: Prisma.XOR<
+      Prisma.ConsumptionAccountScalarRelationFilter,
+      Prisma.ConsumptionAccountWhereInput
     >;
   },
-  'id' | 'customerId_date_product'
+  'id' | 'accountId_date_product'
 >;
 
 export type ConsumptionDailyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
-  customerId?: Prisma.SortOrder;
+  accountId?: Prisma.SortOrder;
   date?: Prisma.SortOrder;
   product?: Prisma.SortOrder;
   amount?: Prisma.SortOrder;
-  unit?: Prisma.SortOrderInput | Prisma.SortOrder;
+  unit?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   _count?: Prisma.ConsumptionDailyCountOrderByAggregateInput;
@@ -329,7 +329,7 @@ export type ConsumptionDailyScalarWhereWithAggregatesInput = {
     | Prisma.ConsumptionDailyScalarWhereWithAggregatesInput
     | Prisma.ConsumptionDailyScalarWhereWithAggregatesInput[];
   id?: Prisma.StringWithAggregatesFilter<'ConsumptionDaily'> | string;
-  customerId?: Prisma.StringWithAggregatesFilter<'ConsumptionDaily'> | string;
+  accountId?: Prisma.StringWithAggregatesFilter<'ConsumptionDaily'> | string;
   date?:
     Prisma.DateTimeWithAggregatesFilter<'ConsumptionDaily'> | Date | string;
   product?: Prisma.StringWithAggregatesFilter<'ConsumptionDaily'> | string;
@@ -339,10 +339,7 @@ export type ConsumptionDailyScalarWhereWithAggregatesInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?:
-    | Prisma.StringNullableWithAggregatesFilter<'ConsumptionDaily'>
-    | string
-    | null;
+  unit?: Prisma.StringWithAggregatesFilter<'ConsumptionDaily'> | string;
   createdAt?:
     Prisma.DateTimeWithAggregatesFilter<'ConsumptionDaily'> | Date | string;
   updatedAt?:
@@ -354,19 +351,19 @@ export type ConsumptionDailyCreateInput = {
   date: Date | string;
   product: string;
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string;
-  unit?: string | null;
+  unit?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
-  customer: Prisma.CustomerCreateNestedOneWithoutConsumptionsInput;
+  account: Prisma.ConsumptionAccountCreateNestedOneWithoutConsumptionsInput;
 };
 
 export type ConsumptionDailyUncheckedCreateInput = {
   id?: string;
-  customerId: string;
+  accountId: string;
   date: Date | string;
   product: string;
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string;
-  unit?: string | null;
+  unit?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -381,15 +378,15 @@ export type ConsumptionDailyUpdateInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  customer?: Prisma.CustomerUpdateOneRequiredWithoutConsumptionsNestedInput;
+  account?: Prisma.ConsumptionAccountUpdateOneRequiredWithoutConsumptionsNestedInput;
 };
 
 export type ConsumptionDailyUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string;
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string;
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   product?: Prisma.StringFieldUpdateOperationsInput | string;
   amount?:
@@ -398,18 +395,18 @@ export type ConsumptionDailyUncheckedUpdateInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
 export type ConsumptionDailyCreateManyInput = {
   id?: string;
-  customerId: string;
+  accountId: string;
   date: Date | string;
   product: string;
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string;
-  unit?: string | null;
+  unit?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
@@ -424,14 +421,14 @@ export type ConsumptionDailyUpdateManyMutationInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
 export type ConsumptionDailyUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
-  customerId?: Prisma.StringFieldUpdateOperationsInput | string;
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string;
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   product?: Prisma.StringFieldUpdateOperationsInput | string;
   amount?:
@@ -440,7 +437,7 @@ export type ConsumptionDailyUncheckedUpdateManyInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -463,15 +460,15 @@ export type ConsumptionDailyOrderByRelevanceInput = {
   search: string;
 };
 
-export type ConsumptionDailyCustomerIdDateProductCompoundUniqueInput = {
-  customerId: string;
+export type ConsumptionDailyAccountIdDateProductCompoundUniqueInput = {
+  accountId: string;
   date: Date | string;
   product: string;
 };
 
 export type ConsumptionDailyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  customerId?: Prisma.SortOrder;
+  accountId?: Prisma.SortOrder;
   date?: Prisma.SortOrder;
   product?: Prisma.SortOrder;
   amount?: Prisma.SortOrder;
@@ -486,7 +483,7 @@ export type ConsumptionDailyAvgOrderByAggregateInput = {
 
 export type ConsumptionDailyMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  customerId?: Prisma.SortOrder;
+  accountId?: Prisma.SortOrder;
   date?: Prisma.SortOrder;
   product?: Prisma.SortOrder;
   amount?: Prisma.SortOrder;
@@ -497,7 +494,7 @@ export type ConsumptionDailyMaxOrderByAggregateInput = {
 
 export type ConsumptionDailyMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
-  customerId?: Prisma.SortOrder;
+  accountId?: Prisma.SortOrder;
   date?: Prisma.SortOrder;
   product?: Prisma.SortOrder;
   amount?: Prisma.SortOrder;
@@ -510,55 +507,55 @@ export type ConsumptionDailySumOrderByAggregateInput = {
   amount?: Prisma.SortOrder;
 };
 
-export type ConsumptionDailyCreateNestedManyWithoutCustomerInput = {
+export type ConsumptionDailyCreateNestedManyWithoutAccountInput = {
   create?:
     | Prisma.XOR<
-        Prisma.ConsumptionDailyCreateWithoutCustomerInput,
-        Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput
+        Prisma.ConsumptionDailyCreateWithoutAccountInput,
+        Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput
       >
-    | Prisma.ConsumptionDailyCreateWithoutCustomerInput[]
-    | Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyCreateWithoutAccountInput[]
+    | Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput[];
   connectOrCreate?:
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput[];
-  createMany?: Prisma.ConsumptionDailyCreateManyCustomerInputEnvelope;
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput[];
+  createMany?: Prisma.ConsumptionDailyCreateManyAccountInputEnvelope;
   connect?:
     | Prisma.ConsumptionDailyWhereUniqueInput
     | Prisma.ConsumptionDailyWhereUniqueInput[];
 };
 
-export type ConsumptionDailyUncheckedCreateNestedManyWithoutCustomerInput = {
+export type ConsumptionDailyUncheckedCreateNestedManyWithoutAccountInput = {
   create?:
     | Prisma.XOR<
-        Prisma.ConsumptionDailyCreateWithoutCustomerInput,
-        Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput
+        Prisma.ConsumptionDailyCreateWithoutAccountInput,
+        Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput
       >
-    | Prisma.ConsumptionDailyCreateWithoutCustomerInput[]
-    | Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyCreateWithoutAccountInput[]
+    | Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput[];
   connectOrCreate?:
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput[];
-  createMany?: Prisma.ConsumptionDailyCreateManyCustomerInputEnvelope;
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput[];
+  createMany?: Prisma.ConsumptionDailyCreateManyAccountInputEnvelope;
   connect?:
     | Prisma.ConsumptionDailyWhereUniqueInput
     | Prisma.ConsumptionDailyWhereUniqueInput[];
 };
 
-export type ConsumptionDailyUpdateManyWithoutCustomerNestedInput = {
+export type ConsumptionDailyUpdateManyWithoutAccountNestedInput = {
   create?:
     | Prisma.XOR<
-        Prisma.ConsumptionDailyCreateWithoutCustomerInput,
-        Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput
+        Prisma.ConsumptionDailyCreateWithoutAccountInput,
+        Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput
       >
-    | Prisma.ConsumptionDailyCreateWithoutCustomerInput[]
-    | Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyCreateWithoutAccountInput[]
+    | Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput[];
   connectOrCreate?:
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput[];
   upsert?:
-    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutCustomerInput
-    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutCustomerInput[];
-  createMany?: Prisma.ConsumptionDailyCreateManyCustomerInputEnvelope;
+    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutAccountInput
+    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutAccountInput[];
+  createMany?: Prisma.ConsumptionDailyCreateManyAccountInputEnvelope;
   set?:
     | Prisma.ConsumptionDailyWhereUniqueInput
     | Prisma.ConsumptionDailyWhereUniqueInput[];
@@ -572,31 +569,31 @@ export type ConsumptionDailyUpdateManyWithoutCustomerNestedInput = {
     | Prisma.ConsumptionDailyWhereUniqueInput
     | Prisma.ConsumptionDailyWhereUniqueInput[];
   update?:
-    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutCustomerInput
-    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutAccountInput
+    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutAccountInput[];
   updateMany?:
-    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutCustomerInput
-    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutAccountInput
+    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutAccountInput[];
   deleteMany?:
     | Prisma.ConsumptionDailyScalarWhereInput
     | Prisma.ConsumptionDailyScalarWhereInput[];
 };
 
-export type ConsumptionDailyUncheckedUpdateManyWithoutCustomerNestedInput = {
+export type ConsumptionDailyUncheckedUpdateManyWithoutAccountNestedInput = {
   create?:
     | Prisma.XOR<
-        Prisma.ConsumptionDailyCreateWithoutCustomerInput,
-        Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput
+        Prisma.ConsumptionDailyCreateWithoutAccountInput,
+        Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput
       >
-    | Prisma.ConsumptionDailyCreateWithoutCustomerInput[]
-    | Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyCreateWithoutAccountInput[]
+    | Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput[];
   connectOrCreate?:
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput
-    | Prisma.ConsumptionDailyCreateOrConnectWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput
+    | Prisma.ConsumptionDailyCreateOrConnectWithoutAccountInput[];
   upsert?:
-    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutCustomerInput
-    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutCustomerInput[];
-  createMany?: Prisma.ConsumptionDailyCreateManyCustomerInputEnvelope;
+    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutAccountInput
+    | Prisma.ConsumptionDailyUpsertWithWhereUniqueWithoutAccountInput[];
+  createMany?: Prisma.ConsumptionDailyCreateManyAccountInputEnvelope;
   set?:
     | Prisma.ConsumptionDailyWhereUniqueInput
     | Prisma.ConsumptionDailyWhereUniqueInput[];
@@ -610,11 +607,11 @@ export type ConsumptionDailyUncheckedUpdateManyWithoutCustomerNestedInput = {
     | Prisma.ConsumptionDailyWhereUniqueInput
     | Prisma.ConsumptionDailyWhereUniqueInput[];
   update?:
-    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutCustomerInput
-    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutAccountInput
+    | Prisma.ConsumptionDailyUpdateWithWhereUniqueWithoutAccountInput[];
   updateMany?:
-    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutCustomerInput
-    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutCustomerInput[];
+    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutAccountInput
+    | Prisma.ConsumptionDailyUpdateManyWithWhereWithoutAccountInput[];
   deleteMany?:
     | Prisma.ConsumptionDailyScalarWhereInput
     | Prisma.ConsumptionDailyScalarWhereInput[];
@@ -628,66 +625,66 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
 };
 
-export type ConsumptionDailyCreateWithoutCustomerInput = {
+export type ConsumptionDailyCreateWithoutAccountInput = {
   id?: string;
   date: Date | string;
   product: string;
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string;
-  unit?: string | null;
+  unit?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
 
-export type ConsumptionDailyUncheckedCreateWithoutCustomerInput = {
+export type ConsumptionDailyUncheckedCreateWithoutAccountInput = {
   id?: string;
   date: Date | string;
   product: string;
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string;
-  unit?: string | null;
+  unit?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
 
-export type ConsumptionDailyCreateOrConnectWithoutCustomerInput = {
+export type ConsumptionDailyCreateOrConnectWithoutAccountInput = {
   where: Prisma.ConsumptionDailyWhereUniqueInput;
   create: Prisma.XOR<
-    Prisma.ConsumptionDailyCreateWithoutCustomerInput,
-    Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput
+    Prisma.ConsumptionDailyCreateWithoutAccountInput,
+    Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput
   >;
 };
 
-export type ConsumptionDailyCreateManyCustomerInputEnvelope = {
+export type ConsumptionDailyCreateManyAccountInputEnvelope = {
   data:
-    | Prisma.ConsumptionDailyCreateManyCustomerInput
-    | Prisma.ConsumptionDailyCreateManyCustomerInput[];
+    | Prisma.ConsumptionDailyCreateManyAccountInput
+    | Prisma.ConsumptionDailyCreateManyAccountInput[];
   skipDuplicates?: boolean;
 };
 
-export type ConsumptionDailyUpsertWithWhereUniqueWithoutCustomerInput = {
+export type ConsumptionDailyUpsertWithWhereUniqueWithoutAccountInput = {
   where: Prisma.ConsumptionDailyWhereUniqueInput;
   update: Prisma.XOR<
-    Prisma.ConsumptionDailyUpdateWithoutCustomerInput,
-    Prisma.ConsumptionDailyUncheckedUpdateWithoutCustomerInput
+    Prisma.ConsumptionDailyUpdateWithoutAccountInput,
+    Prisma.ConsumptionDailyUncheckedUpdateWithoutAccountInput
   >;
   create: Prisma.XOR<
-    Prisma.ConsumptionDailyCreateWithoutCustomerInput,
-    Prisma.ConsumptionDailyUncheckedCreateWithoutCustomerInput
+    Prisma.ConsumptionDailyCreateWithoutAccountInput,
+    Prisma.ConsumptionDailyUncheckedCreateWithoutAccountInput
   >;
 };
 
-export type ConsumptionDailyUpdateWithWhereUniqueWithoutCustomerInput = {
+export type ConsumptionDailyUpdateWithWhereUniqueWithoutAccountInput = {
   where: Prisma.ConsumptionDailyWhereUniqueInput;
   data: Prisma.XOR<
-    Prisma.ConsumptionDailyUpdateWithoutCustomerInput,
-    Prisma.ConsumptionDailyUncheckedUpdateWithoutCustomerInput
+    Prisma.ConsumptionDailyUpdateWithoutAccountInput,
+    Prisma.ConsumptionDailyUncheckedUpdateWithoutAccountInput
   >;
 };
 
-export type ConsumptionDailyUpdateManyWithWhereWithoutCustomerInput = {
+export type ConsumptionDailyUpdateManyWithWhereWithoutAccountInput = {
   where: Prisma.ConsumptionDailyScalarWhereInput;
   data: Prisma.XOR<
     Prisma.ConsumptionDailyUpdateManyMutationInput,
-    Prisma.ConsumptionDailyUncheckedUpdateManyWithoutCustomerInput
+    Prisma.ConsumptionDailyUncheckedUpdateManyWithoutAccountInput
   >;
 };
 
@@ -700,7 +697,7 @@ export type ConsumptionDailyScalarWhereInput = {
     | Prisma.ConsumptionDailyScalarWhereInput
     | Prisma.ConsumptionDailyScalarWhereInput[];
   id?: Prisma.StringFilter<'ConsumptionDaily'> | string;
-  customerId?: Prisma.StringFilter<'ConsumptionDaily'> | string;
+  accountId?: Prisma.StringFilter<'ConsumptionDaily'> | string;
   date?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
   product?: Prisma.StringFilter<'ConsumptionDaily'> | string;
   amount?:
@@ -709,22 +706,22 @@ export type ConsumptionDailyScalarWhereInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.StringNullableFilter<'ConsumptionDaily'> | string | null;
+  unit?: Prisma.StringFilter<'ConsumptionDaily'> | string;
   createdAt?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<'ConsumptionDaily'> | Date | string;
 };
 
-export type ConsumptionDailyCreateManyCustomerInput = {
+export type ConsumptionDailyCreateManyAccountInput = {
   id?: string;
   date: Date | string;
   product: string;
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string;
-  unit?: string | null;
+  unit?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
 
-export type ConsumptionDailyUpdateWithoutCustomerInput = {
+export type ConsumptionDailyUpdateWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   product?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -734,12 +731,12 @@ export type ConsumptionDailyUpdateWithoutCustomerInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
-export type ConsumptionDailyUncheckedUpdateWithoutCustomerInput = {
+export type ConsumptionDailyUncheckedUpdateWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   product?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -749,12 +746,12 @@ export type ConsumptionDailyUncheckedUpdateWithoutCustomerInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 
-export type ConsumptionDailyUncheckedUpdateManyWithoutCustomerInput = {
+export type ConsumptionDailyUncheckedUpdateManyWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   product?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -764,7 +761,7 @@ export type ConsumptionDailyUncheckedUpdateManyWithoutCustomerInput = {
     | runtime.DecimalJsLike
     | number
     | string;
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  unit?: Prisma.StringFieldUpdateOperationsInput | string;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -775,21 +772,21 @@ export type ConsumptionDailySelect<
 > = runtime.Types.Extensions.GetSelect<
   {
     id?: boolean;
-    customerId?: boolean;
+    accountId?: boolean;
     date?: boolean;
     product?: boolean;
     amount?: boolean;
     unit?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
-    customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>;
+    account?: boolean | Prisma.ConsumptionAccountDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['consumptionDaily']
 >;
 
 export type ConsumptionDailySelectScalar = {
   id?: boolean;
-  customerId?: boolean;
+  accountId?: boolean;
   date?: boolean;
   product?: boolean;
   amount?: boolean;
@@ -803,7 +800,7 @@ export type ConsumptionDailyOmit<
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
   | 'id'
-  | 'customerId'
+  | 'accountId'
   | 'date'
   | 'product'
   | 'amount'
@@ -816,7 +813,7 @@ export type ConsumptionDailyInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = {
-  customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>;
+  account?: boolean | Prisma.ConsumptionAccountDefaultArgs<ExtArgs>;
 };
 
 export type $ConsumptionDailyPayload<
@@ -825,16 +822,16 @@ export type $ConsumptionDailyPayload<
 > = {
   name: 'ConsumptionDaily';
   objects: {
-    customer: Prisma.$CustomerPayload<ExtArgs>;
+    account: Prisma.$ConsumptionAccountPayload<ExtArgs>;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
       id: string;
-      customerId: string;
+      accountId: string;
       date: Date;
       product: string;
       amount: runtime.Decimal;
-      unit: string | null;
+      unit: string;
       createdAt: Date;
       updatedAt: Date;
     },
@@ -1331,11 +1328,11 @@ export interface Prisma__ConsumptionDailyClient<
   GlobalOmitOptions = {},
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise';
-  customer<T extends Prisma.CustomerDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.CustomerDefaultArgs<ExtArgs>>,
-  ): Prisma.Prisma__CustomerClient<
+  account<T extends Prisma.ConsumptionAccountDefaultArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.ConsumptionAccountDefaultArgs<ExtArgs>>,
+  ): Prisma.Prisma__ConsumptionAccountClient<
     | runtime.Types.Result.GetResult<
-        Prisma.$CustomerPayload<ExtArgs>,
+        Prisma.$ConsumptionAccountPayload<ExtArgs>,
         T,
         'findUniqueOrThrow',
         GlobalOmitOptions
@@ -1382,7 +1379,7 @@ export interface Prisma__ConsumptionDailyClient<
  */
 export interface ConsumptionDailyFieldRefs {
   readonly id: Prisma.FieldRef<'ConsumptionDaily', 'String'>;
-  readonly customerId: Prisma.FieldRef<'ConsumptionDaily', 'String'>;
+  readonly accountId: Prisma.FieldRef<'ConsumptionDaily', 'String'>;
   readonly date: Prisma.FieldRef<'ConsumptionDaily', 'DateTime'>;
   readonly product: Prisma.FieldRef<'ConsumptionDaily', 'String'>;
   readonly amount: Prisma.FieldRef<'ConsumptionDaily', 'Decimal'>;

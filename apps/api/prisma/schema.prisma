@@ -80,6 +80,17 @@ enum ServiceSyncStatus {
   FAILED
 }
 
+enum ConsumptionSource {
+  DOMESTIC
+  OVERSEAS
+}
+
+enum ConsumptionSyncStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
 model User {
   id             String          @id @default(cuid())
   email          String          @unique
@@ -103,7 +114,6 @@ model Customer {
   ownerId        String?
   owner          User?                 @relation("CustomerOwner", fields: [ownerId], references: [id])
   issues         ServiceIssue[]
-  consumptions   ConsumptionDaily[]
   serviceRecords FeishuServiceRecord[]
   createdAt      DateTime              @default(now())
   updatedAt      DateTime              @updatedAt
@@ -224,17 +234,61 @@ model IssueActivity {
   @@index([issueId, createdAt])
 }
 
-model ConsumptionDaily {
-  id         String   @id @default(cuid())
-  customerId String
-  customer   Customer @relation(fields: [customerId], references: [id])
-  date       DateTime @db.Date
-  product    String
-  amount     Decimal  @db.Decimal(20, 4)
-  unit       String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model ConsumptionAccount {
+  id           String              @id @default(cuid())
+  source       ConsumptionSource
+  externalId   String
+  displayName  String
+  managerName  String?
+  consumptions ConsumptionDaily[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
-  @@unique([customerId, date, product])
+  @@unique([source, externalId])
+  @@index([displayName])
+}
+
+model ConsumptionDaily {
+  id        String             @id @default(cuid())
+  accountId String
+  account   ConsumptionAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  date      DateTime           @db.Date
+  product   String
+  amount    Decimal            @db.Decimal(20, 4)
+  unit      String             @default("CNY")
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@unique([accountId, date, product])
+  @@index([date, accountId])
   @@index([date, product])
+}
+
+model ConsumptionSourceDay {
+  id          String            @id @default(cuid())
+  source      ConsumptionSource
+  date        DateTime          @db.Date
+  recordCount Int
+  amount      Decimal           @db.Decimal(20, 4)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([source, date])
+  @@index([date])
+}
+
+model ConsumptionSyncRun {
+  id           String                @id @default(cuid())
+  status       ConsumptionSyncStatus
+  rangeStart   DateTime              @db.Date
+  rangeEnd     DateTime              @db.Date
+  readCount    Int                   @default(0)
+  accountCount Int                   @default(0)
+  rowCount     Int                   @default(0)
+  errorSummary String?               @db.Text
+  startedAt    DateTime              @default(now())
+  finishedAt   DateTime?
+  createdAt    DateTime              @default(now())
+
+  @@index([status, startedAt])
 }

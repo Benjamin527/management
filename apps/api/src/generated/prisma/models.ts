@@ -13,5 +13,8 @@ export type * from './models/FeishuServiceRecord';
 export type * from './models/ServiceSyncRun';
 export type * from './models/ServiceIssue';
 export type * from './models/IssueActivity';
+export type * from './models/ConsumptionAccount';
 export type * from './models/ConsumptionDaily';
+export type * from './models/ConsumptionSourceDay';
+export type * from './models/ConsumptionSyncRun';
 export type * from './commonInputTypes';

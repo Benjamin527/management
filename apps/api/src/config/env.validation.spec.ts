@@ -57,4 +57,37 @@ describe('validateEnv', () => {
       }),
     ).toThrow('FEISHU_APP_SECRET is required when Feishu sync is enabled');
   });
+
+  it('enables consumption sync only when a source URL is configured', () => {
+    const base = {
+      DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
+      JWT_SECRET: '12345678901234567890123456789012',
+    };
+    expect(validateEnv(base).CONSUMPTION_SYNC_ENABLED).toBe(false);
+
+    const result = validateEnv({
+      ...base,
+      CONSUMPTION_SOURCE_DATABASE_URL:
+        'mysql://reader:secret@db.example.com:3306/guance_crm_v2',
+      CONSUMPTION_SYNC_CRON: '0 13 * * *',
+    });
+
+    expect(result).toMatchObject({
+      CONSUMPTION_SYNC_ENABLED: true,
+      CONSUMPTION_SYNC_CRON: '0 13 * * *',
+    });
+  });
+
+  it('rejects a non-MySQL consumption source URL', () => {
+    expect(() =>
+      validateEnv({
+        DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
+        JWT_SECRET: '12345678901234567890123456789012',
+        CONSUMPTION_SOURCE_DATABASE_URL:
+          'postgres://db.example.com/guance_crm_v2',
+      }),
+    ).toThrow(
+      'CONSUMPTION_SOURCE_DATABASE_URL must be a MySQL connection string',
+    );
+  });
 });

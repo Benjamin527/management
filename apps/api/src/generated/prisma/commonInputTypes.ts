@@ -579,6 +579,31 @@ export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonNullableFilter<$PrismaModel>;
 };
 
+export type EnumConsumptionSourceFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ConsumptionSource
+    | Prisma.EnumConsumptionSourceFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSource[];
+  notIn?: $Enums.ConsumptionSource[];
+  not?:
+    | Prisma.NestedEnumConsumptionSourceFilter<$PrismaModel>
+    | $Enums.ConsumptionSource;
+};
+
+export type EnumConsumptionSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ConsumptionSource
+    | Prisma.EnumConsumptionSourceFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSource[];
+  notIn?: $Enums.ConsumptionSource[];
+  not?:
+    | Prisma.NestedEnumConsumptionSourceWithAggregatesFilter<$PrismaModel>
+    | $Enums.ConsumptionSource;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumConsumptionSourceFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumConsumptionSourceFilter<$PrismaModel>;
+};
+
 export type DecimalFilter<$PrismaModel = never> = {
   equals?:
     | runtime.Decimal
@@ -664,6 +689,33 @@ export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalFilter<$PrismaModel>;
   _min?: Prisma.NestedDecimalFilter<$PrismaModel>;
   _max?: Prisma.NestedDecimalFilter<$PrismaModel>;
+};
+
+export type EnumConsumptionSyncStatusFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ConsumptionSyncStatus
+    | Prisma.EnumConsumptionSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSyncStatus[];
+  notIn?: $Enums.ConsumptionSyncStatus[];
+  not?:
+    | Prisma.NestedEnumConsumptionSyncStatusFilter<$PrismaModel>
+    | $Enums.ConsumptionSyncStatus;
+};
+
+export type EnumConsumptionSyncStatusWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.ConsumptionSyncStatus
+    | Prisma.EnumConsumptionSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSyncStatus[];
+  notIn?: $Enums.ConsumptionSyncStatus[];
+  not?:
+    | Prisma.NestedEnumConsumptionSyncStatusWithAggregatesFilter<$PrismaModel>
+    | $Enums.ConsumptionSyncStatus;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumConsumptionSyncStatusFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumConsumptionSyncStatusFilter<$PrismaModel>;
 };
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -1177,6 +1229,33 @@ export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
     | Prisma.JsonNullValueFilter;
 };
 
+export type NestedEnumConsumptionSourceFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ConsumptionSource
+    | Prisma.EnumConsumptionSourceFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSource[];
+  notIn?: $Enums.ConsumptionSource[];
+  not?:
+    | Prisma.NestedEnumConsumptionSourceFilter<$PrismaModel>
+    | $Enums.ConsumptionSource;
+};
+
+export type NestedEnumConsumptionSourceWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.ConsumptionSource
+    | Prisma.EnumConsumptionSourceFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSource[];
+  notIn?: $Enums.ConsumptionSource[];
+  not?:
+    | Prisma.NestedEnumConsumptionSourceWithAggregatesFilter<$PrismaModel>
+    | $Enums.ConsumptionSource;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumConsumptionSourceFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumConsumptionSourceFilter<$PrismaModel>;
+};
+
 export type NestedDecimalFilter<$PrismaModel = never> = {
   equals?:
     | runtime.Decimal
@@ -1262,4 +1341,31 @@ export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalFilter<$PrismaModel>;
   _min?: Prisma.NestedDecimalFilter<$PrismaModel>;
   _max?: Prisma.NestedDecimalFilter<$PrismaModel>;
+};
+
+export type NestedEnumConsumptionSyncStatusFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.ConsumptionSyncStatus
+    | Prisma.EnumConsumptionSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSyncStatus[];
+  notIn?: $Enums.ConsumptionSyncStatus[];
+  not?:
+    | Prisma.NestedEnumConsumptionSyncStatusFilter<$PrismaModel>
+    | $Enums.ConsumptionSyncStatus;
+};
+
+export type NestedEnumConsumptionSyncStatusWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.ConsumptionSyncStatus
+    | Prisma.EnumConsumptionSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.ConsumptionSyncStatus[];
+  notIn?: $Enums.ConsumptionSyncStatus[];
+  not?:
+    | Prisma.NestedEnumConsumptionSyncStatusWithAggregatesFilter<$PrismaModel>
+    | $Enums.ConsumptionSyncStatus;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumConsumptionSyncStatusFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumConsumptionSyncStatusFilter<$PrismaModel>;
 };
