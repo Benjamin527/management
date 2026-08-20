@@ -69,6 +69,8 @@ describe('ConsumptionSourceClient', () => {
     ]);
     const firstCall = query.mock.calls[0] as unknown as [string, string[]];
     expect(firstCall[1]).toEqual(['2026-08-06', '2026-08-19']);
+    expect(firstCall[0]).toContain('MAX(customer_name) AS displayName');
+    expect(firstCall[0]).not.toContain('GROUP BY customer_id, customer_name');
   });
 
   it('reads source-day coverage independently from amount detail', async () => {

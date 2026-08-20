@@ -35,5 +35,8 @@ describe('DashboardService', () => {
       resolutionRate: 70,
       currentConsumption: null,
     });
+    expect(prisma.consumptionDaily.aggregate).toHaveBeenCalledWith({
+      _sum: { amount: true },
+    });
   });
 });

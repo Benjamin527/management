@@ -15,7 +15,6 @@ export class DashboardService {
 
   async summary() {
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const [
       customerCount,
       openIssueCount,
@@ -56,7 +55,6 @@ export class DashboardService {
         _count: { _all: true },
       }),
       this.prisma.consumptionDaily.aggregate({
-        where: { date: { gte: monthStart } },
         _sum: { amount: true },
       }),
       this.prisma.user.findMany({

@@ -40,14 +40,14 @@ SELECT
 const domesticSql = `
 SELECT
   customer_id AS externalId,
-  customer_name AS displayName,
+  MAX(customer_name) AS displayName,
   MAX(tam_real_name) AS managerName,
   consume_time_of_day AS date,
   COALESCE(NULLIF(product_detail, ''), '未分类') AS product,
   CAST(SUM(origin_amount) AS CHAR) AS amount
 FROM daily_usage_details
 WHERE consume_time_of_day BETWEEN ? AND ?
-GROUP BY customer_id, customer_name, consume_time_of_day,
+GROUP BY customer_id, consume_time_of_day,
   COALESCE(NULLIF(product_detail, ''), '未分类')
 `;
 
