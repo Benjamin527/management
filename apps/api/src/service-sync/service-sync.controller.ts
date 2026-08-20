@@ -45,9 +45,10 @@ export class ServiceSyncController {
       input.mode === 'full-year'
         ? ServiceSyncMode.FULL_YEAR
         : ServiceSyncMode.RECENT;
-    void this.sync.run(mode, user.sub).catch((error: unknown) => {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Manual Feishu sync failed: ${message}`);
+    void this.sync.run(mode, user.sub).catch(() => {
+      this.logger.error(
+        'Manual Feishu sync failed; inspect the sanitized synchronization history',
+      );
     });
     return { accepted: true, mode: input.mode };
   }
