@@ -66,6 +66,24 @@ export class ServiceSyncService implements OnModuleInit {
     return this.config.get<boolean>('FEISHU_SYNC_ENABLED') === true;
   }
 
+  async getStatus() {
+    const [lastSuccessfulRun, lastRun] = await Promise.all([
+      this.prisma.serviceSyncRun.findFirst({
+        where: { status: ServiceSyncStatus.SUCCESS },
+        orderBy: { finishedAt: 'desc' },
+      }),
+      this.prisma.serviceSyncRun.findFirst({ orderBy: { startedAt: 'desc' } }),
+    ]);
+    return {
+      enabled: this.enabled,
+      running: this.running,
+      lastSuccessfulRun,
+      lastRun,
+      nextScheduledAt: this.enabled ? this.nextScheduledAt() : null,
+      sourceUrl: this.config.get<string>('FEISHU_SERVICE_BASE_URL') ?? '',
+    };
+  }
+
   @Cron(process.env.FEISHU_SYNC_CRON || '0 2 * * *', {
     timeZone: 'Asia/Shanghai',
   })
@@ -249,5 +267,19 @@ export class ServiceSyncService implements OnModuleInit {
     return error instanceof Error
       ? error.message
       : 'Unknown synchronization error';
+  }
+
+  private nextScheduledAt() {
+    const offset = 8 * 60 * 60 * 1000;
+    const shifted = new Date(Date.now() + offset);
+    let next =
+      Date.UTC(
+        shifted.getUTCFullYear(),
+        shifted.getUTCMonth(),
+        shifted.getUTCDate(),
+        2,
+      ) - offset;
+    if (next <= Date.now()) next += 24 * 60 * 60 * 1000;
+    return new Date(next).toISOString();
   }
 }
