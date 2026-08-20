@@ -59,6 +59,27 @@ enum IssueActivityType {
   UPDATED
 }
 
+enum ServiceRecordStatus {
+  RESOLVED
+  CLOSED
+  IN_PROGRESS
+  WAITING_REPLY
+  ESCALATED
+  UNKNOWN
+  OTHER
+}
+
+enum ServiceSyncMode {
+  RECENT
+  FULL_YEAR
+}
+
+enum ServiceSyncStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
 model User {
   id             String          @id @default(cuid())
   email          String          @unique
@@ -74,21 +95,88 @@ model User {
 }
 
 model Customer {
-  id           String             @id @default(cuid())
-  name         String             @unique
-  industry     String?
-  level        String?
-  status       CustomerStatus     @default(ACTIVE)
-  ownerId      String?
-  owner        User?              @relation("CustomerOwner", fields: [ownerId], references: [id])
-  issues       ServiceIssue[]
-  consumptions ConsumptionDaily[]
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-  deletedAt    DateTime?
+  id             String                @id @default(cuid())
+  name           String                @unique
+  industry       String?
+  level          String?
+  status         CustomerStatus        @default(ACTIVE)
+  ownerId        String?
+  owner          User?                 @relation("CustomerOwner", fields: [ownerId], references: [id])
+  issues         ServiceIssue[]
+  consumptions   ConsumptionDaily[]
+  serviceRecords FeishuServiceRecord[]
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  deletedAt      DateTime?
 
   @@index([ownerId, status])
   @@index([deletedAt])
+}
+
+model FeishuServiceRecord {
+  id                     String              @id @default(cuid())
+  externalRecordId       String              @unique
+  serviceRecordNo        String?
+  startDate              DateTime
+  endDate                DateTime?
+  customerName           String
+  customerId             String?
+  customer               Customer?           @relation(fields: [customerId], references: [id])
+  questionerRole         String?
+  sourceType             String?
+  feedbackTypeRaw        String?
+  feedbackTypeNormalized String?
+  issueTypeRaw           String?
+  issueTypeNormalized    String?
+  deploymentType         String?
+  ticketId               String?
+  summary                String              @db.Text
+  conclusion             String?             @db.Text
+  satisfaction           Int?
+  sourceStatus           String?
+  normalizedStatus       ServiceRecordStatus
+  firstLineEngineer      String?
+  secondLineEngineer     String?
+  thirdLineEngineer      String?
+  keyIssue               Boolean             @default(false)
+  submittedByName        String?
+  submittedByOpenId      String?
+  submittedAt            DateTime?
+  rawFields              Json
+  sourceCreatedAt        DateTime?
+  sourceUpdatedAt        DateTime?
+  syncedAt               DateTime            @default(now())
+  deletedAt              DateTime?
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  @@index([startDate, deletedAt])
+  @@index([normalizedStatus, startDate])
+  @@index([customerId, startDate])
+  @@index([customerName, startDate])
+  @@index([issueTypeNormalized, startDate])
+  @@index([firstLineEngineer, startDate])
+}
+
+model ServiceSyncRun {
+  id            String            @id @default(cuid())
+  mode          ServiceSyncMode
+  status        ServiceSyncStatus
+  rangeStart    DateTime
+  rangeEnd      DateTime
+  readCount     Int               @default(0)
+  createdCount  Int               @default(0)
+  updatedCount  Int               @default(0)
+  deletedCount  Int               @default(0)
+  failedCount   Int               @default(0)
+  errorSummary  String?           @db.Text
+  requestedById String?
+  startedAt     DateTime          @default(now())
+  finishedAt    DateTime?
+  createdAt     DateTime          @default(now())
+
+  @@index([status, startedAt])
+  @@index([mode, startedAt])
 }
 
 model ServiceIssue {
