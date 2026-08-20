@@ -25,12 +25,22 @@ function tokenResponse(token = 'tenant-token', expire = 7200) {
   });
 }
 
-function recordsResponse(ids: string[], hasMore = false, pageToken?: string) {
+function recordsResponse(
+  ids: string[],
+  hasMore = false,
+  pageToken?: string,
+  startDates: Record<string, number | string> = {},
+) {
   return jsonResponse({
     code: 0,
     msg: 'ok',
     data: {
-      items: ids.map((record_id) => ({ record_id, fields: {} })),
+      items: ids.map((record_id) => ({
+        record_id,
+        fields: {
+          开始日期: startDates[record_id] ?? 1767196800000,
+        },
+      })),
       has_more: hasMore,
       page_token: pageToken,
     },
@@ -86,7 +96,7 @@ describe('FeishuClientService', () => {
     expect(tokenCalls).toHaveLength(1);
   });
 
-  it('searches every page without a view_id and with a date filter', async () => {
+  it('searches every page without inheriting a view or unsupported API filter', async () => {
     fetchMock
       .mockResolvedValueOnce(tokenResponse())
       .mockResolvedValueOnce(recordsResponse(['r1'], true, 'next'))
@@ -102,23 +112,33 @@ describe('FeishuClientService', () => {
     expect(fetchUrl(fetchMock.mock.calls[2][0])).toContain('page_token=next');
     const request = fetchMock.mock.calls[1][1] as RequestInit;
     const body: unknown = JSON.parse(stringBody(request));
-    expect(body).toEqual({
-      filter: {
-        conjunction: 'and',
-        conditions: [
-          {
-            field_name: '开始日期',
-            operator: 'isGreaterEqual',
-            value: ['1767196800000'],
-          },
-          {
-            field_name: '开始日期',
-            operator: 'isLess',
-            value: ['1798732800000'],
-          },
-        ],
-      },
-    });
+    expect(body).toEqual({});
+  });
+
+  it('keeps only records whose start date is inside the requested range', async () => {
+    const start = new Date('2026-01-01T00:00:00+08:00');
+    const end = new Date('2026-01-02T00:00:00+08:00');
+    fetchMock.mockResolvedValueOnce(tokenResponse()).mockResolvedValueOnce(
+      recordsResponse(
+        ['before', 'at-start', 'inside', 'at-end', 'invalid'],
+        false,
+        undefined,
+        {
+          before: start.getTime() - 1,
+          'at-start': start.getTime(),
+          inside: String(start.getTime() + 60_000),
+          'at-end': end.getTime(),
+          invalid: 'not-a-date',
+        },
+      ),
+    );
+
+    const records = await service.searchRecords({ start, end });
+
+    expect(records.map((item) => item.record_id)).toEqual([
+      'at-start',
+      'inside',
+    ]);
   });
 
   it('retries a rate-limited request and then succeeds', async () => {

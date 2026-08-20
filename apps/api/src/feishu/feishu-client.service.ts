@@ -66,8 +66,12 @@ export class FeishuClientService {
     let pageToken: string | undefined;
 
     do {
-      const page = await this.searchPage(range, pageToken);
-      records.push(...(page.items ?? []));
+      const page = await this.searchPage(pageToken);
+      records.push(
+        ...(page.items ?? []).filter((record) =>
+          this.isWithinRange(record.fields['开始日期'], range),
+        ),
+      );
       pageToken = page.has_more ? page.page_token : undefined;
       if (page.has_more && !pageToken) {
         throw new Error(
@@ -79,25 +83,19 @@ export class FeishuClientService {
     return records;
   }
 
-  private async searchPage(
-    range: RecordSearchRange,
-    pageToken?: string,
-  ): Promise<RecordPage> {
+  private async searchPage(pageToken?: string): Promise<RecordPage> {
     try {
-      return await this.requestRecordPage(range, pageToken);
+      return await this.requestRecordPage(pageToken);
     } catch (error) {
       if (!(error instanceof FeishuApiError) || !error.authenticationFailure) {
         throw error;
       }
       this.token = null;
-      return this.requestRecordPage(range, pageToken);
+      return this.requestRecordPage(pageToken);
     }
   }
 
-  private async requestRecordPage(
-    range: RecordSearchRange,
-    pageToken?: string,
-  ): Promise<RecordPage> {
+  private async requestRecordPage(pageToken?: string): Promise<RecordPage> {
     const token = await this.getTenantToken();
     const appToken = encodeURIComponent(
       this.config.getOrThrow<string>('FEISHU_BASE_APP_TOKEN'),
@@ -117,27 +115,29 @@ export class FeishuClientService {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          filter: {
-            conjunction: 'and',
-            conditions: [
-              {
-                field_name: '开始日期',
-                operator: 'isGreaterEqual',
-                value: [String(range.start.getTime())],
-              },
-              {
-                field_name: '开始日期',
-                operator: 'isLess',
-                value: [String(range.end.getTime())],
-              },
-            ],
-          },
-        }),
+        body: JSON.stringify({}),
       },
       'record search',
     );
     return response.data ?? {};
+  }
+
+  private isWithinRange(value: unknown, range: RecordSearchRange) {
+    let timestamp: number;
+    if (typeof value === 'number') {
+      timestamp = value;
+    } else if (typeof value === 'string' && value.trim()) {
+      const numeric = Number(value);
+      timestamp = Number.isFinite(numeric) ? numeric : Date.parse(value);
+    } else {
+      return false;
+    }
+
+    return (
+      Number.isFinite(timestamp) &&
+      timestamp >= range.start.getTime() &&
+      timestamp < range.end.getTime()
+    );
   }
 
   private async getTenantToken(): Promise<string> {
