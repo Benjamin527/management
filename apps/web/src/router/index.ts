@@ -4,9 +4,9 @@ import AppLayout from '../layouts/AppLayout.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import CustomersView from '../views/CustomersView.vue'
-import IssuesView from '../views/IssuesView.vue'
 import ConsumptionView from '../views/ConsumptionView.vue'
 import ServiceAnalysisView from '../views/ServiceAnalysisView.vue'
+import ServiceRecordsView from '../views/ServiceRecordsView.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -16,9 +16,9 @@ export const router = createRouter({
       path: '/', component: AppLayout, redirect: '/dashboard', children: [
         { path: 'dashboard', component: DashboardView },
         { path: 'customers', component: CustomersView },
-        { path: 'issues', component: IssuesView },
+        { path: 'issues', redirect: (to) => ({ path: '/service-records', query: to.query }) },
         { path: 'service-analysis', component: ServiceAnalysisView },
-        { path: 'service-records', component: IssuesView },
+        { path: 'service-records', component: ServiceRecordsView },
         { path: 'consumption', component: ConsumptionView },
       ],
     },

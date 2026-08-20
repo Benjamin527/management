@@ -1,70 +1,39 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import DashboardView from '../src/views/DashboardView.vue'
-import IssuesView from '../src/views/IssuesView.vue'
 
-const { listIssues, createIssue, listCustomers, getDashboardSummary } = vi.hoisted(() => ({
-  listIssues: vi.fn(), createIssue: vi.fn(), listCustomers: vi.fn(), getDashboardSummary: vi.fn(),
+const { getDashboardSummary, getServiceSummary, listServiceRecords } = vi.hoisted(() => ({
+  getDashboardSummary: vi.fn(), getServiceSummary: vi.fn(), listServiceRecords: vi.fn(),
 }))
-vi.mock('../src/api/issues', () => ({ listIssues, createIssue }))
-vi.mock('../src/api/customers', () => ({ listCustomers }))
 vi.mock('../src/api/dashboard', () => ({ getDashboardSummary }))
+vi.mock('../src/api/serviceAnalysis', () => ({ getServiceSummary }))
+vi.mock('../src/api/serviceRecords', () => ({ listServiceRecords }))
 
-const now = new Date()
-const issues = [
-  { id: 'i1', serviceNo: '5001', customerId: 'c1', customer: { id: 'c1', name: '太保' }, title: '待受理问题', description: '详情', channel: 'FEISHU', priority: 'HIGH', status: 'PENDING', assignee: null, slaDueAt: new Date(now.getTime() + 3600000).toISOString(), createdAt: now.toISOString(), updatedAt: now.toISOString() },
-  { id: 'i2', serviceNo: '5002', customerId: 'c1', customer: { id: 'c1', name: '太保' }, title: '已经超时的问题', description: '详情', channel: 'PHONE', priority: 'CRITICAL', status: 'IN_PROGRESS', assignee: { id: 'u1', name: '王雨轩' }, slaDueAt: new Date(now.getTime() - 3600000).toISOString(), createdAt: now.toISOString(), updatedAt: now.toISOString() },
-]
-
-describe('issue actions', () => {
+describe('read-only service dashboard', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    listIssues.mockResolvedValue(issues)
-    createIssue.mockResolvedValue(issues[0])
-    listCustomers.mockResolvedValue({ items: [{ id: 'c1', name: '太保' }], page: 1, pageSize: 100, total: 1 })
     getDashboardSummary.mockResolvedValue({
-      kpis: { customerCount: 1, openIssueCount: 2, overdueIssueCount: 1, resolutionRate: 50, averageFirstResponseMinutes: 18, currentConsumption: 100, consumptionChangeRate: null },
-      issueStatusDistribution: [{ status: 'PENDING', count: 1 }], riskCustomers: [],
+      kpis: { customerCount: 176, openIssueCount: 0, overdueIssueCount: 0, resolutionRate: 0, averageFirstResponseMinutes: null, currentConsumption: 100, consumptionChangeRate: null },
+      issueStatusDistribution: [], riskCustomers: [],
+    })
+    getServiceSummary.mockResolvedValue({
+      total: 4075, waitingReply: 104, inProgress: 321, escalated: 588, bugCount: 410, bugRate: 10.06,
+      resolvedOrClosedRate: 72.98, customerCount: 176, freshness: { lastSyncedAt: null, dataThrough: '2026-08-20T00:00:00.000Z' },
+      quality: { firstLineEngineer: { populated: 1973, total: 4075, rate: 48.42 }, satisfaction: { populated: 35, total: 4075, rate: .86 }, ticketId: { populated: 449, total: 4075, rate: 11.02 }, keyIssue: { populated: 30, total: 4075, rate: .74 }, supportsPreciseSla: false },
+    })
+    listServiceRecords.mockResolvedValue({
+      items: [{ id: 'r1', serviceRecordNo: '4096', customerName: '太保', summary: '告警通知对象调整', normalizedStatus: 'ESCALATED', sourceType: '钉钉', startDate: '2026-08-20T00:00:00.000Z', firstLineEngineer: '王雨轩' }],
+      page: 1, pageSize: 6, total: 4075,
     })
   })
 
-  it('creates an issue from the queue and refreshes it', async () => {
-    const wrapper = mount(IssuesView)
-    await flushPromises()
-    await wrapper.get('[data-action="new-issue"]').trigger('click')
-    await flushPromises()
-    expect(wrapper.text()).toContain('登记服务问题')
-
-    await wrapper.get('select[name="customerId"]').setValue('c1')
-    await wrapper.get('input[name="serviceNo"]').setValue('5100')
-    await wrapper.get('input[name="title"]').setValue('告警未送达')
-    await wrapper.get('textarea[name="description"]').setValue('客户反馈没有收到告警消息')
-    await wrapper.get('[data-form="issue"]').trigger('submit')
+  it('shows the 2026 service mirror without local issue creation', async () => {
+    const wrapper = mount(DashboardView, { global: { stubs: { RouterLink: { template: '<a><slot /></a>' }, SyncStatusBar: true } } })
     await flushPromises()
 
-    expect(createIssue).toHaveBeenCalledWith(expect.objectContaining({ customerId: 'c1', serviceNo: '5100', title: '告警未送达' }))
-    expect(listIssues).toHaveBeenCalledTimes(2)
-    expect(wrapper.text()).toContain('服务问题已进入队列')
-  })
-
-  it('filters actual queue data for pending and overdue issues', async () => {
-    const wrapper = mount(IssuesView)
-    await flushPromises()
-    await wrapper.get('[data-filter="pending"]').trigger('click')
-    expect(wrapper.text()).toContain('待受理问题')
-    expect(wrapper.text()).not.toContain('已经超时的问题')
-
-    await wrapper.get('[data-filter="overdue"]').trigger('click')
-    expect(wrapper.text()).not.toContain('待受理问题')
-    expect(wrapper.text()).toContain('已经超时的问题')
-  })
-
-  it('uses the same working issue dialog from the dashboard', async () => {
-    const wrapper = mount(DashboardView, { global: { stubs: { RouterLink: { template: '<a><slot /></a>' } } } })
-    await flushPromises()
-    await wrapper.get('[data-action="new-issue"]').trigger('click')
-    await flushPromises()
-    expect(wrapper.text()).toContain('登记服务问题')
-    expect(listCustomers).toHaveBeenCalled()
+    expect(wrapper.text()).not.toContain('新建服务问题')
+    expect(wrapper.text()).toContain('查看服务记录')
+    expect(wrapper.text()).toContain('告警通知对象调整')
+    expect(listServiceRecords).toHaveBeenCalledWith({ page: 1, pageSize: 6 })
   })
 })
