@@ -12,6 +12,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ConsumptionModule } from './consumption/consumption.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServiceSyncModule } from './service-sync/service-sync.module';
+import { ServiceAnalysisModule } from './service-analysis/service-analysis.module';
+import { ServiceRecordsModule } from './service-records/service-records.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { ServiceSyncModule } from './service-sync/service-sync.module';
     DashboardModule,
     ConsumptionModule,
     ServiceSyncModule,
+    ServiceAnalysisModule,
+    ServiceRecordsModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
