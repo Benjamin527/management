@@ -1,0 +1,18 @@
+[Unit]
+Description=B2B After-Sales Management API
+After=network.target mysql.service
+Requires=mysql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/after-sales-management
+EnvironmentFile=/opt/after-sales-management/.env
+ExecStart=/opt/node-v22.18.0-linux-x64/bin/node apps/api/dist/src/main.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

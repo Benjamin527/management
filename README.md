@@ -62,6 +62,17 @@ docker compose exec api npm run prisma:seed -w apps/api
 docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --build
 ```
 
+如果服务器无法稳定访问 Docker Hub，可使用原生部署：安装 Node.js 22.18 到 `/opt/node-v22.18.0-linux-x64`，使用 `deploy/after-sales-api.service` 托管 API，并将 `deploy/nginx-native.conf` 安装为 Nginx 站点配置。随后执行：
+
+```bash
+npm ci
+DATABASE_URL=mysql://build:build@127.0.0.1:3306/after_sales npm run prisma:generate -w apps/api
+npm run build
+npm run prisma:migrate -w apps/api
+npm run prisma:seed -w apps/api
+systemctl enable --now after-sales-api nginx
+```
+
 查看日志和停止：
 
 ```bash
