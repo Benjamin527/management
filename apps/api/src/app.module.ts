@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { CustomersModule } from './customers/customers.module';
 import { IssuesModule } from './issues/issues.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ConsumptionModule } from './consumption/consumption.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CustomersModule,
     IssuesModule,
     DashboardModule,
+    ConsumptionModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
