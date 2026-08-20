@@ -83,6 +83,14 @@ describe('service analysis aggregation', () => {
     });
   });
 
+  it('includes third-line escalation counts in engineer workload', () => {
+    expect(buildDistribution(records, 'engineer')).toContainEqual({
+      key: '工程师甲',
+      count: 6,
+      thirdLineEscalated: 1,
+    });
+  });
+
   it('queries only active records inside 2026', async () => {
     const findMany = jest.fn().mockResolvedValue(records);
     const service = new ServiceAnalysisService({

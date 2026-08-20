@@ -31,7 +31,7 @@ export interface ServiceTrendMonth {
   statuses: Record<ServiceRecordStatus, number>
 }
 
-export interface ServiceDistributionItem { key: string; count: number }
+export interface ServiceDistributionItem { key: string; count: number; thirdLineEscalated?: number }
 
 export interface ServiceCustomerRanking {
   customerName: string

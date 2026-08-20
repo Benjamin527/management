@@ -202,6 +202,16 @@ export function buildDistribution(
   const rows = [...counts.entries()]
     .map(([key, count]) => ({ key, count }))
     .sort((left, right) => right.count - left.count);
+  if (dimension === 'engineer') {
+    return rows.map((row) => ({
+      ...row,
+      thirdLineEscalated: records.filter(
+        (record) =>
+          (record.firstLineEngineer || '未填写') === row.key &&
+          Boolean(record.thirdLineEngineer),
+      ).length,
+    }));
+  }
   if (dimension !== 'issueType' || rows.length <= 10) return rows;
   return [
     ...rows.slice(0, 10),
