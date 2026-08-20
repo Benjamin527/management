@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import CustomersView from '../views/CustomersView.vue'
 import IssuesView from '../views/IssuesView.vue'
+import ConsumptionView from '../views/ConsumptionView.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -15,6 +16,7 @@ export const router = createRouter({
         { path: 'dashboard', component: DashboardView },
         { path: 'customers', component: CustomersView },
         { path: 'issues', component: IssuesView },
+        { path: 'consumption', component: ConsumptionView },
       ],
     },
   ],

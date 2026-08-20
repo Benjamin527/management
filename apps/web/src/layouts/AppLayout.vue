@@ -6,7 +6,7 @@ import { useAuthStore } from '../stores/auth'
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
-const titles: Record<string, string> = { '/dashboard': '服务总览', '/customers': '客户中心', '/issues': '服务问题' }
+const titles: Record<string, string> = { '/dashboard': '服务总览', '/customers': '客户中心', '/issues': '服务问题', '/consumption': '消费分析' }
 const title = computed(() => titles[route.path] || '售后运营')
 async function logout() { await auth.logout(); await router.push('/login') }
 </script>
@@ -20,7 +20,7 @@ async function logout() { await auth.logout(); await router.push('/login') }
         <RouterLink to="/dashboard"><span>⌁</span>服务总览</RouterLink>
         <RouterLink to="/customers"><span>◎</span>客户中心</RouterLink>
         <RouterLink to="/issues"><span>◇</span>服务问题</RouterLink>
-        <button disabled><span>↗</span>消费分析<em>即将开放</em></button>
+        <RouterLink to="/consumption"><span>↗</span>消费分析</RouterLink>
         <button disabled><span>∷</span>团队效能<em>即将开放</em></button>
       </nav>
       <div class="rail-foot"><span class="online-dot"></span><div><strong>{{ auth.user?.name || auth.user?.email }}</strong><small>{{ auth.user?.role }}</small></div><button @click="logout" title="退出登录">↪</button></div>
