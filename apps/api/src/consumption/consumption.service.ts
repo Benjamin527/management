@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import {
   analyzeConsumption,
   consumptionPeriodStart,
-  type ConsumptionRow,
 } from './consumption-analysis';
 import { ConsumptionQueryDto } from './dto/consumption-query.dto';
 
@@ -31,6 +30,6 @@ export class ConsumptionService {
       },
       orderBy: { date: 'asc' },
     });
-    return analyzeConsumption(rows as ConsumptionRow[], { days, now });
+    return analyzeConsumption(rows, { days, now });
   }
 }

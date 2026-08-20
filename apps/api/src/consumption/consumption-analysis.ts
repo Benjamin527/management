@@ -88,7 +88,10 @@ export function analyzeConsumption(
           ? key
           : aggregate.lastActiveDate;
       totalsByDate.set(key, (totalsByDate.get(key) ?? 0) + amount);
-      const product = products.get(row.product) ?? { amount: 0, unit: row.unit };
+      const product = products.get(row.product) ?? {
+        amount: 0,
+        unit: row.unit,
+      };
       product.amount += amount;
       products.set(row.product, product);
       if (row.unit) currentUnits.add(row.unit);
@@ -131,19 +134,31 @@ export function analyzeConsumption(
         (customer.amount === 0 ||
           (customer.lastActiveDate && customer.lastActiveDate < silentCutoff))
       ) {
-        return { ...base, type: 'SILENT' as const, reason: '最近 7 天无消费记录' };
+        return {
+          ...base,
+          type: 'SILENT' as const,
+          reason: '最近 7 天无消费记录',
+        };
       }
       if (
         customer.previousAmount > 0 &&
         customer.amount < customer.previousAmount * 0.7
       ) {
-        return { ...base, type: 'DROP' as const, reason: '较上一周期下降超过 30%' };
+        return {
+          ...base,
+          type: 'DROP' as const,
+          reason: '较上一周期下降超过 30%',
+        };
       }
       if (
         customer.previousAmount > 0 &&
         customer.amount > customer.previousAmount * 1.5
       ) {
-        return { ...base, type: 'RISE' as const, reason: '较上一周期增长超过 50%' };
+        return {
+          ...base,
+          type: 'RISE' as const,
+          reason: '较上一周期增长超过 50%',
+        };
       }
       return null;
     })

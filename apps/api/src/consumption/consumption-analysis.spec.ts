@@ -30,11 +30,7 @@ describe('consumption analysis', () => {
 
   it('fills missing trend dates and calculates customer period change', () => {
     const result = analyzeConsumption(
-      [
-        row('2026-08-14', 50),
-        row('2026-08-19', 60),
-        row('2026-08-20', 90),
-      ],
+      [row('2026-08-14', 50), row('2026-08-19', 60), row('2026-08-20', 90)],
       { days: 7, now: new Date('2026-08-20T12:00:00.000Z') },
     );
 

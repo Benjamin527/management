@@ -2,8 +2,25 @@ import { ConsumptionService } from './consumption.service';
 
 describe('ConsumptionService', () => {
   it('queries the requested customer and product across current and previous periods', async () => {
+    type QueryArgs = {
+      where: { customerId?: string; product?: string };
+      include: {
+        customer: {
+          select: {
+            id: boolean;
+            name: boolean;
+            owner: { select: { name: boolean } };
+          };
+        };
+      };
+    };
+    let capturedQuery: QueryArgs | undefined;
+    const findMany = (args: QueryArgs) => {
+      capturedQuery = args;
+      return Promise.resolve([]);
+    };
     const prisma = {
-      consumptionDaily: { findMany: jest.fn().mockResolvedValue([]) },
+      consumptionDaily: { findMany },
     };
     const service = new ConsumptionService(prisma as never);
 
@@ -12,20 +29,22 @@ describe('ConsumptionService', () => {
       new Date('2026-08-20T12:00:00.000Z'),
     );
 
-    expect(prisma.consumptionDaily.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ customerId: 'c1', product: '日志' }),
-        include: {
-          customer: {
-            select: {
-              id: true,
-              name: true,
-              owner: { select: { name: true } },
-            },
-          },
+    expect(capturedQuery).toBeDefined();
+    if (!capturedQuery) throw new Error('Prisma query was not captured');
+    expect(capturedQuery.where).toMatchObject({
+      customerId: 'c1',
+      product: '日志',
+    });
+    expect(capturedQuery.include).toEqual({
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          owner: { select: { name: true } },
         },
-      }),
-    );
-    expect(result).toMatchObject({ periodDays: 30, trend: expect.any(Array) });
+      },
+    });
+    expect(result.periodDays).toBe(30);
+    expect(Array.isArray(result.trend)).toBe(true);
   });
 });
