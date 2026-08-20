@@ -7,6 +7,7 @@ import CustomersView from '../views/CustomersView.vue'
 import ConsumptionView from '../views/ConsumptionView.vue'
 import ServiceAnalysisView from '../views/ServiceAnalysisView.vue'
 import ServiceRecordsView from '../views/ServiceRecordsView.vue'
+import CustomerDetailView from '../views/CustomerDetailView.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -16,6 +17,7 @@ export const router = createRouter({
       path: '/', component: AppLayout, redirect: '/dashboard', children: [
         { path: 'dashboard', component: DashboardView },
         { path: 'customers', component: CustomersView },
+        { path: 'customers/:id', component: CustomerDetailView },
         { path: 'issues', redirect: (to) => ({ path: '/service-records', query: to.query }) },
         { path: 'service-analysis', component: ServiceAnalysisView },
         { path: 'service-records', component: ServiceRecordsView },

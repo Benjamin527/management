@@ -7,7 +7,7 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const titles: Record<string, string> = { '/dashboard': '服务总览', '/customers': '客户中心', '/issues': '服务问题', '/service-analysis': '服务分析', '/service-records': '服务记录', '/consumption': '消费分析' }
-const title = computed(() => titles[route.path] || '售后运营')
+const title = computed(() => route.path.startsWith('/customers/') ? '客户服务档案' : titles[route.path] || '售后运营')
 async function logout() { await auth.logout(); await router.push('/login') }
 </script>
 

@@ -1,5 +1,5 @@
 import { apiRequest } from './client'
-import type { Customer, CustomerDraft, CustomerListResponse, CustomerStatus } from './types'
+import type { Customer, CustomerDetail, CustomerDraft, CustomerListResponse, CustomerStatus } from './types'
 
 export function listCustomers(params: { keyword?: string; status?: CustomerStatus; page?: number; pageSize?: number } = {}) {
   const query = new URLSearchParams()
@@ -14,3 +14,5 @@ export function listCustomers(params: { keyword?: string; status?: CustomerStatu
 export function createCustomer(input: CustomerDraft) {
   return apiRequest<Customer>('/customers', { method: 'POST', body: JSON.stringify(input) })
 }
+
+export const getCustomer = (id: string) => apiRequest<CustomerDetail>(`/customers/${encodeURIComponent(id)}`)

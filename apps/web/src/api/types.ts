@@ -11,8 +11,20 @@ export interface Customer {
   status: CustomerStatus
   owner: { id: string; name: string } | null
   _count?: { issues: number }
+  service2026?: { total: number; open: number; lastServiceAt: string | null }
   createdAt: string
   updatedAt: string
+}
+
+export interface CustomerDetail extends Customer {
+  owner: { id: string; name: string; email?: string } | null
+  service2026: {
+    total: number
+    open: number
+    lastServiceAt: string | null
+    monthlyTrend: Array<{ month: string; count: number }>
+    topIssueTypes: Array<{ issueType: string; count: number }>
+  }
 }
 
 export interface CustomerDraft {

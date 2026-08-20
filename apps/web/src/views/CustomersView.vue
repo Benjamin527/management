@@ -68,9 +68,9 @@ onMounted(load)
       <div v-if="loading" class="table-state">正在读取客户档案…</div>
       <div v-else-if="error" class="table-state error-state"><strong>客户列表加载失败</strong><p>{{ error }}</p><button class="ghost-button" @click="load">重新加载</button></div>
       <div v-else-if="!customers.length" class="table-state"><strong>{{ keyword ? '没有匹配的客户' : '还没有客户档案' }}</strong><p>{{ keyword ? '换一个客户名称再试试。' : '点击“新建客户”建立第一份售后档案。' }}</p></div>
-      <div v-else class="customer-table">
-        <div class="table-head"><span>客户</span><span>负责人</span><span>客户级别</span><span>未解决问题</span><span>状态</span></div>
-        <div v-for="customer in customers" :key="customer.id" class="table-row"><div><strong>{{ customer.name }}</strong><small>{{ customer.industry || '未填写行业' }}</small></div><span>{{ customer.owner?.name || '未分配' }}</span><span>{{ customer.level || '未设置' }}</span><strong>{{ customer._count?.issues ?? 0 }}</strong><StatusBadge :status="statusLabels[customer.status]" /></div>
+      <div v-else class="customer-table customer-service-table">
+        <div class="table-head"><span>客户</span><span>负责人</span><span>2026 服务量</span><span>未闭环</span><span>最近服务</span><span>状态</span></div>
+        <RouterLink v-for="customer in customers" :key="customer.id" :to="`/customers/${customer.id}`" class="table-row"><div><strong>{{ customer.name }}</strong><small>{{ customer.industry || '未填写行业' }} · {{ customer.level || '未设置级别' }}</small></div><span>{{ customer.owner?.name || '未分配' }}</span><strong>{{ customer.service2026?.total ?? 0 }}</strong><strong :class="{ negative: (customer.service2026?.open ?? 0) > 0 }">{{ customer.service2026?.open ?? 0 }}</strong><span>{{ customer.service2026?.lastServiceAt?.slice(0, 10) || '—' }}</span><StatusBadge :status="statusLabels[customer.status]" /></RouterLink>
       </div>
     </article>
     <CustomerDialog :open="customerDialogOpen" @close="customerDialogOpen = false" @saved="customerSaved" />
@@ -78,3 +78,7 @@ onMounted(load)
     <AppToast :message="toast.message" :tone="toast.tone" />
   </section>
 </template>
+
+<style scoped>
+.customer-service-table .table-head,.customer-service-table .table-row{grid-template-columns:1.6fr 1fr .75fr .65fr .9fr .8fr}.customer-service-table .table-row:hover{background:#f7faf9}.customer-service-table .table-row>strong{font:700 11px ui-monospace,monospace}@media(max-width:680px){.customer-service-table{min-width:820px}}
+</style>
