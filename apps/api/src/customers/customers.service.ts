@@ -122,7 +122,6 @@ export class CustomersService {
           orderBy: { updatedAt: 'desc' },
           take: 10,
         },
-        consumptions: { orderBy: { date: 'desc' }, take: 30 },
       },
     });
     if (!customer) throw new NotFoundException('客户不存在');

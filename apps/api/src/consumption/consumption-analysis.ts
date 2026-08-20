@@ -1,39 +1,44 @@
+import { addUtcDays, dateKey } from './consumption-window';
+
+export type ConsumptionSourceFilter = 'ALL' | 'DOMESTIC' | 'OVERSEAS';
+type ConsumptionSource = Exclude<ConsumptionSourceFilter, 'ALL'>;
+
 export type ConsumptionRow = {
   date: Date;
   amount: number | string | { toString(): string };
   product: string;
   unit: string | null;
-  customer: {
+  account: {
     id: string;
-    name: string;
-    owner: { name: string } | null;
+    source: ConsumptionSource;
+    externalId: string;
+    displayName: string;
+    managerName: string | null;
   };
 };
 
-type CustomerAggregate = {
-  id: string;
-  name: string;
-  owner: string | null;
+export type ConsumptionCoverageRow = {
+  source: ConsumptionSource;
+  date: Date;
+  recordCount: number;
+  amount: number | string | { toString(): string };
+};
+
+type AccountAggregate = {
+  accountId: string;
+  externalId: string;
+  accountName: string;
+  source: ConsumptionSource;
+  managerName: string | null;
   amount: number;
-  previousAmount: number;
+  recent7Amount: number;
+  previous7Amount: number;
   products: Set<string>;
   lastActiveDate: string | null;
 };
 
-const dayMs = 86_400_000;
-
-function startOfUtcDay(value: Date) {
-  return new Date(
-    Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate()),
-  );
-}
-
-function addDays(value: Date, days: number) {
-  return new Date(value.getTime() + days * dayMs);
-}
-
-function dateKey(value: Date) {
-  return value.toISOString().slice(0, 10);
+function rounded(value: number) {
+  return Number(value.toFixed(4));
 }
 
 function changeRate(current: number, previous: number) {
@@ -41,99 +46,120 @@ function changeRate(current: number, previous: number) {
   return Number((((current - previous) / previous) * 100).toFixed(1));
 }
 
-function rounded(value: number) {
-  return Number(value.toFixed(4));
-}
-
-export function consumptionPeriodStart(days: number, now = new Date()) {
-  return addDays(startOfUtcDay(now), -(days * 2 - 1));
-}
-
 export function analyzeConsumption(
   rows: ConsumptionRow[],
-  options: { days: 7 | 30 | 60; now?: Date },
+  coverageRows: ConsumptionCoverageRow[],
+  options: {
+    source: ConsumptionSourceFilter;
+    rangeStart: Date;
+    rangeEnd: Date;
+    lastSyncedAt: Date | null;
+  },
 ) {
-  const now = options.now ?? new Date();
-  const today = startOfUtcDay(now);
-  const currentStart = addDays(today, -(options.days - 1));
-  const previousStart = addDays(currentStart, -options.days);
-  const currentStartKey = dateKey(currentStart);
-  const todayKey = dateKey(today);
-  const previousStartKey = dateKey(previousStart);
+  const rangeStartKey = dateKey(options.rangeStart);
+  const rangeEndKey = dateKey(options.rangeEnd);
+  const recentStartKey = dateKey(addUtcDays(options.rangeStart, 7));
+  const dates = Array.from({ length: 14 }, (_, index) =>
+    dateKey(addUtcDays(options.rangeStart, index)),
+  );
   const totalsByDate = new Map<string, number>();
-  const customers = new Map<string, CustomerAggregate>();
-  const products = new Map<string, { amount: number; unit: string | null }>();
-  const currentUnits = new Set<string>();
+  const accounts = new Map<string, AccountAggregate>();
+  const products = new Map<string, number>();
 
   for (const row of rows) {
     const key = dateKey(row.date);
-    if (key < previousStartKey || key > todayKey) continue;
+    if (key < rangeStartKey || key > rangeEndKey) continue;
     const amount = Number(row.amount);
     if (!Number.isFinite(amount)) continue;
-    const aggregate = customers.get(row.customer.id) ?? {
-      id: row.customer.id,
-      name: row.customer.name,
-      owner: row.customer.owner?.name ?? null,
+    const aggregate = accounts.get(row.account.id) ?? {
+      accountId: row.account.id,
+      externalId: row.account.externalId,
+      accountName: row.account.displayName,
+      source: row.account.source,
+      managerName: row.account.managerName,
       amount: 0,
-      previousAmount: 0,
+      recent7Amount: 0,
+      previous7Amount: 0,
       products: new Set<string>(),
       lastActiveDate: null,
     };
 
-    if (key >= currentStartKey) {
-      aggregate.amount += amount;
-      aggregate.products.add(row.product);
+    aggregate.amount += amount;
+    if (key >= recentStartKey) aggregate.recent7Amount += amount;
+    else aggregate.previous7Amount += amount;
+    aggregate.products.add(row.product);
+    if (amount !== 0) {
       aggregate.lastActiveDate =
         !aggregate.lastActiveDate || key > aggregate.lastActiveDate
           ? key
           : aggregate.lastActiveDate;
-      totalsByDate.set(key, (totalsByDate.get(key) ?? 0) + amount);
-      const product = products.get(row.product) ?? {
-        amount: 0,
-        unit: row.unit,
-      };
-      product.amount += amount;
-      products.set(row.product, product);
-      if (row.unit) currentUnits.add(row.unit);
-    } else {
-      aggregate.previousAmount += amount;
     }
-    customers.set(row.customer.id, aggregate);
+    accounts.set(row.account.id, aggregate);
+    totalsByDate.set(key, (totalsByDate.get(key) ?? 0) + amount);
+    products.set(row.product, (products.get(row.product) ?? 0) + amount);
   }
 
-  const trend = Array.from({ length: options.days }, (_, index) => {
-    const key = dateKey(addDays(currentStart, index));
-    return { date: key, amount: rounded(totalsByDate.get(key) ?? 0) };
-  });
-  const customerRanking = [...customers.values()]
-    .filter((customer) => customer.amount > 0)
-    .map((customer) => ({
-      customerId: customer.id,
-      customerName: customer.name,
-      owner: customer.owner,
-      amount: rounded(customer.amount),
-      previousAmount: rounded(customer.previousAmount),
-      changeRate: changeRate(customer.amount, customer.previousAmount),
-      products: [...customer.products].sort(),
-      lastActiveDate: customer.lastActiveDate,
+  const sourceCoverage = new Map<
+    string,
+    { domestic: boolean; overseas: boolean }
+  >();
+  for (const day of dates) {
+    sourceCoverage.set(day, { domestic: false, overseas: false });
+  }
+  for (const row of coverageRows) {
+    const key = dateKey(row.date);
+    const day = sourceCoverage.get(key);
+    if (!day) continue;
+    if (row.source === 'DOMESTIC') day.domestic = true;
+    if (row.source === 'OVERSEAS') day.overseas = true;
+  }
+  const coverage = dates.map((date) => ({
+    date,
+    ...(sourceCoverage.get(date) ?? { domestic: false, overseas: false }),
+  }));
+  const isAvailable = (day: (typeof coverage)[number]) => {
+    if (options.source === 'DOMESTIC') return day.domestic;
+    if (options.source === 'OVERSEAS') return day.overseas;
+    return day.domestic && day.overseas;
+  };
+  const availableDates = coverage.filter(isAvailable).map((day) => day.date);
+  const missingDates = coverage
+    .filter((day) => !isAvailable(day))
+    .map((day) => day.date);
+  const confidence = missingDates.length ? ('LOW' as const) : ('HIGH' as const);
+
+  const accountRanking = [...accounts.values()]
+    .filter((account) => account.amount !== 0)
+    .map((account) => ({
+      accountId: account.accountId,
+      externalId: account.externalId,
+      accountName: account.accountName,
+      source: account.source,
+      managerName: account.managerName,
+      amount: rounded(account.amount),
+      recent7Amount: rounded(account.recent7Amount),
+      previous7Amount: rounded(account.previous7Amount),
+      changeRate: changeRate(account.recent7Amount, account.previous7Amount),
+      products: [...account.products].sort(),
+      lastActiveDate: account.lastActiveDate,
     }))
-    .sort((a, b) => b.amount - a.amount);
-  const silentCutoff = dateKey(addDays(today, -6));
-  const anomalies = [...customers.values()]
-    .map((customer) => {
+    .sort((left, right) => right.amount - left.amount);
+
+  const anomalies = [...accounts.values()]
+    .map((account) => {
       const base = {
-        customerId: customer.id,
-        customerName: customer.name,
-        owner: customer.owner,
-        amount: rounded(customer.amount),
-        previousAmount: rounded(customer.previousAmount),
-        changeRate: changeRate(customer.amount, customer.previousAmount),
+        accountId: account.accountId,
+        externalId: account.externalId,
+        accountName: account.accountName,
+        source: account.source,
+        managerName: account.managerName,
+        amount: rounded(account.amount),
+        recent7Amount: rounded(account.recent7Amount),
+        previous7Amount: rounded(account.previous7Amount),
+        changeRate: changeRate(account.recent7Amount, account.previous7Amount),
+        confidence,
       };
-      if (
-        customer.previousAmount > 0 &&
-        (customer.amount === 0 ||
-          (customer.lastActiveDate && customer.lastActiveDate < silentCutoff))
-      ) {
+      if (account.previous7Amount > 0 && account.recent7Amount === 0) {
         return {
           ...base,
           type: 'SILENT' as const,
@@ -141,72 +167,90 @@ export function analyzeConsumption(
         };
       }
       if (
-        customer.previousAmount > 0 &&
-        customer.amount < customer.previousAmount * 0.7
+        account.previous7Amount > 0 &&
+        account.recent7Amount < account.previous7Amount * 0.7
       ) {
         return {
           ...base,
           type: 'DROP' as const,
-          reason: '较上一周期下降超过 30%',
+          reason: '较此前 7 天下降超过 30%',
         };
       }
       if (
-        customer.previousAmount > 0 &&
-        customer.amount > customer.previousAmount * 1.5
+        account.previous7Amount > 0 &&
+        account.recent7Amount > account.previous7Amount * 1.5
       ) {
         return {
           ...base,
           type: 'RISE' as const,
-          reason: '较上一周期增长超过 50%',
+          reason: '较此前 7 天增长超过 50%',
         };
       }
       return null;
     })
     .filter((item): item is NonNullable<typeof item> => item !== null)
-    .sort((a, b) => {
+    .sort((left, right) => {
       const order = { SILENT: 0, DROP: 1, RISE: 2 };
-      return order[a.type] - order[b.type];
+      return order[left.type] - order[right.type];
     });
-  const totalAmount = customerRanking.reduce(
-    (sum, customer) => sum + customer.amount,
-    0,
-  );
-  const previousAmount = [...customers.values()].reduce(
-    (sum, customer) => sum + customer.previousAmount,
-    0,
-  );
+
+  const recent7Amount = dates
+    .slice(7)
+    .reduce((sum, date) => sum + (totalsByDate.get(date) ?? 0), 0);
+  const previous7Amount = dates
+    .slice(0, 7)
+    .reduce((sum, date) => sum + (totalsByDate.get(date) ?? 0), 0);
+  const totalAmount = recent7Amount + previous7Amount;
 
   return {
-    periodDays: options.days,
-    range: { from: currentStartKey, to: todayKey },
-    unit:
-      currentUnits.size === 1
-        ? [...currentUnits][0]
-        : currentUnits.size > 1
-          ? '多单位'
-          : null,
+    periodDays: 14,
+    source: options.source,
+    range: { from: rangeStartKey, to: rangeEndKey },
+    dataThrough: rangeEndKey,
+    lastSyncedAt: options.lastSyncedAt?.toISOString() ?? null,
+    unit: 'CNY',
     kpis: {
       totalAmount: rounded(totalAmount),
-      previousAmount: rounded(previousAmount),
-      changeRate: changeRate(totalAmount, previousAmount),
-      activeCustomers: customerRanking.length,
-      anomalyCustomers: anomalies.length,
+      recent7Amount: rounded(recent7Amount),
+      previous7Amount: rounded(previous7Amount),
+      changeRate: changeRate(recent7Amount, previous7Amount),
+      activeAccounts: accountRanking.length,
+      anomalyAccounts: anomalies.length,
     },
-    trend,
+    trend: dates.map((date) => ({
+      date,
+      amount: rounded(totalsByDate.get(date) ?? 0),
+    })),
+    coverage,
+    availableDates,
+    missingDates,
     productDistribution: [...products.entries()]
-      .map(([product, value]) => ({
+      .map(([product, amount]) => ({
         product,
-        amount: rounded(value.amount),
-        unit: value.unit,
+        amount: rounded(amount),
+        unit: 'CNY',
         share: totalAmount
-          ? Number(((value.amount / totalAmount) * 100).toFixed(1))
+          ? Number(((amount / totalAmount) * 100).toFixed(1))
           : 0,
       }))
-      .sort((a, b) => b.amount - a.amount),
-    customerRanking,
+      .sort((left, right) => right.amount - left.amount),
+    accountRanking,
     anomalies,
     filters: {
-      products: [...products.keys()].sort(),
+      accounts: [...accounts.values()]
+        .map((account) => ({
+          id: account.accountId,
+          source: account.source,
+          externalId: account.externalId,
+          displayName: account.accountName,
+          managerName: account.managerName,
+        }))
+        .sort((left, right) =>
+          left.displayName.localeCompare(right.displayName, 'zh-CN'),
+        ),
+      products: [...products.keys()].sort((left, right) =>
+        left.localeCompare(right, 'zh-CN'),
+      ),
     },
   };
 }

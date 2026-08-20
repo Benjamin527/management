@@ -1,15 +1,13 @@
-import { Type } from 'class-transformer';
 import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class ConsumptionQueryDto {
   @IsOptional()
-  @Type(() => Number)
-  @IsIn([7, 30, 60])
-  days: 7 | 30 | 60 = 30;
+  @IsIn(['ALL', 'DOMESTIC', 'OVERSEAS'])
+  source: 'ALL' | 'DOMESTIC' | 'OVERSEAS' = 'ALL';
 
   @IsOptional()
   @IsString()
-  customerId?: string;
+  accountId?: string;
 
   @IsOptional()
   @IsString()
