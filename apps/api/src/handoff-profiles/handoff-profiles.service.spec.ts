@@ -159,7 +159,37 @@ describe('HandoffProfilesService', () => {
         linkedById: true,
       },
     });
-    expect(transaction.customer.findFirst).not.toHaveBeenCalled();
+    expect(transaction.customer.findFirst).toHaveBeenCalledWith({
+      where: { id: 'customer-1', deletedAt: null },
+      select: { id: true },
+    });
+    expect(transaction.feishuHandoffProfile.update).not.toHaveBeenCalled();
+  });
+
+  it('rejects an existing manual link when its target customer is soft-deleted', async () => {
+    const transaction = {
+      feishuHandoffProfile: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'profile-1',
+          customerId: 'customer-1',
+          linkSource: 'MANUAL',
+          linkedAt: new Date('2026-08-20T00:00:00.000Z'),
+          linkedById: 'original-admin',
+        }),
+        update: jest.fn(),
+      },
+      customer: { findFirst: jest.fn().mockResolvedValue(null) },
+    };
+    const prisma = prismaWithTransaction(transaction);
+    const service = new HandoffProfilesService(prisma as never, {} as never);
+
+    await expect(
+      service.link('profile-1', 'customer-1', 'admin-1'),
+    ).rejects.toBeInstanceOf(NotFoundException);
+    expect(transaction.customer.findFirst).toHaveBeenCalledWith({
+      where: { id: 'customer-1', deletedAt: null },
+      select: { id: true },
+    });
     expect(transaction.feishuHandoffProfile.update).not.toHaveBeenCalled();
   });
 
@@ -210,7 +240,7 @@ describe('HandoffProfilesService', () => {
         linkedById: 'admin-1',
       },
     });
-    expect(transaction.customer.findFirst).toHaveBeenCalledTimes(1);
+    expect(transaction.customer.findFirst).toHaveBeenCalledTimes(2);
   });
 
   it('turns a concurrent unique collision into the same safe conflict', async () => {

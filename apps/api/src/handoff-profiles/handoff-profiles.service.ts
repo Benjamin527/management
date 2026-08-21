@@ -50,18 +50,18 @@ export class HandoffProfilesService {
           },
         });
         if (!profile) throw new NotFoundException('交接档案不存在');
-        if (
-          profile.customerId === customerId &&
-          profile.linkSource === HandoffLinkSource.MANUAL
-        ) {
-          return profile;
-        }
 
         const customer = await transaction.customer.findFirst({
           where: { id: customerId, deletedAt: null },
           select: { id: true },
         });
         if (!customer) throw new NotFoundException('客户不存在');
+        if (
+          profile.customerId === customerId &&
+          profile.linkSource === HandoffLinkSource.MANUAL
+        ) {
+          return profile;
+        }
 
         const occupied = await transaction.feishuHandoffProfile.findFirst({
           where: {
