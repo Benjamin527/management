@@ -125,6 +125,22 @@ describe('handoff record mapper', () => {
     expect(mapped.profile.customFeatures).toBe('来自副本的功能');
   });
 
+  it('keeps both display text and URL from one deployment checklist cell', () => {
+    const mapped = mapHandoffRecord(
+      record({
+        客户名称: [{ text: '云鲸智能' }],
+        部署清单: [
+          { text: 'runbook', link: 'https://deploy.example/runbook' },
+          { text: 'second item', url: 'https://deploy.example/second' },
+        ],
+      }),
+    );
+
+    expect(mapped.deploymentChecklistSecret).toBe(
+      'runbook\nhttps://deploy.example/runbook\nsecond item\nhttps://deploy.example/second',
+    );
+  });
+
   it('maps empty optional fields to null', () => {
     const mapped = mapHandoffRecord(
       record({ 客户名称: [{ text: '云鲸智能' }] }),
@@ -166,15 +182,50 @@ describe('handoff record mapper', () => {
       valueText([
         ' first ',
         42,
-        { name: ' Name ', text: 'ignored', link: 'ignored', url: 'ignored' },
+        {
+          name: ' Name ',
+          text: 'ignored display',
+          link: ' https://example/preferred ',
+          url: 'https://example/ignored',
+        },
         { name: ' ', text: ' Text ' },
         { text: '', link: ' https://example/link ' },
         { link: null, url: ' https://example/url ' },
         null,
         {},
       ]),
-    ).toBe('first\n42\nName\nText\nhttps://example/link\nhttps://example/url');
+    ).toBe(
+      'first\n42\nName\nhttps://example/preferred\nText\nhttps://example/link\nhttps://example/url',
+    );
   });
+
+  it.each([
+    ['undefined', undefined, ''],
+    ['bigint', 9_876_543_210_123_456_789n, '9876543210123456789'],
+    ['Date', new Date('2025-07-21T00:00:00.000Z'), '2025-07-21'],
+    ['non-finite number', Number.POSITIVE_INFINITY, 'Infinity'],
+  ])(
+    'rejects %s raw field values without exposing their data',
+    (type, unsupportedValue, forbiddenText) => {
+      expect.assertions(forbiddenText ? 2 : 1);
+
+      try {
+        mapHandoffRecord(
+          record({
+            客户名称: [{ text: '云鲸智能' }],
+            非JSON字段: { nested: unsupportedValue },
+          }),
+        );
+      } catch (error) {
+        expect(error).toEqual(
+          new Error(`rawFieldsMasked contains unsupported JSON value: ${type}`),
+        );
+        if (forbiddenText) {
+          expect((error as Error).message).not.toContain(forbiddenText);
+        }
+      }
+    },
+  );
 
   it('rejects a record without a customer name', () => {
     expect(() => mapHandoffRecord(record({ 客户名称: [] }))).toThrow(
@@ -187,7 +238,7 @@ describe('handoff record mapper', () => {
       record(
         {
           客户名称: [{ text: '云鲸智能' }],
-          交接时间: Number.POSITIVE_INFINITY,
+          交接时间: 9_000_000_000_000_000,
         },
         {
           created_time: Number.NaN,

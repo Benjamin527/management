@@ -59,10 +59,20 @@ export function valueText(value: unknown): string {
   }
   if (value && typeof value === 'object') {
     const cell = value as Record<string, unknown>;
-    for (const key of ['name', 'text', 'link', 'url']) {
-      const text = valueText(cell[key]);
-      if (text) return text;
-    }
+    const displayText = firstValueText(cell, ['name', 'text']);
+    const linkText = firstValueText(cell, ['link', 'url']);
+    return [...new Set([displayText, linkText].filter(Boolean))].join('\n');
+  }
+  return '';
+}
+
+function firstValueText(
+  value: Record<string, unknown>,
+  keys: string[],
+): string {
+  for (const key of keys) {
+    const text = valueText(value[key]);
+    if (text) return text;
   }
   return '';
 }
@@ -158,14 +168,26 @@ function cloneJsonValue(value: unknown): JsonValue {
   if (
     value === null ||
     typeof value === 'string' ||
-    typeof value === 'number' ||
     typeof value === 'boolean'
   ) {
     return value;
   }
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value))
+      throw unsupportedJsonValue('non-finite number');
+    return value;
+  }
   if (Array.isArray(value)) return value.map(cloneJsonValue);
   if (value && typeof value === 'object') {
-    return cloneJsonObject(value as Record<string, unknown>);
+    if (value instanceof Date) throw unsupportedJsonValue('Date');
+    const prototype = Object.getPrototypeOf(value) as object | null;
+    if (prototype === Object.prototype || prototype === null) {
+      return cloneJsonObject(value as Record<string, unknown>);
+    }
   }
-  return null;
+  throw unsupportedJsonValue(typeof value);
+}
+
+function unsupportedJsonValue(type: string): Error {
+  return new Error(`rawFieldsMasked contains unsupported JSON value: ${type}`);
 }
