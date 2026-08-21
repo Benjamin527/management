@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, toRef, watch } from "vue";
 import {
   linkHandoffProfile,
   listUnmatchedHandoffProfiles,
 } from "../../api/handoffProfiles";
 import type { Customer, UnmatchedHandoffProfile } from "../../api/types";
+import { useOverlayLayer } from "../../composables/useOverlayLayer";
 
 const props = defineProps<{ open: boolean; customers: Customer[] }>();
 const emit = defineEmits<{ close: []; linked: [] }>();
+useOverlayLayer(toRef(props, "open"), () => emit("close"));
 const profiles = ref<UnmatchedHandoffProfile[]>([]);
 const selections = ref<Record<string, string>>({});
 const loading = ref(false);
@@ -54,75 +56,77 @@ watch(
 </script>
 
 <template>
-  <div
-    v-if="open"
-    class="dialog-backdrop"
-    role="presentation"
-    @mousedown.self="emit('close')"
-  >
-    <section
-      class="dialog-card unmatched-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="unmatched-title"
+  <Teleport to="body"
+    ><div
+      v-if="open"
+      class="dialog-backdrop"
+      role="presentation"
+      @mousedown.self="emit('close')"
     >
-      <header>
-        <div>
-          <small>UNMATCHED HANDOFF</small>
-          <h2 id="unmatched-title">待关联交接档案</h2>
-          <p>飞书客户名称未能唯一匹配时，在这里人工确认一次。</p>
-        </div>
-        <button class="icon-button" aria-label="关闭" @click="emit('close')">
-          ×
-        </button>
-      </header>
+      <section
+        class="dialog-card unmatched-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="unmatched-title"
+      >
+        <header>
+          <div>
+            <small>UNMATCHED HANDOFF</small>
+            <h2 id="unmatched-title">待关联交接档案</h2>
+            <p>飞书客户名称未能唯一匹配时，在这里人工确认一次。</p>
+          </div>
+          <button class="icon-button" aria-label="关闭" @click="emit('close')">
+            ×
+          </button>
+        </header>
 
-      <p v-if="error" class="inline-error" role="alert">{{ error }}</p>
-      <div v-if="loading" class="unmatched-state">正在读取未匹配档案…</div>
-      <div v-else-if="!profiles.length" class="unmatched-state">
-        <strong>未匹配队列已清空</strong>
-        <span>当前飞书交接档案都已进入客户档案。</span>
-      </div>
-      <div v-else class="unmatched-list">
-        <article v-for="profile in profiles" :key="profile.profileId">
-          <div class="unmatched-profile">
-            <span>{{ profile.deploymentType || "未填写部署方式" }}</span>
-            <strong>{{ profile.customerName }}</strong>
-            <small>
-              {{ profile.handoffPeople.join("、") || "未填写交接人" }} ·
-              {{ profile.handoffAt?.slice(0, 10) || "未填写交接日期" }}
-            </small>
-          </div>
-          <div class="unmatched-link">
-            <select
-              v-model="selections[profile.profileId]"
-              :data-link-customer="profile.profileId"
-            >
-              <option value="">选择系统客户</option>
-              <option
-                v-for="customer in customers"
-                :key="customer.id"
-                :value="customer.id"
+        <p v-if="error" class="inline-error" role="alert">{{ error }}</p>
+        <div v-if="loading" class="unmatched-state">正在读取未匹配档案…</div>
+        <div v-else-if="!profiles.length" class="unmatched-state">
+          <strong>未匹配队列已清空</strong>
+          <span>当前飞书交接档案都已进入客户档案。</span>
+        </div>
+        <div v-else class="unmatched-list">
+          <article v-for="profile in profiles" :key="profile.profileId">
+            <div class="unmatched-profile">
+              <span>{{ profile.deploymentType || "未填写部署方式" }}</span>
+              <strong>{{ profile.customerName }}</strong>
+              <small>
+                {{ profile.handoffPeople.join("、") || "未填写交接人" }} ·
+                {{ profile.handoffAt?.slice(0, 10) || "未填写交接日期" }}
+              </small>
+            </div>
+            <div class="unmatched-link">
+              <select
+                v-model="selections[profile.profileId]"
+                :data-link-customer="profile.profileId"
               >
-                {{ customer.name }}
-              </option>
-            </select>
-            <button
-              class="primary-button"
-              :data-link-profile="profile.profileId"
-              :disabled="
-                !selections[profile.profileId] ||
-                linkingId === profile.profileId
-              "
-              @click="link(profile)"
-            >
-              {{ linkingId === profile.profileId ? "关联中…" : "确认关联" }}
-            </button>
-          </div>
-        </article>
-      </div>
-    </section>
-  </div>
+                <option value="">选择系统客户</option>
+                <option
+                  v-for="customer in customers"
+                  :key="customer.id"
+                  :value="customer.id"
+                >
+                  {{ customer.name }}
+                </option>
+              </select>
+              <button
+                class="primary-button"
+                :data-link-profile="profile.profileId"
+                :disabled="
+                  !selections[profile.profileId] ||
+                  linkingId === profile.profileId
+                "
+                @click="link(profile)"
+              >
+                {{ linkingId === profile.profileId ? "关联中…" : "确认关联" }}
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div></Teleport
+  >
 </template>
 
 <style scoped>

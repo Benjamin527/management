@@ -406,6 +406,7 @@ onMounted(() => {
 <style scoped>
 .customer-page {
   min-height: 0;
+  overflow: hidden !important;
 }
 .handoff-pulse {
   display: grid;
@@ -481,7 +482,11 @@ onMounted(() => {
   gap: 8px;
 }
 .customer-book-panel {
+  flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   padding-bottom: 14px;
 }
 .customer-book-heading {
@@ -550,18 +555,19 @@ onMounted(() => {
     monospace;
 }
 .customer-book-scroll {
+  flex: 1;
   min-height: 0;
   overflow: auto;
+  overscroll-behavior: contain;
 }
 .customer-handoff-table {
   min-width: 1110px;
 }
 .customer-handoff-table .table-head,
 .customer-handoff-table .table-row {
-  grid-template-columns: minmax(190px, 1.45fr) 0.65fr 1fr 0.8fr minmax(
-      170px,
-      1.2fr
-    ) 0.65fr 0.7fr;
+  grid-template-columns:
+    minmax(190px, 1.45fr) 0.65fr 1fr 0.8fr minmax(170px, 1.2fr)
+    0.65fr 0.7fr;
 }
 .customer-handoff-table .table-head {
   position: sticky;
@@ -650,6 +656,17 @@ onMounted(() => {
   }
 }
 @media (max-width: 680px) {
+  .customer-page {
+    overflow: visible !important;
+  }
+  .customer-book-panel {
+    display: block;
+    overflow: visible;
+  }
+  .customer-book-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
   .handoff-pulse {
     grid-template-columns: 1fr 1fr;
   }

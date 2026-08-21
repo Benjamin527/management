@@ -24,3 +24,14 @@
 
 .dialog-card textarea{display:block;width:100%;margin-top:7px;padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:inherit;resize:vertical;outline:none}.dialog-card textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(21,151,134,.1)}.priority.priority-high,.priority.priority-critical{background:var(--red-soft);color:var(--red)}.priority.priority-critical{box-shadow:0 0 0 3px rgba(214,93,87,.1)}.priority.priority-medium{background:var(--amber-soft);color:#aa6b17}.dashboard-consumption{display:flex;flex-direction:column;align-items:flex-start;padding:7px 6px 3px}.dashboard-consumption>span{font-size:11px;color:var(--muted)}.dashboard-consumption>strong{font:700 34px/1 ui-monospace,monospace;letter-spacing:-.06em;margin:16px 0 9px}.dashboard-consumption>small{font-size:10px}.dashboard-consumption .ghost-button{margin:24px 0 0;padding:8px 12px}.dashboard-quiet{min-height:150px}.issue-dialog{width:min(650px,100%)}
 @media(max-width:680px){.issue-actions{align-items:stretch;flex-direction:column}.issue-actions>.primary-button{width:100%}.issue-actions .segmented{overflow-x:auto}.issue-actions .segmented button{white-space:nowrap;flex:1}}
+
+/* Viewport shell: desktop routes stay inside the application frame. */
+html,body,#app{height:100%;overflow:hidden}
+.app-shell{height:100dvh;min-height:0;overflow:hidden}
+.service-rail{height:100dvh}
+.app-shell>.app-main{height:100dvh;min-width:0;min-height:0;padding:0 38px;display:flex;flex-direction:column;overflow:hidden}
+.app-topbar{flex:0 0 108px}
+.app-main>.page-stack{flex:1;min-height:0;overflow:auto;padding-bottom:48px;overscroll-behavior:contain}
+.dialog-card{overscroll-behavior:contain}
+@media(max-width:980px){.app-shell>.app-main{padding:0 22px}.app-main>.page-stack{padding-bottom:34px}}
+@media(max-width:680px){html,body,#app{height:auto;overflow:visible}.app-shell{height:auto;min-height:100vh;overflow:visible}.app-shell>.app-main{height:auto;min-height:100vh;overflow:visible;padding:0 14px}.app-main>.page-stack{overflow:visible;padding-bottom:28px}.app-topbar{flex-basis:84px}}

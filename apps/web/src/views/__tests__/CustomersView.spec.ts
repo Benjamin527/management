@@ -61,7 +61,9 @@ async function mountView() {
     ],
   });
   await router.push("/customers");
-  const wrapper = mount(CustomersView, { global: { plugins: [router] } });
+  const wrapper = mount(CustomersView, {
+    global: { plugins: [router], stubs: { teleport: true } },
+  });
   await flushPromises();
   return wrapper;
 }
@@ -126,6 +128,22 @@ describe("CustomersView", () => {
     expect(wrapper.text()).toContain("SAAS");
     expect(wrapper.text()).toContain("苏桐桐");
     expect(wrapper.text()).toContain("仍有一个告警需求需要持续跟进");
+    expect(wrapper.get(".customer-page").classes()).toContain("customer-page");
+    expect(
+      wrapper
+        .get(".customer-book-panel")
+        .find(".customer-book-heading")
+        .exists(),
+    ).toBe(true);
+    expect(
+      wrapper.get(".customer-book-scroll").find(".customer-table").exists(),
+    ).toBe(true);
+    expect(
+      wrapper
+        .get(".customer-book-scroll")
+        .find(".customer-book-heading")
+        .exists(),
+    ).toBe(false);
   });
 
   it("reloads customers with handoff filters", async () => {
