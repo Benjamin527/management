@@ -10,6 +10,18 @@ export type IssueStatus =
 export type IssuePriority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 export type IssueChannel =
   "FEISHU" | "WECHAT" | "DINGTALK" | "PHONE" | "EMAIL" | "FORM" | "OTHER";
+export type HandoffState = "ALL" | "HANDED_OVER" | "PENDING";
+
+export interface HandoffSummary {
+  profileId: string;
+  deploymentType: string | null;
+  handoffPeople: string[];
+  handoffAt: string | null;
+  handoffStatus: string | null;
+  hasLegacyIssues: boolean;
+  legacyIssuePreview: string | null;
+  sourceUpdatedAt: string | null;
+}
 
 export interface Customer {
   id: string;
@@ -20,6 +32,7 @@ export interface Customer {
   owner: { id: string; name: string } | null;
   _count?: { issues: number };
   service2026?: { total: number; open: number; lastServiceAt: string | null };
+  handoffSummary?: HandoffSummary | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -48,6 +61,41 @@ export interface CustomerListResponse {
   page: number;
   pageSize: number;
   total: number;
+  handoffOverview: {
+    customerTotal: number;
+    handedOver: number;
+    pending: number;
+    unmatched: number;
+    legacyIssues: number;
+  };
+}
+
+export interface UnmatchedHandoffProfile {
+  profileId: string;
+  externalRecordId: string;
+  customerName: string;
+  deploymentType: string | null;
+  handoffPeople: string[];
+  handoffAt: string | null;
+  handoffStatus: string | null;
+  sourceUpdatedAt: string | null;
+}
+
+export interface HandoffSyncRun {
+  id?: string;
+  status?: "RUNNING" | "SUCCESS" | "FAILED";
+  readCount?: number;
+  startedAt?: string;
+  finishedAt: string | null;
+}
+
+export interface HandoffSyncStatus {
+  enabled: boolean;
+  running: boolean;
+  lastSuccessfulRun: HandoffSyncRun | null;
+  lastRun: HandoffSyncRun | null;
+  nextScheduledAt: string | null;
+  sourceUrl: string | null;
 }
 
 export interface ServiceIssue {
