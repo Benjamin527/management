@@ -138,8 +138,8 @@ model FeishuHandoffProfile {
   customer                  Customer?               @relation(fields: [customerId], references: [id])
   customerName              String
   normalizedCustomerName    String
-  deploymentType            String
-  deploymentChecklistMasked String                  @db.Text
+  deploymentType            String?
+  deploymentChecklistMasked String?                 @db.Text
   saasSites                 Json?
   featureUsage              Json?
   logCollection             Json?
@@ -154,8 +154,8 @@ model FeishuHandoffProfile {
   legacyIssues              String?                 @db.Text
   communicationChannel      String?                 @db.Text
   contactInfo               String?                 @db.Text
-  handoffAt                 DateTime
-  handoffStatus             String
+  handoffAt                 DateTime?
+  handoffStatus             String?
   rawFieldsMasked           Json
   sourceCreatedAt           DateTime?
   sourceUpdatedAt           DateTime?

@@ -286,8 +286,8 @@ export type FeishuHandoffProfileGroupByOutputType = {
   customerId: string | null;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType: string | null;
+  deploymentChecklistMasked: string | null;
   saasSites: runtime.JsonValue | null;
   featureUsage: runtime.JsonValue | null;
   logCollection: runtime.JsonValue | null;
@@ -302,8 +302,8 @@ export type FeishuHandoffProfileGroupByOutputType = {
   legacyIssues: string | null;
   communicationChannel: string | null;
   contactInfo: string | null;
-  handoffAt: Date;
-  handoffStatus: string;
+  handoffAt: Date | null;
+  handoffStatus: string | null;
   rawFieldsMasked: runtime.JsonValue;
   sourceCreatedAt: Date | null;
   sourceUpdatedAt: Date | null;
@@ -346,9 +346,10 @@ export type FeishuHandoffProfileWhereInput = {
     Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
   customerName?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
   normalizedCustomerName?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
-  deploymentType?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
+  deploymentType?:
+    Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
   deploymentChecklistMasked?:
-    Prisma.StringFilter<'FeishuHandoffProfile'> | string;
+    Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
   saasSites?: Prisma.JsonNullableFilter<'FeishuHandoffProfile'>;
   featureUsage?: Prisma.JsonNullableFilter<'FeishuHandoffProfile'>;
   logCollection?: Prisma.JsonNullableFilter<'FeishuHandoffProfile'>;
@@ -371,8 +372,13 @@ export type FeishuHandoffProfileWhereInput = {
     Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
   contactInfo?:
     Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
-  handoffAt?: Prisma.DateTimeFilter<'FeishuHandoffProfile'> | Date | string;
-  handoffStatus?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
+  handoffAt?:
+    | Prisma.DateTimeNullableFilter<'FeishuHandoffProfile'>
+    | Date
+    | string
+    | null;
+  handoffStatus?:
+    Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
   rawFieldsMasked?: Prisma.JsonFilter<'FeishuHandoffProfile'>;
   sourceCreatedAt?:
     | Prisma.DateTimeNullableFilter<'FeishuHandoffProfile'>
@@ -406,8 +412,8 @@ export type FeishuHandoffProfileOrderByWithRelationInput = {
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
-  deploymentType?: Prisma.SortOrder;
-  deploymentChecklistMasked?: Prisma.SortOrder;
+  deploymentType?: Prisma.SortOrderInput | Prisma.SortOrder;
+  deploymentChecklistMasked?: Prisma.SortOrderInput | Prisma.SortOrder;
   saasSites?: Prisma.SortOrderInput | Prisma.SortOrder;
   featureUsage?: Prisma.SortOrderInput | Prisma.SortOrder;
   logCollection?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -422,8 +428,8 @@ export type FeishuHandoffProfileOrderByWithRelationInput = {
   legacyIssues?: Prisma.SortOrderInput | Prisma.SortOrder;
   communicationChannel?: Prisma.SortOrderInput | Prisma.SortOrder;
   contactInfo?: Prisma.SortOrderInput | Prisma.SortOrder;
-  handoffAt?: Prisma.SortOrder;
-  handoffStatus?: Prisma.SortOrder;
+  handoffAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+  handoffStatus?: Prisma.SortOrderInput | Prisma.SortOrder;
   rawFieldsMasked?: Prisma.SortOrder;
   sourceCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   sourceUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -452,9 +458,10 @@ export type FeishuHandoffProfileWhereUniqueInput = Prisma.AtLeast<
     customerName?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
     normalizedCustomerName?:
       Prisma.StringFilter<'FeishuHandoffProfile'> | string;
-    deploymentType?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
+    deploymentType?:
+      Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
     deploymentChecklistMasked?:
-      Prisma.StringFilter<'FeishuHandoffProfile'> | string;
+      Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
     saasSites?: Prisma.JsonNullableFilter<'FeishuHandoffProfile'>;
     featureUsage?: Prisma.JsonNullableFilter<'FeishuHandoffProfile'>;
     logCollection?: Prisma.JsonNullableFilter<'FeishuHandoffProfile'>;
@@ -477,8 +484,13 @@ export type FeishuHandoffProfileWhereUniqueInput = Prisma.AtLeast<
       Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
     contactInfo?:
       Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
-    handoffAt?: Prisma.DateTimeFilter<'FeishuHandoffProfile'> | Date | string;
-    handoffStatus?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
+    handoffAt?:
+      | Prisma.DateTimeNullableFilter<'FeishuHandoffProfile'>
+      | Date
+      | string
+      | null;
+    handoffStatus?:
+      Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
     rawFieldsMasked?: Prisma.JsonFilter<'FeishuHandoffProfile'>;
     sourceCreatedAt?:
       | Prisma.DateTimeNullableFilter<'FeishuHandoffProfile'>
@@ -514,8 +526,8 @@ export type FeishuHandoffProfileOrderByWithAggregationInput = {
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
-  deploymentType?: Prisma.SortOrder;
-  deploymentChecklistMasked?: Prisma.SortOrder;
+  deploymentType?: Prisma.SortOrderInput | Prisma.SortOrder;
+  deploymentChecklistMasked?: Prisma.SortOrderInput | Prisma.SortOrder;
   saasSites?: Prisma.SortOrderInput | Prisma.SortOrder;
   featureUsage?: Prisma.SortOrderInput | Prisma.SortOrder;
   logCollection?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -530,8 +542,8 @@ export type FeishuHandoffProfileOrderByWithAggregationInput = {
   legacyIssues?: Prisma.SortOrderInput | Prisma.SortOrder;
   communicationChannel?: Prisma.SortOrderInput | Prisma.SortOrder;
   contactInfo?: Prisma.SortOrderInput | Prisma.SortOrder;
-  handoffAt?: Prisma.SortOrder;
-  handoffStatus?: Prisma.SortOrder;
+  handoffAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+  handoffStatus?: Prisma.SortOrderInput | Prisma.SortOrder;
   rawFieldsMasked?: Prisma.SortOrder;
   sourceCreatedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
   sourceUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -564,9 +576,13 @@ export type FeishuHandoffProfileScalarWhereWithAggregatesInput = {
   normalizedCustomerName?:
     Prisma.StringWithAggregatesFilter<'FeishuHandoffProfile'> | string;
   deploymentType?:
-    Prisma.StringWithAggregatesFilter<'FeishuHandoffProfile'> | string;
+    | Prisma.StringNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | string
+    | null;
   deploymentChecklistMasked?:
-    Prisma.StringWithAggregatesFilter<'FeishuHandoffProfile'> | string;
+    | Prisma.StringNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | string
+    | null;
   saasSites?: Prisma.JsonNullableWithAggregatesFilter<'FeishuHandoffProfile'>;
   featureUsage?: Prisma.JsonNullableWithAggregatesFilter<'FeishuHandoffProfile'>;
   logCollection?: Prisma.JsonNullableWithAggregatesFilter<'FeishuHandoffProfile'>;
@@ -606,9 +622,14 @@ export type FeishuHandoffProfileScalarWhereWithAggregatesInput = {
     | string
     | null;
   handoffAt?:
-    Prisma.DateTimeWithAggregatesFilter<'FeishuHandoffProfile'> | Date | string;
+    | Prisma.DateTimeNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | Date
+    | string
+    | null;
   handoffStatus?:
-    Prisma.StringWithAggregatesFilter<'FeishuHandoffProfile'> | string;
+    | Prisma.StringNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | string
+    | null;
   rawFieldsMasked?: Prisma.JsonWithAggregatesFilter<'FeishuHandoffProfile'>;
   sourceCreatedAt?:
     | Prisma.DateTimeNullableWithAggregatesFilter<'FeishuHandoffProfile'>
@@ -638,8 +659,8 @@ export type FeishuHandoffProfileCreateInput = {
   externalRecordId: string;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -654,8 +675,8 @@ export type FeishuHandoffProfileCreateInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -674,8 +695,8 @@ export type FeishuHandoffProfileUncheckedCreateInput = {
   customerId?: string | null;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -690,8 +711,8 @@ export type FeishuHandoffProfileUncheckedCreateInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -708,8 +729,10 @@ export type FeishuHandoffProfileUpdateInput = {
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -729,8 +752,10 @@ export type FeishuHandoffProfileUpdateInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -752,8 +777,10 @@ export type FeishuHandoffProfileUncheckedUpdateInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -773,8 +800,10 @@ export type FeishuHandoffProfileUncheckedUpdateInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -795,8 +824,8 @@ export type FeishuHandoffProfileCreateManyInput = {
   customerId?: string | null;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -811,8 +840,8 @@ export type FeishuHandoffProfileCreateManyInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -827,8 +856,10 @@ export type FeishuHandoffProfileUpdateManyMutationInput = {
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -848,8 +879,10 @@ export type FeishuHandoffProfileUpdateManyMutationInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -868,8 +901,10 @@ export type FeishuHandoffProfileUncheckedUpdateManyInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -889,8 +924,10 @@ export type FeishuHandoffProfileUncheckedUpdateManyInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1119,8 +1156,8 @@ export type FeishuHandoffProfileCreateWithoutCustomerInput = {
   externalRecordId: string;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1135,8 +1172,8 @@ export type FeishuHandoffProfileCreateWithoutCustomerInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -1153,8 +1190,8 @@ export type FeishuHandoffProfileUncheckedCreateWithoutCustomerInput = {
   externalRecordId: string;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1169,8 +1206,8 @@ export type FeishuHandoffProfileUncheckedCreateWithoutCustomerInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -1215,8 +1252,10 @@ export type FeishuHandoffProfileUpdateWithoutCustomerInput = {
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1236,8 +1275,10 @@ export type FeishuHandoffProfileUpdateWithoutCustomerInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1257,8 +1298,10 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutCustomerInput = {
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1278,8 +1321,10 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutCustomerInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1299,8 +1344,8 @@ export type FeishuHandoffProfileCreateWithoutSecretsInput = {
   externalRecordId: string;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1315,8 +1360,8 @@ export type FeishuHandoffProfileCreateWithoutSecretsInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -1334,8 +1379,8 @@ export type FeishuHandoffProfileUncheckedCreateWithoutSecretsInput = {
   customerId?: string | null;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1350,8 +1395,8 @@ export type FeishuHandoffProfileUncheckedCreateWithoutSecretsInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -1395,8 +1440,10 @@ export type FeishuHandoffProfileUpdateWithoutSecretsInput = {
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1416,8 +1463,10 @@ export type FeishuHandoffProfileUpdateWithoutSecretsInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1438,8 +1487,10 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutSecretsInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1459,8 +1510,10 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutSecretsInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1479,8 +1532,8 @@ export type FeishuHandoffProfileCreateWithoutAuditsInput = {
   externalRecordId: string;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1495,8 +1548,8 @@ export type FeishuHandoffProfileCreateWithoutAuditsInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -1514,8 +1567,8 @@ export type FeishuHandoffProfileUncheckedCreateWithoutAuditsInput = {
   customerId?: string | null;
   customerName: string;
   normalizedCustomerName: string;
-  deploymentType: string;
-  deploymentChecklistMasked: string;
+  deploymentType?: string | null;
+  deploymentChecklistMasked?: string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1530,8 +1583,8 @@ export type FeishuHandoffProfileUncheckedCreateWithoutAuditsInput = {
   legacyIssues?: string | null;
   communicationChannel?: string | null;
   contactInfo?: string | null;
-  handoffAt: Date | string;
-  handoffStatus: string;
+  handoffAt?: Date | string | null;
+  handoffStatus?: string | null;
   rawFieldsMasked: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?: Date | string | null;
   sourceUpdatedAt?: Date | string | null;
@@ -1575,8 +1628,10 @@ export type FeishuHandoffProfileUpdateWithoutAuditsInput = {
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1596,8 +1651,10 @@ export type FeishuHandoffProfileUpdateWithoutAuditsInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1618,8 +1675,10 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutAuditsInput = {
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentType?: Prisma.StringFieldUpdateOperationsInput | string;
-  deploymentChecklistMasked?: Prisma.StringFieldUpdateOperationsInput | string;
+  deploymentType?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  deploymentChecklistMasked?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   saasSites?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   featureUsage?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
   logCollection?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -1639,8 +1698,10 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutAuditsInput = {
   communicationChannel?:
     Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   contactInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-  handoffAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-  handoffStatus?: Prisma.StringFieldUpdateOperationsInput | string;
+  handoffAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  handoffStatus?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   rawFieldsMasked?: Prisma.JsonNullValueInput | runtime.InputJsonValue;
   sourceCreatedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1845,8 +1906,8 @@ export type $FeishuHandoffProfilePayload<
       customerId: string | null;
       customerName: string;
       normalizedCustomerName: string;
-      deploymentType: string;
-      deploymentChecklistMasked: string;
+      deploymentType: string | null;
+      deploymentChecklistMasked: string | null;
       saasSites: runtime.JsonValue | null;
       featureUsage: runtime.JsonValue | null;
       logCollection: runtime.JsonValue | null;
@@ -1861,8 +1922,8 @@ export type $FeishuHandoffProfilePayload<
       legacyIssues: string | null;
       communicationChannel: string | null;
       contactInfo: string | null;
-      handoffAt: Date;
-      handoffStatus: string;
+      handoffAt: Date | null;
+      handoffStatus: string | null;
       rawFieldsMasked: runtime.JsonValue;
       sourceCreatedAt: Date | null;
       sourceUpdatedAt: Date | null;
