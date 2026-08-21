@@ -1,5 +1,5 @@
 import { ConflictException, Logger } from '@nestjs/common';
-import { SCHEDULE_CRON_OPTIONS } from '@nestjs/schedule/dist/schedule.constants';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { createHandoffSecretProvider } from './handoff-sync.module';
 import { HandoffSyncService } from './handoff-sync.service';
 
@@ -26,6 +26,7 @@ function lastArgument(mock: jest.Mock) {
 function createPrismaMock() {
   const leaseState = {
     ownerId: null as string | null,
+    fence: 0,
     expiresAt: new Date(0),
   };
   const prisma = {
@@ -35,8 +36,28 @@ function createPrismaMock() {
         Promise.resolve({
           id: 1,
           ownerId: leaseState.ownerId,
+          fence: leaseState.fence,
           expiresAt: leaseState.expiresAt,
         }),
+      ),
+      findFirst: jest.fn().mockImplementation(
+        ({
+          where,
+        }: {
+          where: {
+            id: number;
+            ownerId: string;
+            fence: number;
+            expiresAt: { gt: Date };
+          };
+        }) =>
+          Promise.resolve(
+            leaseState.ownerId === where.ownerId &&
+              leaseState.fence === where.fence &&
+              leaseState.expiresAt > where.expiresAt.gt
+              ? { id: 1 }
+              : null,
+          ),
       ),
       updateMany: jest.fn().mockImplementation(
         ({
@@ -46,17 +67,26 @@ function createPrismaMock() {
           where: {
             id: number;
             ownerId?: string;
-            expiresAt?: { lte: Date };
+            fence?: number;
+            expiresAt?: { lte?: Date; gt?: Date };
           };
-          data: { ownerId: string | null; expiresAt: Date };
+          data: {
+            ownerId?: string | null;
+            fence?: { increment: number };
+            expiresAt: Date;
+          };
         }) => {
           const canAcquire =
-            where.expiresAt &&
+            where.expiresAt?.lte &&
             leaseState.expiresAt.getTime() <= where.expiresAt.lte.getTime();
           const ownsLease =
-            where.ownerId !== undefined && leaseState.ownerId === where.ownerId;
+            where.ownerId !== undefined &&
+            leaseState.ownerId === where.ownerId &&
+            (where.fence === undefined || leaseState.fence === where.fence) &&
+            (!where.expiresAt?.gt || leaseState.expiresAt > where.expiresAt.gt);
           if (!canAcquire && !ownsLease) return Promise.resolve({ count: 0 });
-          leaseState.ownerId = data.ownerId;
+          if (data.ownerId !== undefined) leaseState.ownerId = data.ownerId;
+          if (data.fence) leaseState.fence += data.fence.increment;
           leaseState.expiresAt = data.expiresAt;
           return Promise.resolve({ count: 1 });
         },
@@ -103,6 +133,7 @@ describe('HandoffSyncService', () => {
   let secrets: { encrypt: jest.Mock };
   let values: Record<string, unknown>;
   let config: { get: jest.Mock; getOrThrow: jest.Mock };
+  let scheduler: SchedulerRegistry;
   let service: HandoffSyncService;
 
   beforeEach(() => {
@@ -133,15 +164,20 @@ describe('HandoffSyncService', () => {
         return values[key];
       }),
     };
+    scheduler = new SchedulerRegistry();
     service = new HandoffSyncService(
       prisma as never,
       feishu as never,
       config as never,
       secrets as never,
+      scheduler,
     );
   });
 
   afterEach(() => {
+    if (scheduler.doesExist('cron', 'feishu-handoff-sync')) {
+      scheduler.deleteCronJob('feishu-handoff-sync');
+    }
     jest.useRealTimers();
     jest.restoreAllMocks();
   });
@@ -703,6 +739,7 @@ describe('HandoffSyncService', () => {
       { listAllRecords: jest.fn().mockResolvedValue([]) } as never,
       config as never,
       secrets as never,
+      new SchedulerRegistry(),
     );
 
     const attempts = await Promise.allSettled([
@@ -719,28 +756,167 @@ describe('HandoffSyncService', () => {
   });
 
   it('does not let a non-owner release another instance lease', async () => {
-    const ownerId = await service.acquireLease();
+    const lease = await service.acquireLease();
 
     await (
       service as unknown as {
-        releaseLease(candidateOwnerId: string): Promise<void>;
+        releaseLease(candidate: {
+          ownerId: string;
+          fence: number;
+        }): Promise<void>;
       }
-    ).releaseLease('not-the-owner');
+    ).releaseLease({ ownerId: 'not-the-owner', fence: lease.fence });
 
-    expect(prisma.leaseState.ownerId).toBe(ownerId);
+    expect(prisma.leaseState.ownerId).toBe(lease.ownerId);
+    expect(prisma.leaseState.fence).toBe(lease.fence);
   });
 
   it('reclaims an expired lease', async () => {
     prisma.leaseState.ownerId = 'expired-owner';
     prisma.leaseState.expiresAt = new Date('2026-08-20T17:59:59.000Z');
 
-    const ownerId = await service.acquireLease();
+    const lease = await service.acquireLease();
 
-    expect(ownerId).not.toBe('expired-owner');
-    expect(prisma.leaseState.ownerId).toBe(ownerId);
+    expect(lease.ownerId).not.toBe('expired-owner');
+    expect(lease.fence).toBe(1);
+    expect(prisma.leaseState.ownerId).toBe(lease.ownerId);
     expect(prisma.leaseState.expiresAt).toEqual(
       new Date('2026-08-20T18:30:00.000Z'),
     );
+  });
+
+  it('renews the fenced lease while a run lasts beyond the original lease duration', async () => {
+    let finishFetch: (() => void) | undefined;
+    feishu.listAllRecords.mockImplementation(
+      () =>
+        new Promise<unknown[]>((resolve) => {
+          finishFetch = () => resolve([]);
+        }),
+    );
+
+    const running = service.run();
+    for (let index = 0; index < 10; index += 1) await Promise.resolve();
+    const originalExpiry = prisma.leaseState.expiresAt;
+
+    await jest.advanceTimersByTimeAsync(35 * 60 * 1000);
+
+    expect(prisma.leaseState.ownerId).not.toBeNull();
+    expect(prisma.leaseState.expiresAt.getTime()).toBeGreaterThan(
+      originalExpiry.getTime(),
+    );
+    expect(prisma.leaseState.expiresAt.getTime()).toBeGreaterThan(Date.now());
+    finishFetch?.();
+    await running;
+    expect(prisma.leaseState.ownerId).toBeNull();
+  });
+
+  it('does not let a non-owner renew or release a fenced lease', async () => {
+    const lease = await service.acquireLease();
+    const candidate = { ownerId: 'other-owner', fence: lease.fence };
+
+    const renewed = await (
+      service as unknown as {
+        renewLease(candidateLease: typeof candidate): Promise<boolean>;
+      }
+    ).renewLease(candidate);
+    await (
+      service as unknown as {
+        releaseLease(candidateLease: typeof candidate): Promise<void>;
+      }
+    ).releaseLease(candidate);
+
+    expect(renewed).toBe(false);
+    expect(prisma.leaseState.ownerId).toBe(lease.ownerId);
+    expect(prisma.leaseState.fence).toBe(lease.fence);
+  });
+
+  it('prevents an old fenced owner from committing after another owner takes over', async () => {
+    const lease = await service.acquireLease();
+    feishu.listAllRecords.mockResolvedValue([
+      sourceRecord('blocked-record', '客户甲', null),
+    ]);
+    let finishPersistence: (() => void) | undefined;
+    prisma.feishuHandoffProfile.upsert.mockImplementation(
+      () =>
+        new Promise<{ id: string }>((resolve) => {
+          finishPersistence = () => resolve({ id: 'profile-blocked' });
+        }),
+    );
+
+    const running = service.runWithLease(lease);
+    for (let index = 0; index < 10; index += 1) await Promise.resolve();
+    prisma.leaseState.ownerId = 'new-owner';
+    prisma.leaseState.fence = lease.fence + 1;
+    prisma.leaseState.expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+    finishPersistence?.();
+
+    await expect(running).rejects.toThrow('Handoff synchronization lease lost');
+    const runUpdates = prisma.handoffSyncRun.update.mock.calls as unknown as {
+      data: { status: string };
+    }[][];
+    expect(runUpdates.some(([input]) => input.data.status === 'SUCCESS')).toBe(
+      false,
+    );
+    expect(runUpdates.at(-1)?.[0].data.status).toBe('FAILED');
+    expect(prisma.leaseState.ownerId).toBe('new-owner');
+  });
+
+  it('marks a heartbeat as lost and aborts before reconciliation after takeover', async () => {
+    const lease = await service.acquireLease();
+    let finishFetch: (() => void) | undefined;
+    feishu.listAllRecords.mockImplementation(
+      () =>
+        new Promise<unknown[]>((resolve) => {
+          finishFetch = () => resolve([]);
+        }),
+    );
+    const running = service.runWithLease(lease);
+    for (let index = 0; index < 10; index += 1) await Promise.resolve();
+    prisma.leaseState.ownerId = 'takeover-owner';
+    prisma.leaseState.fence = lease.fence + 1;
+    prisma.leaseState.expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
+    await jest.advanceTimersByTimeAsync(5 * 60 * 1000);
+    finishFetch?.();
+
+    await expect(running).rejects.toThrow('Handoff synchronization lease lost');
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('passes bounded interactive transaction options and processes one hundred delayed records', async () => {
+    feishu.listAllRecords.mockResolvedValue(
+      Array.from({ length: 100 }, (_, index) =>
+        sourceRecord(`bulk-${index}`, '不存在', null),
+      ),
+    );
+    prisma.feishuHandoffProfile.upsert.mockImplementation(
+      ({ where }: { where: { externalRecordId: string } }) =>
+        new Promise<{ id: string }>((resolve) => {
+          setTimeout(
+            () => resolve({ id: `profile-${where.externalRecordId}` }),
+            1,
+          );
+        }),
+    );
+
+    const running = service.run();
+    await jest.advanceTimersByTimeAsync(500);
+    const result = await running;
+
+    expect(result).toMatchObject({
+      status: 'SUCCESS',
+      readCount: 100,
+      createdCount: 100,
+      failedCount: 0,
+    });
+    const transactionCalls = prisma.$transaction.mock.calls as unknown as [
+      unknown,
+      unknown,
+    ][];
+    expect(transactionCalls[0][1]).toEqual({
+      maxWait: 10_000,
+      timeout: 120_000,
+    });
   });
 
   it('recovers interrupted runs on startup', async () => {
@@ -768,20 +944,23 @@ describe('HandoffSyncService', () => {
     expect(prisma.handoffSyncRun.updateMany).not.toHaveBeenCalled();
   });
 
-  it('uses the 02:30 Asia/Shanghai cron and skips disabled schedules', async () => {
-    const scheduledMethod = Object.getOwnPropertyDescriptor(
-      HandoffSyncService.prototype,
-      'runScheduledSync',
-    )?.value as unknown as object;
-    const metadata = Reflect.getMetadata(
-      SCHEDULE_CRON_OPTIONS,
-      scheduledMethod,
-    ) as { cronTime: string; timeZone: string };
-    expect(metadata).toMatchObject({
-      cronTime: '30 2 * * *',
-      timeZone: 'Asia/Shanghai',
-    });
+  it('registers and removes the validated non-default cron dynamically', async () => {
+    values.FEISHU_HANDOFF_SYNC_CRON = '15 4 * * *';
 
+    await service.onModuleInit();
+
+    const job = scheduler.getCronJob('feishu-handoff-sync');
+    expect(job.cronTime.source).toBe('15 4 * * *');
+    expect(job.cronTime.timeZone).toBe('Asia/Shanghai');
+    expect(job.isActive).toBe(true);
+    await expect(service.getStatus()).resolves.toMatchObject({
+      nextScheduledAt: '2026-08-20T20:15:00.000Z',
+    });
+    service.onModuleDestroy();
+    expect(scheduler.doesExist('cron', 'feishu-handoff-sync')).toBe(false);
+  });
+
+  it('skips a dynamically scheduled tick when synchronization is disabled', async () => {
     values.FEISHU_HANDOFF_SYNC_ENABLED = false;
     const run = jest.spyOn(service, 'run');
     await service.runScheduledSync();

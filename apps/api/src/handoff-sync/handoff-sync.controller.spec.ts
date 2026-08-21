@@ -13,7 +13,9 @@ describe('HandoffSyncController', () => {
     jest.spyOn(Logger.prototype, 'error').mockImplementation();
     sync = {
       getStatus: jest.fn().mockResolvedValue({ enabled: true, running: false }),
-      acquireLease: jest.fn().mockResolvedValue('lease-owner-1'),
+      acquireLease: jest
+        .fn()
+        .mockResolvedValue({ ownerId: 'lease-owner-1', fence: 7 }),
       runWithLease: jest.fn().mockResolvedValue({ status: 'SUCCESS' }),
     };
     controller = new HandoffSyncController(sync as never);
@@ -39,7 +41,10 @@ describe('HandoffSyncController', () => {
         }),
       ).resolves.toEqual({ accepted: true });
       expect(sync.acquireLease).toHaveBeenCalledTimes(1);
-      expect(sync.runWithLease).toHaveBeenCalledWith('lease-owner-1', 'user-1');
+      expect(sync.runWithLease).toHaveBeenCalledWith(
+        { ownerId: 'lease-owner-1', fence: 7 },
+        'user-1',
+      );
     },
   );
 

@@ -28,15 +28,18 @@ export type AggregateHandoffSyncLease = {
 
 export type HandoffSyncLeaseAvgAggregateOutputType = {
   id: number | null;
+  fence: number | null;
 };
 
 export type HandoffSyncLeaseSumAggregateOutputType = {
   id: number | null;
+  fence: number | null;
 };
 
 export type HandoffSyncLeaseMinAggregateOutputType = {
   id: number | null;
   ownerId: string | null;
+  fence: number | null;
   expiresAt: Date | null;
   updatedAt: Date | null;
 };
@@ -44,6 +47,7 @@ export type HandoffSyncLeaseMinAggregateOutputType = {
 export type HandoffSyncLeaseMaxAggregateOutputType = {
   id: number | null;
   ownerId: string | null;
+  fence: number | null;
   expiresAt: Date | null;
   updatedAt: Date | null;
 };
@@ -51,6 +55,7 @@ export type HandoffSyncLeaseMaxAggregateOutputType = {
 export type HandoffSyncLeaseCountAggregateOutputType = {
   id: number;
   ownerId: number;
+  fence: number;
   expiresAt: number;
   updatedAt: number;
   _all: number;
@@ -58,15 +63,18 @@ export type HandoffSyncLeaseCountAggregateOutputType = {
 
 export type HandoffSyncLeaseAvgAggregateInputType = {
   id?: true;
+  fence?: true;
 };
 
 export type HandoffSyncLeaseSumAggregateInputType = {
   id?: true;
+  fence?: true;
 };
 
 export type HandoffSyncLeaseMinAggregateInputType = {
   id?: true;
   ownerId?: true;
+  fence?: true;
   expiresAt?: true;
   updatedAt?: true;
 };
@@ -74,6 +82,7 @@ export type HandoffSyncLeaseMinAggregateInputType = {
 export type HandoffSyncLeaseMaxAggregateInputType = {
   id?: true;
   ownerId?: true;
+  fence?: true;
   expiresAt?: true;
   updatedAt?: true;
 };
@@ -81,6 +90,7 @@ export type HandoffSyncLeaseMaxAggregateInputType = {
 export type HandoffSyncLeaseCountAggregateInputType = {
   id?: true;
   ownerId?: true;
+  fence?: true;
   expiresAt?: true;
   updatedAt?: true;
   _all?: true;
@@ -186,6 +196,7 @@ export type HandoffSyncLeaseGroupByArgs<
 export type HandoffSyncLeaseGroupByOutputType = {
   id: number;
   ownerId: string | null;
+  fence: number;
   expiresAt: Date;
   updatedAt: Date;
   _count: HandoffSyncLeaseCountAggregateOutputType | null;
@@ -217,6 +228,7 @@ export type HandoffSyncLeaseWhereInput = {
   NOT?: Prisma.HandoffSyncLeaseWhereInput | Prisma.HandoffSyncLeaseWhereInput[];
   id?: Prisma.IntFilter<'HandoffSyncLease'> | number;
   ownerId?: Prisma.StringNullableFilter<'HandoffSyncLease'> | string | null;
+  fence?: Prisma.IntFilter<'HandoffSyncLease'> | number;
   expiresAt?: Prisma.DateTimeFilter<'HandoffSyncLease'> | Date | string;
   updatedAt?: Prisma.DateTimeFilter<'HandoffSyncLease'> | Date | string;
 };
@@ -224,6 +236,7 @@ export type HandoffSyncLeaseWhereInput = {
 export type HandoffSyncLeaseOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   _relevance?: Prisma.HandoffSyncLeaseOrderByRelevanceInput;
@@ -238,6 +251,7 @@ export type HandoffSyncLeaseWhereUniqueInput = Prisma.AtLeast<
     NOT?:
       Prisma.HandoffSyncLeaseWhereInput | Prisma.HandoffSyncLeaseWhereInput[];
     ownerId?: Prisma.StringNullableFilter<'HandoffSyncLease'> | string | null;
+    fence?: Prisma.IntFilter<'HandoffSyncLease'> | number;
     expiresAt?: Prisma.DateTimeFilter<'HandoffSyncLease'> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<'HandoffSyncLease'> | Date | string;
   },
@@ -247,6 +261,7 @@ export type HandoffSyncLeaseWhereUniqueInput = Prisma.AtLeast<
 export type HandoffSyncLeaseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   _count?: Prisma.HandoffSyncLeaseCountOrderByAggregateInput;
@@ -269,6 +284,7 @@ export type HandoffSyncLeaseScalarWhereWithAggregatesInput = {
     | Prisma.StringNullableWithAggregatesFilter<'HandoffSyncLease'>
     | string
     | null;
+  fence?: Prisma.IntWithAggregatesFilter<'HandoffSyncLease'> | number;
   expiresAt?:
     Prisma.DateTimeWithAggregatesFilter<'HandoffSyncLease'> | Date | string;
   updatedAt?:
@@ -278,6 +294,7 @@ export type HandoffSyncLeaseScalarWhereWithAggregatesInput = {
 export type HandoffSyncLeaseCreateInput = {
   id: number;
   ownerId?: string | null;
+  fence?: number;
   expiresAt: Date | string;
   updatedAt?: Date | string;
 };
@@ -285,6 +302,7 @@ export type HandoffSyncLeaseCreateInput = {
 export type HandoffSyncLeaseUncheckedCreateInput = {
   id: number;
   ownerId?: string | null;
+  fence?: number;
   expiresAt: Date | string;
   updatedAt?: Date | string;
 };
@@ -292,6 +310,7 @@ export type HandoffSyncLeaseUncheckedCreateInput = {
 export type HandoffSyncLeaseUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fence?: Prisma.IntFieldUpdateOperationsInput | number;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -299,6 +318,7 @@ export type HandoffSyncLeaseUpdateInput = {
 export type HandoffSyncLeaseUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fence?: Prisma.IntFieldUpdateOperationsInput | number;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -306,6 +326,7 @@ export type HandoffSyncLeaseUncheckedUpdateInput = {
 export type HandoffSyncLeaseCreateManyInput = {
   id: number;
   ownerId?: string | null;
+  fence?: number;
   expiresAt: Date | string;
   updatedAt?: Date | string;
 };
@@ -313,6 +334,7 @@ export type HandoffSyncLeaseCreateManyInput = {
 export type HandoffSyncLeaseUpdateManyMutationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fence?: Prisma.IntFieldUpdateOperationsInput | number;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -320,6 +342,7 @@ export type HandoffSyncLeaseUpdateManyMutationInput = {
 export type HandoffSyncLeaseUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number;
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  fence?: Prisma.IntFieldUpdateOperationsInput | number;
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -335,17 +358,20 @@ export type HandoffSyncLeaseOrderByRelevanceInput = {
 export type HandoffSyncLeaseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   ownerId?: Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
 };
 
 export type HandoffSyncLeaseAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
 };
 
 export type HandoffSyncLeaseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   ownerId?: Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
 };
@@ -353,12 +379,14 @@ export type HandoffSyncLeaseMaxOrderByAggregateInput = {
 export type HandoffSyncLeaseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   ownerId?: Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
   expiresAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
 };
 
 export type HandoffSyncLeaseSumOrderByAggregateInput = {
   id?: Prisma.SortOrder;
+  fence?: Prisma.SortOrder;
 };
 
 export type HandoffSyncLeaseSelect<
@@ -368,6 +396,7 @@ export type HandoffSyncLeaseSelect<
   {
     id?: boolean;
     ownerId?: boolean;
+    fence?: boolean;
     expiresAt?: boolean;
     updatedAt?: boolean;
   },
@@ -377,6 +406,7 @@ export type HandoffSyncLeaseSelect<
 export type HandoffSyncLeaseSelectScalar = {
   id?: boolean;
   ownerId?: boolean;
+  fence?: boolean;
   expiresAt?: boolean;
   updatedAt?: boolean;
 };
@@ -385,7 +415,7 @@ export type HandoffSyncLeaseOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'ownerId' | 'expiresAt' | 'updatedAt',
+  'id' | 'ownerId' | 'fence' | 'expiresAt' | 'updatedAt',
   ExtArgs['result']['handoffSyncLease']
 >;
 
@@ -399,6 +429,7 @@ export type $HandoffSyncLeasePayload<
     {
       id: number;
       ownerId: string | null;
+      fence: number;
       expiresAt: Date;
       updatedAt: Date;
     },
@@ -933,6 +964,7 @@ export interface Prisma__HandoffSyncLeaseClient<
 export interface HandoffSyncLeaseFieldRefs {
   readonly id: Prisma.FieldRef<'HandoffSyncLease', 'Int'>;
   readonly ownerId: Prisma.FieldRef<'HandoffSyncLease', 'String'>;
+  readonly fence: Prisma.FieldRef<'HandoffSyncLease', 'Int'>;
   readonly expiresAt: Prisma.FieldRef<'HandoffSyncLease', 'DateTime'>;
   readonly updatedAt: Prisma.FieldRef<'HandoffSyncLease', 'DateTime'>;
 }

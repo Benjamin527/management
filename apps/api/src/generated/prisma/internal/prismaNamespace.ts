@@ -1662,6 +1662,7 @@ export type HandoffSyncRunScalarFieldEnum =
 export const HandoffSyncLeaseScalarFieldEnum = {
   id: 'id',
   ownerId: 'ownerId',
+  fence: 'fence',
   expiresAt: 'expiresAt',
   updatedAt: 'updatedAt',
 } as const;

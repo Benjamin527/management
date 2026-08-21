@@ -234,6 +234,7 @@ model HandoffSyncRun {
 model HandoffSyncLease {
   id        Int      @id
   ownerId   String?
+  fence     Int      @default(0)
   expiresAt DateTime
   updatedAt DateTime @updatedAt
 }

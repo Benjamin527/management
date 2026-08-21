@@ -46,6 +46,7 @@ CREATE TABLE `FeishuHandoffProfile` (
 CREATE TABLE `HandoffSyncLease` (
     `id` INTEGER NOT NULL,
     `ownerId` VARCHAR(191) NULL,
+    `fence` INTEGER NOT NULL DEFAULT 0,
     `expiresAt` DATETIME(3) NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -53,8 +54,8 @@ CREATE TABLE `HandoffSyncLease` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- SeedSingleton
-INSERT INTO `HandoffSyncLease` (`id`, `ownerId`, `expiresAt`, `updatedAt`)
-VALUES (1, NULL, '1970-01-01 00:00:00.000', CURRENT_TIMESTAMP(3));
+INSERT INTO `HandoffSyncLease` (`id`, `ownerId`, `fence`, `expiresAt`, `updatedAt`)
+VALUES (1, NULL, 0, '1970-01-01 00:00:00.000', CURRENT_TIMESTAMP(3));
 
 -- CreateTable
 CREATE TABLE `FeishuHandoffSecret` (

@@ -1,4 +1,5 @@
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { randomUUID } from 'node:crypto';
 import { Prisma, PrismaClient } from '../generated/prisma/client';
 import {
@@ -10,6 +11,19 @@ import { HandoffSyncService } from './handoff-sync.service';
 
 const testDatabaseUrl = process.env.HANDOFF_TEST_DATABASE_URL;
 const integrationDescribe = testDatabaseUrl ? describe : describe.skip;
+const missingCiDatabaseDescribe =
+  process.env.CI === 'true' && !testDatabaseUrl ? describe : describe.skip;
+
+missingCiDatabaseDescribe(
+  'HandoffSyncService transaction integration configuration',
+  () => {
+    it('requires an isolated test database in CI', () => {
+      throw new Error(
+        'HANDOFF_TEST_DATABASE_URL is required in CI; never use a production database',
+      );
+    });
+  },
+);
 
 integrationDescribe('HandoffSyncService transaction integration', () => {
   let prisma: PrismaClient;
@@ -45,8 +59,8 @@ integrationDescribe('HandoffSyncService transaction integration', () => {
     });
     await prisma.handoffSyncLease.upsert({
       where: { id: 1 },
-      create: { id: 1, ownerId: null, expiresAt: new Date(0) },
-      update: { ownerId: null, expiresAt: new Date(0) },
+      create: { id: 1, ownerId: null, fence: 0, expiresAt: new Date(0) },
+      update: { ownerId: null, fence: 0, expiresAt: new Date(0) },
     });
 
     const prismaWithFailingSuccess = {
@@ -60,6 +74,7 @@ integrationDescribe('HandoffSyncService transaction integration', () => {
             customer: transaction.customer,
             feishuHandoffProfile: transaction.feishuHandoffProfile,
             feishuHandoffSecret: transaction.feishuHandoffSecret,
+            handoffSyncLease: transaction.handoffSyncLease,
             handoffSyncRun: {
               update: async (input: Prisma.HandoffSyncRunUpdateArgs) => {
                 const status = (input.data as { status?: string }).status;
@@ -89,6 +104,7 @@ integrationDescribe('HandoffSyncService transaction integration', () => {
         getOrThrow: (key: string) => configValues[key],
       } as never,
       { encrypt: () => null } as never,
+      new SchedulerRegistry(),
     );
 
     try {
