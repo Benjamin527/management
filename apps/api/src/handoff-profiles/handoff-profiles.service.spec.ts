@@ -64,7 +64,13 @@ describe('HandoffProfilesService', () => {
     ).rejects.toBeInstanceOf(NotFoundException);
     expect(transaction.feishuHandoffProfile.findFirst).toHaveBeenCalledWith({
       where: { id: 'profile-1', deletedAt: null },
-      select: { id: true, customerId: true },
+      select: {
+        id: true,
+        customerId: true,
+        linkSource: true,
+        linkedAt: true,
+        linkedById: true,
+      },
     });
   });
 
@@ -120,14 +126,17 @@ describe('HandoffProfilesService', () => {
     );
   });
 
-  it('idempotently refreshes manual link metadata when linking the same customer', async () => {
-    const linked = { id: 'profile-1', customerId: 'customer-1' };
+  it('returns an existing manual link unchanged when retried for the same customer', async () => {
+    const linked = {
+      id: 'profile-1',
+      customerId: 'customer-1',
+      linkSource: 'MANUAL',
+      linkedAt: new Date('2026-08-20T00:00:00.000Z'),
+      linkedById: 'original-admin',
+    };
     const transaction = {
       feishuHandoffProfile: {
-        findFirst: jest
-          .fn()
-          .mockResolvedValueOnce(linked)
-          .mockResolvedValueOnce(null),
+        findFirst: jest.fn().mockResolvedValue(linked),
         update: jest.fn().mockResolvedValue(linked),
       },
       customer: {
@@ -140,6 +149,58 @@ describe('HandoffProfilesService', () => {
     await expect(
       service.link('profile-1', 'customer-1', 'admin-1'),
     ).resolves.toEqual(linked);
+    expect(transaction.feishuHandoffProfile.findFirst).toHaveBeenCalledWith({
+      where: { id: 'profile-1', deletedAt: null },
+      select: {
+        id: true,
+        customerId: true,
+        linkSource: true,
+        linkedAt: true,
+        linkedById: true,
+      },
+    });
+    expect(transaction.customer.findFirst).not.toHaveBeenCalled();
+    expect(transaction.feishuHandoffProfile.update).not.toHaveBeenCalled();
+  });
+
+  it('converts an auto link to manual once and leaves a retry unchanged', async () => {
+    const autoLinked = {
+      id: 'profile-1',
+      customerId: 'customer-1',
+      linkSource: 'AUTO',
+      linkedAt: new Date('2026-08-19T00:00:00.000Z'),
+      linkedById: null,
+    };
+    const manuallyLinked = {
+      ...autoLinked,
+      linkSource: 'MANUAL',
+      linkedAt: new Date('2026-08-20T00:00:00.000Z'),
+      linkedById: 'admin-1',
+    };
+    const transaction = {
+      feishuHandoffProfile: {
+        findFirst: jest
+          .fn()
+          .mockResolvedValueOnce(autoLinked)
+          .mockResolvedValueOnce(null)
+          .mockResolvedValueOnce(manuallyLinked),
+        update: jest.fn().mockResolvedValue(manuallyLinked),
+      },
+      customer: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'customer-1' }),
+      },
+    };
+    const prisma = prismaWithTransaction(transaction);
+    const service = new HandoffProfilesService(prisma as never, {} as never);
+
+    await expect(
+      service.link('profile-1', 'customer-1', 'admin-1'),
+    ).resolves.toEqual(manuallyLinked);
+    await expect(
+      service.link('profile-1', 'customer-1', 'admin-2'),
+    ).resolves.toEqual(manuallyLinked);
+
+    expect(transaction.feishuHandoffProfile.update).toHaveBeenCalledTimes(1);
     expect(transaction.feishuHandoffProfile.update).toHaveBeenCalledWith({
       where: { id: 'profile-1' },
       data: {
@@ -149,6 +210,7 @@ describe('HandoffProfilesService', () => {
         linkedById: 'admin-1',
       },
     });
+    expect(transaction.customer.findFirst).toHaveBeenCalledTimes(1);
   });
 
   it('turns a concurrent unique collision into the same safe conflict', async () => {

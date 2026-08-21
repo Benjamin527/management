@@ -41,9 +41,21 @@ export class HandoffProfilesService {
       return await this.prisma.$transaction(async (transaction) => {
         const profile = await transaction.feishuHandoffProfile.findFirst({
           where: { id: profileId, deletedAt: null },
-          select: { id: true, customerId: true },
+          select: {
+            id: true,
+            customerId: true,
+            linkSource: true,
+            linkedAt: true,
+            linkedById: true,
+          },
         });
         if (!profile) throw new NotFoundException('交接档案不存在');
+        if (
+          profile.customerId === customerId &&
+          profile.linkSource === HandoffLinkSource.MANUAL
+        ) {
+          return profile;
+        }
 
         const customer = await transaction.customer.findFirst({
           where: { id: customerId, deletedAt: null },
