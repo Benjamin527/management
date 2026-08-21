@@ -82,6 +82,27 @@ describe('validateEnv', () => {
   });
 
   it.each([
+    ['missing', {}],
+    ['empty', { FEISHU_HANDOFF_BASE_APP_TOKEN: '' }],
+    ['blank', { FEISHU_HANDOFF_BASE_APP_TOKEN: '   ' }],
+  ])(
+    'disables Feishu handoff sync when the base app token is %s',
+    (_description, tokenInput) => {
+      const value = validateEnv({
+        DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
+        JWT_SECRET: '12345678901234567890123456789012',
+        FEISHU_HANDOFF_TABLE_ID: '',
+        FEISHU_HANDOFF_BASE_URL: '',
+        FEISHU_HANDOFF_SYNC_CRON: 'not a cron',
+        HANDOFF_SECRET_ENCRYPTION_KEY: 'not-a-key',
+        ...tokenInput,
+      });
+
+      expect(value.FEISHU_HANDOFF_SYNC_ENABLED).toBe(false);
+    },
+  );
+
+  it.each([
     ['FEISHU_HANDOFF_TABLE_ID', { FEISHU_HANDOFF_TABLE_ID: undefined }],
     ['FEISHU_HANDOFF_BASE_URL', { FEISHU_HANDOFF_BASE_URL: undefined }],
     [
@@ -124,7 +145,11 @@ describe('validateEnv', () => {
     );
   });
 
-  it('rejects a handoff encryption key that is not 64 hexadecimal characters', () => {
+  it.each([
+    ['a non-hexadecimal character', 'g'.repeat(64)],
+    ['63 characters', 'a'.repeat(63)],
+    ['65 characters', 'a'.repeat(65)],
+  ])('rejects a handoff encryption key with %s', (_description, key) => {
     expect(() =>
       validateEnv({
         DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
@@ -133,7 +158,7 @@ describe('validateEnv', () => {
         FEISHU_HANDOFF_TABLE_ID: 'tblHandoff123',
         FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/example',
         FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
-        HANDOFF_SECRET_ENCRYPTION_KEY: 'g'.repeat(64),
+        HANDOFF_SECRET_ENCRYPTION_KEY: key,
       }),
     ).toThrow(
       'HANDOFF_SECRET_ENCRYPTION_KEY must be 32 bytes encoded as 64 hexadecimal characters',
