@@ -9,7 +9,7 @@ import {
 import { AppEnvironment } from '../config/env.validation';
 
 export interface EncryptedHandoffSecret {
-  version: 1;
+  formatVersion: 1;
   keyId: string;
   ciphertext: string;
   iv: string;
@@ -75,7 +75,7 @@ export class HandoffSecretService {
     ]);
 
     return {
-      version: 1,
+      formatVersion: 1,
       keyId: this.currentKey.id,
       ciphertext: ciphertext.toString('base64'),
       iv: iv.toString('base64'),
@@ -88,7 +88,7 @@ export class HandoffSecretService {
     payload: EncryptedHandoffSecret,
   ): string {
     try {
-      if (payload.version !== 1) throw new Error(DECRYPTION_ERROR);
+      if (payload.formatVersion !== 1) throw new Error(DECRYPTION_ERROR);
       const key = this.decryptionKeys.get(payload.keyId);
       if (!key) throw new Error(DECRYPTION_ERROR);
 

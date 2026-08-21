@@ -189,7 +189,7 @@ describe('HandoffSecretService', () => {
       'versioned secret',
     ) as EncryptedHandoffSecret;
 
-    expect(encrypted.version).toBe(1);
+    expect(encrypted.formatVersion).toBe(1);
     expect(encrypted.keyId).toBe(keyId(encryptionKey));
     expect(encrypted.keyId).not.toContain(encryptionKey);
   });
@@ -215,7 +215,7 @@ describe('HandoffSecretService', () => {
   });
 
   it.each([
-    ['an unknown envelope version', { version: 2 }],
+    ['an unknown envelope version', { formatVersion: 2 }],
     ['an unknown key ID', { keyId: '0'.repeat(64) }],
   ])('safely rejects %s', (_description, override) => {
     const service = createService();
