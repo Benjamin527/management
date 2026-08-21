@@ -158,6 +158,12 @@ describe("CustomersView", () => {
         pageSize: 100,
       }),
     );
+
+    await wrapper.get('[data-filter="deployment-type"]').setValue("SaaS");
+    await flushPromises();
+    expect(listCustomers).toHaveBeenLastCalledWith(
+      expect.objectContaining({ deploymentType: "SaaS" }),
+    );
   });
 
   it("links an unmatched Feishu profile to an existing customer", async () => {

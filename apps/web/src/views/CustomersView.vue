@@ -291,7 +291,7 @@ onMounted(() => {
           >部署方式
           <select v-model="deploymentType" data-filter="deployment-type">
             <option value="">全部</option>
-            <option value="SAAS">SAAS</option>
+              <option value="SaaS">SaaS</option>
             <option value="私有部署">私有部署</option>
           </select>
         </label>
