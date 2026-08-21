@@ -31,6 +31,6 @@ export function createHandoffSecretProvider(
       useFactory: createHandoffSecretProvider,
     },
   ],
-  exports: [HandoffSyncService],
+  exports: [HandoffSyncService, HandoffSecretService],
 })
 export class HandoffSyncModule {}

@@ -15,6 +15,7 @@ import { ServiceSyncModule } from './service-sync/service-sync.module';
 import { ServiceAnalysisModule } from './service-analysis/service-analysis.module';
 import { ServiceRecordsModule } from './service-records/service-records.module';
 import { HandoffSyncModule } from './handoff-sync/handoff-sync.module';
+import { HandoffProfilesModule } from './handoff-profiles/handoff-profiles.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { HandoffSyncModule } from './handoff-sync/handoff-sync.module';
     ServiceAnalysisModule,
     ServiceRecordsModule,
     HandoffSyncModule,
+    HandoffProfilesModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
