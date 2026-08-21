@@ -59,6 +59,8 @@ describe('validateEnv', () => {
   });
 
   it('enables Feishu handoff sync and preserves its table ID', () => {
+    const previousKeyA = 'a'.repeat(64);
+    const previousKeyB = 'B'.repeat(64);
     const value = validateEnv({
       DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
       JWT_SECRET: '12345678901234567890123456789012',
@@ -68,6 +70,7 @@ describe('validateEnv', () => {
       FEISHU_HANDOFF_SYNC_CRON: '  30 2 * * *  ',
       HANDOFF_SECRET_ENCRYPTION_KEY:
         '  0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  ',
+      HANDOFF_SECRET_PREVIOUS_KEYS: `  ${previousKeyA}, ${previousKeyB}  `,
     });
 
     expect(value).toMatchObject({
@@ -78,8 +81,51 @@ describe('validateEnv', () => {
       FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
       HANDOFF_SECRET_ENCRYPTION_KEY:
         '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+      HANDOFF_SECRET_PREVIOUS_KEYS: [previousKeyA, previousKeyB],
     });
   });
+
+  it('normalizes an omitted historical handoff keyring to an empty array', () => {
+    const value = validateEnv({
+      DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
+      JWT_SECRET: '12345678901234567890123456789012',
+      FEISHU_HANDOFF_BASE_APP_TOKEN: 'handoff_base_token',
+      FEISHU_HANDOFF_TABLE_ID: 'tblHandoff123',
+      FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/example',
+      FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
+      HANDOFF_SECRET_ENCRYPTION_KEY:
+        '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+    });
+
+    expect(value.HANDOFF_SECRET_PREVIOUS_KEYS).toEqual([]);
+  });
+
+  it.each(['not-a-key', `${'a'.repeat(64)},not-a-key`])(
+    'rejects an invalid historical handoff key without echoing it',
+    (previousKeys) => {
+      let error: Error | undefined;
+      try {
+        validateEnv({
+          DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
+          JWT_SECRET: '12345678901234567890123456789012',
+          FEISHU_HANDOFF_BASE_APP_TOKEN: 'handoff_base_token',
+          FEISHU_HANDOFF_TABLE_ID: 'tblHandoff123',
+          FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/example',
+          FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
+          HANDOFF_SECRET_ENCRYPTION_KEY:
+            '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+          HANDOFF_SECRET_PREVIOUS_KEYS: previousKeys,
+        });
+      } catch (caught) {
+        error = caught as Error;
+      }
+
+      expect(error?.message).toBe(
+        'HANDOFF_SECRET_PREVIOUS_KEYS must contain comma-separated 32-byte keys encoded as 64 hexadecimal characters',
+      );
+      expect(error?.message).not.toContain(previousKeys);
+    },
+  );
 
   it.each([
     ['missing', {}],

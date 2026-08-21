@@ -18,6 +18,7 @@ export interface AppEnvironment {
   FEISHU_HANDOFF_BASE_URL?: string;
   FEISHU_HANDOFF_SYNC_CRON?: string;
   HANDOFF_SECRET_ENCRYPTION_KEY?: string;
+  HANDOFF_SECRET_PREVIOUS_KEYS?: string[];
   CONSUMPTION_SYNC_ENABLED: boolean;
   CONSUMPTION_SOURCE_DATABASE_URL?: string;
   CONSUMPTION_SYNC_CRON?: string;
@@ -95,6 +96,7 @@ function validateHandoffConfig(
   | 'FEISHU_HANDOFF_BASE_URL'
   | 'FEISHU_HANDOFF_SYNC_CRON'
   | 'HANDOFF_SECRET_ENCRYPTION_KEY'
+  | 'HANDOFF_SECRET_PREVIOUS_KEYS'
 > {
   const required = [
     'FEISHU_HANDOFF_TABLE_ID',
@@ -125,12 +127,25 @@ function validateHandoffConfig(
     );
   }
 
+  const previousKeysValue = stringValue(
+    input.HANDOFF_SECRET_PREVIOUS_KEYS,
+  ).trim();
+  const previousKeys = previousKeysValue
+    ? previousKeysValue.split(',').map((key) => key.trim())
+    : [];
+  if (previousKeys.some((key) => !/^[a-f0-9]{64}$/i.test(key))) {
+    throw new Error(
+      'HANDOFF_SECRET_PREVIOUS_KEYS must contain comma-separated 32-byte keys encoded as 64 hexadecimal characters',
+    );
+  }
+
   return {
     FEISHU_HANDOFF_BASE_APP_TOKEN: baseAppToken,
     FEISHU_HANDOFF_TABLE_ID: values.FEISHU_HANDOFF_TABLE_ID,
     FEISHU_HANDOFF_BASE_URL: values.FEISHU_HANDOFF_BASE_URL,
     FEISHU_HANDOFF_SYNC_CRON: cron,
     HANDOFF_SECRET_ENCRYPTION_KEY: values.HANDOFF_SECRET_ENCRYPTION_KEY,
+    HANDOFF_SECRET_PREVIOUS_KEYS: previousKeys,
   };
 }
 

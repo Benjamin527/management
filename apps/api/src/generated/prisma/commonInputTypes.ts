@@ -359,17 +359,6 @@ export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
   _max?: Prisma.NestedJsonFilter<$PrismaModel>;
 };
 
-export type EnumHandoffSyncStatusFilter<$PrismaModel = never> = {
-  equals?:
-    | $Enums.HandoffSyncStatus
-    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
-  in?: $Enums.HandoffSyncStatus[];
-  notIn?: $Enums.HandoffSyncStatus[];
-  not?:
-    | Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>
-    | $Enums.HandoffSyncStatus;
-};
-
 export type IntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>;
   in?: number[];
@@ -379,20 +368,6 @@ export type IntFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>;
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>;
   not?: Prisma.NestedIntFilter<$PrismaModel> | number;
-};
-
-export type EnumHandoffSyncStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?:
-    | $Enums.HandoffSyncStatus
-    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
-  in?: $Enums.HandoffSyncStatus[];
-  notIn?: $Enums.HandoffSyncStatus[];
-  not?:
-    | Prisma.NestedEnumHandoffSyncStatusWithAggregatesFilter<$PrismaModel>
-    | $Enums.HandoffSyncStatus;
-  _count?: Prisma.NestedIntFilter<$PrismaModel>;
-  _min?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
-  _max?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
 };
 
 export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -409,6 +384,31 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedIntFilter<$PrismaModel>;
   _min?: Prisma.NestedIntFilter<$PrismaModel>;
   _max?: Prisma.NestedIntFilter<$PrismaModel>;
+};
+
+export type EnumHandoffSyncStatusFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.HandoffSyncStatus
+    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.HandoffSyncStatus[];
+  notIn?: $Enums.HandoffSyncStatus[];
+  not?:
+    | Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>
+    | $Enums.HandoffSyncStatus;
+};
+
+export type EnumHandoffSyncStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.HandoffSyncStatus
+    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.HandoffSyncStatus[];
+  notIn?: $Enums.HandoffSyncStatus[];
+  not?:
+    | Prisma.NestedEnumHandoffSyncStatusWithAggregatesFilter<$PrismaModel>
+    | $Enums.HandoffSyncStatus;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
 };
 
 export type IntNullableFilter<$PrismaModel = never> = {
@@ -1025,33 +1025,6 @@ export type NestedJsonFilterBase<$PrismaModel = never> = {
     | Prisma.JsonNullValueFilter;
 };
 
-export type NestedEnumHandoffSyncStatusFilter<$PrismaModel = never> = {
-  equals?:
-    | $Enums.HandoffSyncStatus
-    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
-  in?: $Enums.HandoffSyncStatus[];
-  notIn?: $Enums.HandoffSyncStatus[];
-  not?:
-    | Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>
-    | $Enums.HandoffSyncStatus;
-};
-
-export type NestedEnumHandoffSyncStatusWithAggregatesFilter<
-  $PrismaModel = never,
-> = {
-  equals?:
-    | $Enums.HandoffSyncStatus
-    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
-  in?: $Enums.HandoffSyncStatus[];
-  notIn?: $Enums.HandoffSyncStatus[];
-  not?:
-    | Prisma.NestedEnumHandoffSyncStatusWithAggregatesFilter<$PrismaModel>
-    | $Enums.HandoffSyncStatus;
-  _count?: Prisma.NestedIntFilter<$PrismaModel>;
-  _min?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
-  _max?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
-};
-
 export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>;
   in?: number[];
@@ -1077,6 +1050,33 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>;
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>;
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number;
+};
+
+export type NestedEnumHandoffSyncStatusFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.HandoffSyncStatus
+    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.HandoffSyncStatus[];
+  notIn?: $Enums.HandoffSyncStatus[];
+  not?:
+    | Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>
+    | $Enums.HandoffSyncStatus;
+};
+
+export type NestedEnumHandoffSyncStatusWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.HandoffSyncStatus
+    | Prisma.EnumHandoffSyncStatusFieldRefInput<$PrismaModel>;
+  in?: $Enums.HandoffSyncStatus[];
+  notIn?: $Enums.HandoffSyncStatus[];
+  not?:
+    | Prisma.NestedEnumHandoffSyncStatusWithAggregatesFilter<$PrismaModel>
+    | $Enums.HandoffSyncStatus;
+  _count?: Prisma.NestedIntFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumHandoffSyncStatusFilter<$PrismaModel>;
 };
 
 export type NestedEnumServiceRecordStatusFilter<$PrismaModel = never> = {

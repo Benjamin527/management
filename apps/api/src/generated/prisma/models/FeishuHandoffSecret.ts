@@ -20,14 +20,26 @@ export type FeishuHandoffSecretModel =
 
 export type AggregateFeishuHandoffSecret = {
   _count: FeishuHandoffSecretCountAggregateOutputType | null;
+  _avg: FeishuHandoffSecretAvgAggregateOutputType | null;
+  _sum: FeishuHandoffSecretSumAggregateOutputType | null;
   _min: FeishuHandoffSecretMinAggregateOutputType | null;
   _max: FeishuHandoffSecretMaxAggregateOutputType | null;
+};
+
+export type FeishuHandoffSecretAvgAggregateOutputType = {
+  formatVersion: number | null;
+};
+
+export type FeishuHandoffSecretSumAggregateOutputType = {
+  formatVersion: number | null;
 };
 
 export type FeishuHandoffSecretMinAggregateOutputType = {
   id: string | null;
   profileId: string | null;
   fieldName: string | null;
+  formatVersion: number | null;
+  keyId: string | null;
   ciphertext: string | null;
   iv: string | null;
   authTag: string | null;
@@ -39,6 +51,8 @@ export type FeishuHandoffSecretMaxAggregateOutputType = {
   id: string | null;
   profileId: string | null;
   fieldName: string | null;
+  formatVersion: number | null;
+  keyId: string | null;
   ciphertext: string | null;
   iv: string | null;
   authTag: string | null;
@@ -50,6 +64,8 @@ export type FeishuHandoffSecretCountAggregateOutputType = {
   id: number;
   profileId: number;
   fieldName: number;
+  formatVersion: number;
+  keyId: number;
   ciphertext: number;
   iv: number;
   authTag: number;
@@ -58,10 +74,20 @@ export type FeishuHandoffSecretCountAggregateOutputType = {
   _all: number;
 };
 
+export type FeishuHandoffSecretAvgAggregateInputType = {
+  formatVersion?: true;
+};
+
+export type FeishuHandoffSecretSumAggregateInputType = {
+  formatVersion?: true;
+};
+
 export type FeishuHandoffSecretMinAggregateInputType = {
   id?: true;
   profileId?: true;
   fieldName?: true;
+  formatVersion?: true;
+  keyId?: true;
   ciphertext?: true;
   iv?: true;
   authTag?: true;
@@ -73,6 +99,8 @@ export type FeishuHandoffSecretMaxAggregateInputType = {
   id?: true;
   profileId?: true;
   fieldName?: true;
+  formatVersion?: true;
+  keyId?: true;
   ciphertext?: true;
   iv?: true;
   authTag?: true;
@@ -84,6 +112,8 @@ export type FeishuHandoffSecretCountAggregateInputType = {
   id?: true;
   profileId?: true;
   fieldName?: true;
+  formatVersion?: true;
+  keyId?: true;
   ciphertext?: true;
   iv?: true;
   authTag?: true;
@@ -135,6 +165,18 @@ export type FeishuHandoffSecretAggregateArgs<
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    *
+   * Select which fields to average
+   **/
+  _avg?: FeishuHandoffSecretAvgAggregateInputType;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
+   * Select which fields to sum
+   **/
+  _sum?: FeishuHandoffSecretSumAggregateInputType;
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   *
    * Select which fields to find the minimum value
    **/
   _min?: FeishuHandoffSecretMinAggregateInputType;
@@ -172,6 +214,8 @@ export type FeishuHandoffSecretGroupByArgs<
   take?: number;
   skip?: number;
   _count?: FeishuHandoffSecretCountAggregateInputType | true;
+  _avg?: FeishuHandoffSecretAvgAggregateInputType;
+  _sum?: FeishuHandoffSecretSumAggregateInputType;
   _min?: FeishuHandoffSecretMinAggregateInputType;
   _max?: FeishuHandoffSecretMaxAggregateInputType;
 };
@@ -180,12 +224,16 @@ export type FeishuHandoffSecretGroupByOutputType = {
   id: string;
   profileId: string;
   fieldName: string;
+  formatVersion: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
   createdAt: Date;
   updatedAt: Date;
   _count: FeishuHandoffSecretCountAggregateOutputType | null;
+  _avg: FeishuHandoffSecretAvgAggregateOutputType | null;
+  _sum: FeishuHandoffSecretSumAggregateOutputType | null;
   _min: FeishuHandoffSecretMinAggregateOutputType | null;
   _max: FeishuHandoffSecretMaxAggregateOutputType | null;
 };
@@ -217,6 +265,8 @@ export type FeishuHandoffSecretWhereInput = {
   id?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   profileId?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   fieldName?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
+  formatVersion?: Prisma.IntFilter<'FeishuHandoffSecret'> | number;
+  keyId?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   ciphertext?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   iv?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   authTag?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
@@ -232,6 +282,8 @@ export type FeishuHandoffSecretOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
+  formatVersion?: Prisma.SortOrder;
+  keyId?: Prisma.SortOrder;
   ciphertext?: Prisma.SortOrder;
   iv?: Prisma.SortOrder;
   authTag?: Prisma.SortOrder;
@@ -254,6 +306,8 @@ export type FeishuHandoffSecretWhereUniqueInput = Prisma.AtLeast<
       | Prisma.FeishuHandoffSecretWhereInput[];
     profileId?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
     fieldName?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
+    formatVersion?: Prisma.IntFilter<'FeishuHandoffSecret'> | number;
+    keyId?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
     ciphertext?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
     iv?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
     authTag?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
@@ -271,14 +325,18 @@ export type FeishuHandoffSecretOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
+  formatVersion?: Prisma.SortOrder;
+  keyId?: Prisma.SortOrder;
   ciphertext?: Prisma.SortOrder;
   iv?: Prisma.SortOrder;
   authTag?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
   _count?: Prisma.FeishuHandoffSecretCountOrderByAggregateInput;
+  _avg?: Prisma.FeishuHandoffSecretAvgOrderByAggregateInput;
   _max?: Prisma.FeishuHandoffSecretMaxOrderByAggregateInput;
   _min?: Prisma.FeishuHandoffSecretMinOrderByAggregateInput;
+  _sum?: Prisma.FeishuHandoffSecretSumOrderByAggregateInput;
 };
 
 export type FeishuHandoffSecretScalarWhereWithAggregatesInput = {
@@ -292,6 +350,9 @@ export type FeishuHandoffSecretScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<'FeishuHandoffSecret'> | string;
   profileId?: Prisma.StringWithAggregatesFilter<'FeishuHandoffSecret'> | string;
   fieldName?: Prisma.StringWithAggregatesFilter<'FeishuHandoffSecret'> | string;
+  formatVersion?:
+    Prisma.IntWithAggregatesFilter<'FeishuHandoffSecret'> | number;
+  keyId?: Prisma.StringWithAggregatesFilter<'FeishuHandoffSecret'> | string;
   ciphertext?:
     Prisma.StringWithAggregatesFilter<'FeishuHandoffSecret'> | string;
   iv?: Prisma.StringWithAggregatesFilter<'FeishuHandoffSecret'> | string;
@@ -305,6 +366,8 @@ export type FeishuHandoffSecretScalarWhereWithAggregatesInput = {
 export type FeishuHandoffSecretCreateInput = {
   id?: string;
   fieldName: string;
+  formatVersion?: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
@@ -317,6 +380,8 @@ export type FeishuHandoffSecretUncheckedCreateInput = {
   id?: string;
   profileId: string;
   fieldName: string;
+  formatVersion?: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
@@ -327,6 +392,8 @@ export type FeishuHandoffSecretUncheckedCreateInput = {
 export type FeishuHandoffSecretUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -339,6 +406,8 @@ export type FeishuHandoffSecretUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   profileId?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -350,6 +419,8 @@ export type FeishuHandoffSecretCreateManyInput = {
   id?: string;
   profileId: string;
   fieldName: string;
+  formatVersion?: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
@@ -360,6 +431,8 @@ export type FeishuHandoffSecretCreateManyInput = {
 export type FeishuHandoffSecretUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -371,6 +444,8 @@ export type FeishuHandoffSecretUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   profileId?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -405,6 +480,8 @@ export type FeishuHandoffSecretCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
+  formatVersion?: Prisma.SortOrder;
+  keyId?: Prisma.SortOrder;
   ciphertext?: Prisma.SortOrder;
   iv?: Prisma.SortOrder;
   authTag?: Prisma.SortOrder;
@@ -412,10 +489,16 @@ export type FeishuHandoffSecretCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder;
 };
 
+export type FeishuHandoffSecretAvgOrderByAggregateInput = {
+  formatVersion?: Prisma.SortOrder;
+};
+
 export type FeishuHandoffSecretMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
+  formatVersion?: Prisma.SortOrder;
+  keyId?: Prisma.SortOrder;
   ciphertext?: Prisma.SortOrder;
   iv?: Prisma.SortOrder;
   authTag?: Prisma.SortOrder;
@@ -427,11 +510,17 @@ export type FeishuHandoffSecretMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
+  formatVersion?: Prisma.SortOrder;
+  keyId?: Prisma.SortOrder;
   ciphertext?: Prisma.SortOrder;
   iv?: Prisma.SortOrder;
   authTag?: Prisma.SortOrder;
   createdAt?: Prisma.SortOrder;
   updatedAt?: Prisma.SortOrder;
+};
+
+export type FeishuHandoffSecretSumOrderByAggregateInput = {
+  formatVersion?: Prisma.SortOrder;
 };
 
 export type FeishuHandoffSecretCreateNestedManyWithoutProfileInput = {
@@ -544,9 +633,19 @@ export type FeishuHandoffSecretUncheckedUpdateManyWithoutProfileNestedInput = {
     | Prisma.FeishuHandoffSecretScalarWhereInput[];
 };
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number;
+  increment?: number;
+  decrement?: number;
+  multiply?: number;
+  divide?: number;
+};
+
 export type FeishuHandoffSecretCreateWithoutProfileInput = {
   id?: string;
   fieldName: string;
+  formatVersion?: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
@@ -557,6 +656,8 @@ export type FeishuHandoffSecretCreateWithoutProfileInput = {
 export type FeishuHandoffSecretUncheckedCreateWithoutProfileInput = {
   id?: string;
   fieldName: string;
+  formatVersion?: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
@@ -618,6 +719,8 @@ export type FeishuHandoffSecretScalarWhereInput = {
   id?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   profileId?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   fieldName?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
+  formatVersion?: Prisma.IntFilter<'FeishuHandoffSecret'> | number;
+  keyId?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   ciphertext?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   iv?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
   authTag?: Prisma.StringFilter<'FeishuHandoffSecret'> | string;
@@ -628,6 +731,8 @@ export type FeishuHandoffSecretScalarWhereInput = {
 export type FeishuHandoffSecretCreateManyProfileInput = {
   id?: string;
   fieldName: string;
+  formatVersion?: number;
+  keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
@@ -638,6 +743,8 @@ export type FeishuHandoffSecretCreateManyProfileInput = {
 export type FeishuHandoffSecretUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -648,6 +755,8 @@ export type FeishuHandoffSecretUpdateWithoutProfileInput = {
 export type FeishuHandoffSecretUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -658,6 +767,8 @@ export type FeishuHandoffSecretUncheckedUpdateWithoutProfileInput = {
 export type FeishuHandoffSecretUncheckedUpdateManyWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
+  formatVersion?: Prisma.IntFieldUpdateOperationsInput | number;
+  keyId?: Prisma.StringFieldUpdateOperationsInput | string;
   ciphertext?: Prisma.StringFieldUpdateOperationsInput | string;
   iv?: Prisma.StringFieldUpdateOperationsInput | string;
   authTag?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -673,6 +784,8 @@ export type FeishuHandoffSecretSelect<
     id?: boolean;
     profileId?: boolean;
     fieldName?: boolean;
+    formatVersion?: boolean;
+    keyId?: boolean;
     ciphertext?: boolean;
     iv?: boolean;
     authTag?: boolean;
@@ -687,6 +800,8 @@ export type FeishuHandoffSecretSelectScalar = {
   id?: boolean;
   profileId?: boolean;
   fieldName?: boolean;
+  formatVersion?: boolean;
+  keyId?: boolean;
   ciphertext?: boolean;
   iv?: boolean;
   authTag?: boolean;
@@ -701,6 +816,8 @@ export type FeishuHandoffSecretOmit<
   | 'id'
   | 'profileId'
   | 'fieldName'
+  | 'formatVersion'
+  | 'keyId'
   | 'ciphertext'
   | 'iv'
   | 'authTag'
@@ -728,6 +845,8 @@ export type $FeishuHandoffSecretPayload<
       id: string;
       profileId: string;
       fieldName: string;
+      formatVersion: number;
+      keyId: string;
       ciphertext: string;
       iv: string;
       authTag: string;
@@ -1280,6 +1399,8 @@ export interface FeishuHandoffSecretFieldRefs {
   readonly id: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;
   readonly profileId: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;
   readonly fieldName: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;
+  readonly formatVersion: Prisma.FieldRef<'FeishuHandoffSecret', 'Int'>;
+  readonly keyId: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;
   readonly ciphertext: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;
   readonly iv: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;
   readonly authTag: Prisma.FieldRef<'FeishuHandoffSecret', 'String'>;

@@ -1540,6 +1540,8 @@ export const FeishuHandoffSecretScalarFieldEnum = {
   id: 'id',
   profileId: 'profileId',
   fieldName: 'fieldName',
+  formatVersion: 'formatVersion',
+  keyId: 'keyId',
   ciphertext: 'ciphertext',
   iv: 'iv',
   authTag: 'authTag',
@@ -1832,6 +1834,7 @@ export const FeishuHandoffSecretOrderByRelevanceFieldEnum = {
   id: 'id',
   profileId: 'profileId',
   fieldName: 'fieldName',
+  keyId: 'keyId',
   ciphertext: 'ciphertext',
   iv: 'iv',
   authTag: 'authTag',
@@ -2020,18 +2023,18 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
- * Reference to a field of type 'HandoffSyncStatus'
- */
-export type EnumHandoffSyncStatusFieldRefInput<$PrismaModel> =
-  FieldRefInputType<$PrismaModel, 'HandoffSyncStatus'>;
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'Int'
 >;
+
+/**
+ * Reference to a field of type 'HandoffSyncStatus'
+ */
+export type EnumHandoffSyncStatusFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'HandoffSyncStatus'>;
 
 /**
  * Reference to a field of type 'ServiceRecordStatus'

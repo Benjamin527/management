@@ -44,6 +44,8 @@ CREATE TABLE `FeishuHandoffSecret` (
     `id` VARCHAR(191) NOT NULL,
     `profileId` VARCHAR(191) NOT NULL,
     `fieldName` VARCHAR(191) NOT NULL,
+    `formatVersion` INTEGER NOT NULL DEFAULT 1,
+    `keyId` VARCHAR(191) NOT NULL,
     `ciphertext` LONGTEXT NOT NULL,
     `iv` VARCHAR(191) NOT NULL,
     `authTag` VARCHAR(191) NOT NULL,
