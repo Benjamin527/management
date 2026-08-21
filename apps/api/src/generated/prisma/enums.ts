@@ -126,3 +126,11 @@ export const HandoffSyncStatus = {
 
 export type HandoffSyncStatus =
   (typeof HandoffSyncStatus)[keyof typeof HandoffSyncStatus];
+
+export const HandoffLinkSource = {
+  AUTO: 'AUTO',
+  MANUAL: 'MANUAL',
+} as const;
+
+export type HandoffLinkSource =
+  (typeof HandoffLinkSource)[keyof typeof HandoffLinkSource];

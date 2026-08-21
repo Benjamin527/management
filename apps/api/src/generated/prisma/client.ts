@@ -75,6 +75,11 @@ export type SensitiveAccessAudit = Prisma.SensitiveAccessAuditModel;
  */
 export type HandoffSyncRun = Prisma.HandoffSyncRunModel;
 /**
+ * Model HandoffSyncLease
+ *
+ */
+export type HandoffSyncLease = Prisma.HandoffSyncLeaseModel;
+/**
  * Model FeishuServiceRecord
  *
  */

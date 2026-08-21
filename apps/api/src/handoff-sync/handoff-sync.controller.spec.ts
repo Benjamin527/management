@@ -4,9 +4,8 @@ import { HandoffSyncController } from './handoff-sync.controller';
 describe('HandoffSyncController', () => {
   let sync: {
     getStatus: jest.Mock;
-    run: jest.Mock;
-    enabled: boolean;
-    isRunning: boolean;
+    acquireLease: jest.Mock;
+    runWithLease: jest.Mock;
   };
   let controller: HandoffSyncController;
 
@@ -14,9 +13,8 @@ describe('HandoffSyncController', () => {
     jest.spyOn(Logger.prototype, 'error').mockImplementation();
     sync = {
       getStatus: jest.fn().mockResolvedValue({ enabled: true, running: false }),
-      run: jest.fn().mockResolvedValue({ status: 'SUCCESS' }),
-      enabled: true,
-      isRunning: false,
+      acquireLease: jest.fn().mockResolvedValue('lease-owner-1'),
+      runWithLease: jest.fn().mockResolvedValue({ status: 'SUCCESS' }),
     };
     controller = new HandoffSyncController(sync as never);
   });
@@ -32,60 +30,53 @@ describe('HandoffSyncController', () => {
 
   it.each(['ADMIN', 'MANAGER'])(
     'lets %s trigger an immediate background run',
-    (role) => {
-      expect(
+    async (role) => {
+      await expect(
         controller.run({
           sub: 'user-1',
           email: 'user@example.com',
           role,
         }),
-      ).toEqual({ accepted: true });
-      expect(sync.run).toHaveBeenCalledWith('user-1');
+      ).resolves.toEqual({ accepted: true });
+      expect(sync.acquireLease).toHaveBeenCalledTimes(1);
+      expect(sync.runWithLease).toHaveBeenCalledWith('lease-owner-1', 'user-1');
     },
   );
 
   it.each(['AGENT', 'SALES'])(
     'forbids %s from triggering synchronization',
-    (role) => {
-      expect(() =>
+    async (role) => {
+      await expect(
         controller.run({
           sub: 'user-1',
           email: 'user@example.com',
           role,
         }),
-      ).toThrow(ForbiddenException);
-      expect(sync.run).not.toHaveBeenCalled();
+      ).rejects.toBeInstanceOf(ForbiddenException);
+      expect(sync.acquireLease).not.toHaveBeenCalled();
     },
   );
 
-  it('rejects concurrent and disabled manual runs before accepting them', () => {
-    sync.isRunning = true;
-    expect(() =>
-      controller.run({
-        sub: 'admin-1',
-        email: 'admin@example.com',
-        role: 'ADMIN',
-      }),
-    ).toThrow(ConflictException);
+  it('returns Conflict when the database lease cannot be acquired before accepting', async () => {
+    sync.acquireLease.mockRejectedValue(new ConflictException());
 
-    sync.isRunning = false;
-    sync.enabled = false;
-    expect(() =>
+    await expect(
       controller.run({
         sub: 'admin-1',
         email: 'admin@example.com',
         role: 'ADMIN',
       }),
-    ).toThrow(ConflictException);
+    ).rejects.toBeInstanceOf(ConflictException);
+    expect(sync.runWithLease).not.toHaveBeenCalled();
   });
 
   it('logs only a generic message when a background run fails', async () => {
     const logger = (controller as unknown as { logger: { error: jest.Mock } })
       .logger;
     jest.spyOn(logger, 'error');
-    sync.run.mockRejectedValue(new Error('deployment secret leaked'));
+    sync.runWithLease.mockRejectedValue(new Error('deployment secret leaked'));
 
-    controller.run({
+    await controller.run({
       sub: 'admin-1',
       email: 'admin@example.com',
       role: 'ADMIN',

@@ -60,6 +60,7 @@ export const ModelName = {
   FeishuHandoffSecret: 'FeishuHandoffSecret',
   SensitiveAccessAudit: 'SensitiveAccessAudit',
   HandoffSyncRun: 'HandoffSyncRun',
+  HandoffSyncLease: 'HandoffSyncLease',
   FeishuServiceRecord: 'FeishuServiceRecord',
   ServiceSyncRun: 'ServiceSyncRun',
   ServiceIssue: 'ServiceIssue',
@@ -119,6 +120,9 @@ export const FeishuHandoffProfileScalarFieldEnum = {
   id: 'id',
   externalRecordId: 'externalRecordId',
   customerId: 'customerId',
+  linkSource: 'linkSource',
+  linkedAt: 'linkedAt',
+  linkedById: 'linkedById',
   customerName: 'customerName',
   normalizedCustomerName: 'normalizedCustomerName',
   deploymentType: 'deploymentType',
@@ -200,6 +204,16 @@ export const HandoffSyncRunScalarFieldEnum = {
 
 export type HandoffSyncRunScalarFieldEnum =
   (typeof HandoffSyncRunScalarFieldEnum)[keyof typeof HandoffSyncRunScalarFieldEnum];
+
+export const HandoffSyncLeaseScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  expiresAt: 'expiresAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type HandoffSyncLeaseScalarFieldEnum =
+  (typeof HandoffSyncLeaseScalarFieldEnum)[keyof typeof HandoffSyncLeaseScalarFieldEnum];
 
 export const FeishuServiceRecordScalarFieldEnum = {
   id: 'id',
@@ -427,6 +441,7 @@ export const FeishuHandoffProfileOrderByRelevanceFieldEnum = {
   id: 'id',
   externalRecordId: 'externalRecordId',
   customerId: 'customerId',
+  linkedById: 'linkedById',
   customerName: 'customerName',
   normalizedCustomerName: 'normalizedCustomerName',
   deploymentType: 'deploymentType',
@@ -480,6 +495,13 @@ export const HandoffSyncRunOrderByRelevanceFieldEnum = {
 
 export type HandoffSyncRunOrderByRelevanceFieldEnum =
   (typeof HandoffSyncRunOrderByRelevanceFieldEnum)[keyof typeof HandoffSyncRunOrderByRelevanceFieldEnum];
+
+export const HandoffSyncLeaseOrderByRelevanceFieldEnum = {
+  ownerId: 'ownerId',
+} as const;
+
+export type HandoffSyncLeaseOrderByRelevanceFieldEnum =
+  (typeof HandoffSyncLeaseOrderByRelevanceFieldEnum)[keyof typeof HandoffSyncLeaseOrderByRelevanceFieldEnum];
 
 export const FeishuServiceRecordOrderByRelevanceFieldEnum = {
   id: 'id',

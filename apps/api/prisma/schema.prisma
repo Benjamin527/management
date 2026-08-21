@@ -97,6 +97,11 @@ enum HandoffSyncStatus {
   FAILED
 }
 
+enum HandoffLinkSource {
+  AUTO
+  MANUAL
+}
+
 model User {
   id                    String                 @id @default(cuid())
   email                 String                 @unique
@@ -136,6 +141,9 @@ model FeishuHandoffProfile {
   externalRecordId          String                 @unique
   customerId                String?                @unique
   customer                  Customer?              @relation(fields: [customerId], references: [id])
+  linkSource                HandoffLinkSource?
+  linkedAt                  DateTime?
+  linkedById                String?
   customerName              String
   normalizedCustomerName    String
   deploymentType            String?
@@ -221,6 +229,13 @@ model HandoffSyncRun {
 
   @@index([status, startedAt])
   @@index([startedAt])
+}
+
+model HandoffSyncLease {
+  id        Int      @id
+  ownerId   String?
+  expiresAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model FeishuServiceRecord {

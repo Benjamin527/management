@@ -433,6 +433,7 @@ export const ModelName = {
   FeishuHandoffSecret: 'FeishuHandoffSecret',
   SensitiveAccessAudit: 'SensitiveAccessAudit',
   HandoffSyncRun: 'HandoffSyncRun',
+  HandoffSyncLease: 'HandoffSyncLease',
   FeishuServiceRecord: 'FeishuServiceRecord',
   ServiceSyncRun: 'ServiceSyncRun',
   ServiceIssue: 'ServiceIssue',
@@ -469,6 +470,7 @@ export type TypeMap<
       | 'feishuHandoffSecret'
       | 'sensitiveAccessAudit'
       | 'handoffSyncRun'
+      | 'handoffSyncLease'
       | 'feishuServiceRecord'
       | 'serviceSyncRun'
       | 'serviceIssue'
@@ -884,6 +886,74 @@ export type TypeMap<
           args: Prisma.HandoffSyncRunCountArgs<ExtArgs>;
           result:
             | runtime.Types.Utils.Optional<Prisma.HandoffSyncRunCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    HandoffSyncLease: {
+      payload: Prisma.$HandoffSyncLeasePayload<ExtArgs>;
+      fields: Prisma.HandoffSyncLeaseFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.HandoffSyncLeaseFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.HandoffSyncLeaseFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>;
+        };
+        findFirst: {
+          args: Prisma.HandoffSyncLeaseFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.HandoffSyncLeaseFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>;
+        };
+        findMany: {
+          args: Prisma.HandoffSyncLeaseFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>[];
+        };
+        create: {
+          args: Prisma.HandoffSyncLeaseCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>;
+        };
+        createMany: {
+          args: Prisma.HandoffSyncLeaseCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.HandoffSyncLeaseDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>;
+        };
+        update: {
+          args: Prisma.HandoffSyncLeaseUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>;
+        };
+        deleteMany: {
+          args: Prisma.HandoffSyncLeaseDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.HandoffSyncLeaseUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.HandoffSyncLeaseUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncLeasePayload>;
+        };
+        aggregate: {
+          args: Prisma.HandoffSyncLeaseAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHandoffSyncLease>;
+        };
+        groupBy: {
+          args: Prisma.HandoffSyncLeaseGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.HandoffSyncLeaseGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.HandoffSyncLeaseCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.HandoffSyncLeaseCountAggregateOutputType>
             | number;
         };
       };
@@ -1504,6 +1574,9 @@ export const FeishuHandoffProfileScalarFieldEnum = {
   id: 'id',
   externalRecordId: 'externalRecordId',
   customerId: 'customerId',
+  linkSource: 'linkSource',
+  linkedAt: 'linkedAt',
+  linkedById: 'linkedById',
   customerName: 'customerName',
   normalizedCustomerName: 'normalizedCustomerName',
   deploymentType: 'deploymentType',
@@ -1585,6 +1658,16 @@ export const HandoffSyncRunScalarFieldEnum = {
 
 export type HandoffSyncRunScalarFieldEnum =
   (typeof HandoffSyncRunScalarFieldEnum)[keyof typeof HandoffSyncRunScalarFieldEnum];
+
+export const HandoffSyncLeaseScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  expiresAt: 'expiresAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type HandoffSyncLeaseScalarFieldEnum =
+  (typeof HandoffSyncLeaseScalarFieldEnum)[keyof typeof HandoffSyncLeaseScalarFieldEnum];
 
 export const FeishuServiceRecordScalarFieldEnum = {
   id: 'id',
@@ -1812,6 +1895,7 @@ export const FeishuHandoffProfileOrderByRelevanceFieldEnum = {
   id: 'id',
   externalRecordId: 'externalRecordId',
   customerId: 'customerId',
+  linkedById: 'linkedById',
   customerName: 'customerName',
   normalizedCustomerName: 'normalizedCustomerName',
   deploymentType: 'deploymentType',
@@ -1865,6 +1949,13 @@ export const HandoffSyncRunOrderByRelevanceFieldEnum = {
 
 export type HandoffSyncRunOrderByRelevanceFieldEnum =
   (typeof HandoffSyncRunOrderByRelevanceFieldEnum)[keyof typeof HandoffSyncRunOrderByRelevanceFieldEnum];
+
+export const HandoffSyncLeaseOrderByRelevanceFieldEnum = {
+  ownerId: 'ownerId',
+} as const;
+
+export type HandoffSyncLeaseOrderByRelevanceFieldEnum =
+  (typeof HandoffSyncLeaseOrderByRelevanceFieldEnum)[keyof typeof HandoffSyncLeaseOrderByRelevanceFieldEnum];
 
 export const FeishuServiceRecordOrderByRelevanceFieldEnum = {
   id: 'id',
@@ -2005,6 +2096,12 @@ export type EnumCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'CustomerStatus'
 >;
+
+/**
+ * Reference to a field of type 'HandoffLinkSource'
+ */
+export type EnumHandoffLinkSourceFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'HandoffLinkSource'>;
 
 /**
  * Reference to a field of type 'Json'
@@ -2277,6 +2374,7 @@ export type GlobalOmitConfig = {
   feishuHandoffSecret?: Prisma.FeishuHandoffSecretOmit;
   sensitiveAccessAudit?: Prisma.SensitiveAccessAuditOmit;
   handoffSyncRun?: Prisma.HandoffSyncRunOmit;
+  handoffSyncLease?: Prisma.HandoffSyncLeaseOmit;
   feishuServiceRecord?: Prisma.FeishuServiceRecordOmit;
   serviceSyncRun?: Prisma.ServiceSyncRunOmit;
   serviceIssue?: Prisma.ServiceIssueOmit;

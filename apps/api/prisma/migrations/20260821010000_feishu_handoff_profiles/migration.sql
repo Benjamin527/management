@@ -3,6 +3,9 @@ CREATE TABLE `FeishuHandoffProfile` (
     `id` VARCHAR(191) NOT NULL,
     `externalRecordId` VARCHAR(191) NOT NULL,
     `customerId` VARCHAR(191) NULL,
+    `linkSource` ENUM('AUTO', 'MANUAL') NULL,
+    `linkedAt` DATETIME(3) NULL,
+    `linkedById` VARCHAR(191) NULL,
     `customerName` VARCHAR(191) NOT NULL,
     `normalizedCustomerName` VARCHAR(191) NOT NULL,
     `deploymentType` VARCHAR(191) NULL,
@@ -38,6 +41,20 @@ CREATE TABLE `FeishuHandoffProfile` (
     INDEX `FeishuHandoffProfile_handoffStatus_handoffAt_idx`(`handoffStatus`, `handoffAt`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `HandoffSyncLease` (
+    `id` INTEGER NOT NULL,
+    `ownerId` VARCHAR(191) NULL,
+    `expiresAt` DATETIME(3) NOT NULL,
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- SeedSingleton
+INSERT INTO `HandoffSyncLease` (`id`, `ownerId`, `expiresAt`, `updatedAt`)
+VALUES (1, NULL, '1970-01-01 00:00:00.000', CURRENT_TIMESTAMP(3));
 
 -- CreateTable
 CREATE TABLE `FeishuHandoffSecret` (

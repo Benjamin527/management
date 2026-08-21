@@ -24,7 +24,44 @@ function lastArgument(mock: jest.Mock) {
 }
 
 function createPrismaMock() {
+  const leaseState = {
+    ownerId: null as string | null,
+    expiresAt: new Date(0),
+  };
   const prisma = {
+    leaseState,
+    handoffSyncLease: {
+      findUnique: jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          id: 1,
+          ownerId: leaseState.ownerId,
+          expiresAt: leaseState.expiresAt,
+        }),
+      ),
+      updateMany: jest.fn().mockImplementation(
+        ({
+          where,
+          data,
+        }: {
+          where: {
+            id: number;
+            ownerId?: string;
+            expiresAt?: { lte: Date };
+          };
+          data: { ownerId: string | null; expiresAt: Date };
+        }) => {
+          const canAcquire =
+            where.expiresAt &&
+            leaseState.expiresAt.getTime() <= where.expiresAt.lte.getTime();
+          const ownsLease =
+            where.ownerId !== undefined && leaseState.ownerId === where.ownerId;
+          if (!canAcquire && !ownsLease) return Promise.resolve({ count: 0 });
+          leaseState.ownerId = data.ownerId;
+          leaseState.expiresAt = data.expiresAt;
+          return Promise.resolve({ count: 1 });
+        },
+      ),
+    },
     handoffSyncRun: {
       findFirst: jest.fn().mockResolvedValue(null),
       create: jest.fn().mockResolvedValue({ id: 'run-1' }),
@@ -50,6 +87,7 @@ function createPrismaMock() {
       upsert: jest.fn().mockResolvedValue({ id: 'secret-1' }),
       deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
     },
+    $executeRawUnsafe: jest.fn().mockResolvedValue(0),
     $transaction: jest.fn(),
   };
   prisma.$transaction.mockImplementation(
@@ -64,6 +102,7 @@ describe('HandoffSyncService', () => {
   let feishu: { listAllRecords: jest.Mock };
   let secrets: { encrypt: jest.Mock };
   let values: Record<string, unknown>;
+  let config: { get: jest.Mock; getOrThrow: jest.Mock };
   let service: HandoffSyncService;
 
   beforeEach(() => {
@@ -85,8 +124,9 @@ describe('HandoffSyncService', () => {
       FEISHU_HANDOFF_BASE_APP_TOKEN: 'handoff-app-token',
       FEISHU_HANDOFF_TABLE_ID: 'handoff-table-id',
       FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/handoff',
+      FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
     };
-    const config = {
+    config = {
       get: jest.fn((key: string) => values[key]),
       getOrThrow: jest.fn((key: string) => {
         if (values[key] === undefined) throw new Error(`missing ${key}`);
@@ -120,6 +160,21 @@ describe('HandoffSyncService', () => {
       lastRun: latest,
       nextScheduledAt: '2026-08-20T18:30:00.000Z',
       sourceUrl: 'https://example.feishu.cn/base/handoff',
+    });
+  });
+
+  it('derives running from an unexpired database lease', async () => {
+    prisma.leaseState.ownerId = 'other-instance';
+    prisma.leaseState.expiresAt = new Date('2026-08-20T18:20:00.000Z');
+
+    await expect(service.getStatus()).resolves.toMatchObject({ running: true });
+  });
+
+  it('computes the next schedule from a non-default validated cron in Asia/Shanghai', async () => {
+    values.FEISHU_HANDOFF_SYNC_CRON = '15 4 * * *';
+
+    await expect(service.getStatus()).resolves.toMatchObject({
+      nextScheduledAt: '2026-08-20T20:15:00.000Z',
     });
   });
 
@@ -188,17 +243,29 @@ describe('HandoffSyncService', () => {
     await service.run();
 
     const calls = prisma.feishuHandoffProfile.upsert.mock.calls as unknown as {
-      create: { customerId: string | null };
+      create: {
+        customerId: string | null;
+        linkSource: string | null;
+        linkedAt: Date | null;
+        linkedById: string | null;
+      };
     }[][];
     expect(calls[0][0].create.customerId).toBe('unique-id');
+    expect(calls[0][0].create.linkSource).toBe('AUTO');
+    expect(calls[0][0].create.linkedAt).toBeInstanceOf(Date);
     expect(calls[1][0].create.customerId).toBeNull();
+    expect(calls[1][0].create.linkSource).toBeNull();
+    expect(calls[1][0].create.linkedAt).toBeNull();
+    expect(calls[1][0].create.linkedById).toBeNull();
     expect(calls[2][0].create.customerId).toBeNull();
+    expect(calls[2][0].create.linkSource).toBeNull();
     expect(lastArgument(prisma.handoffSyncRun.update)).toMatchObject({
       data: { unlinkedCount: 2 },
     });
   });
 
-  it('preserves an existing live customer link even when name matching points elsewhere', async () => {
+  it('preserves an existing MANUAL customer link even when name matching points elsewhere', async () => {
+    const linkedAt = new Date('2026-08-01T00:00:00.000Z');
     feishu.listAllRecords.mockResolvedValue([
       sourceRecord('r1', '新客户', null),
     ]);
@@ -209,6 +276,9 @@ describe('HandoffSyncService', () => {
       {
         externalRecordId: 'r1',
         customerId: 'stable-customer',
+        linkSource: 'MANUAL',
+        linkedAt,
+        linkedById: 'manager-1',
         deletedAt: null,
         customer: { deletedAt: null },
       },
@@ -217,9 +287,54 @@ describe('HandoffSyncService', () => {
     await service.run();
 
     expect(lastArgument(prisma.feishuHandoffProfile.upsert)).toMatchObject({
-      create: { customerId: 'stable-customer' },
-      update: { customerId: 'stable-customer' },
+      create: {
+        customerId: 'stable-customer',
+        linkSource: 'MANUAL',
+        linkedAt,
+        linkedById: 'manager-1',
+      },
+      update: {
+        customerId: 'stable-customer',
+        linkSource: 'MANUAL',
+        linkedAt,
+        linkedById: 'manager-1',
+      },
     });
+  });
+
+  it('recomputes an AUTO link after a source customer rename', async () => {
+    feishu.listAllRecords.mockResolvedValue([
+      sourceRecord('r1', '客户乙', null),
+    ]);
+    prisma.customer.findMany.mockResolvedValue([
+      { id: 'customer-a', name: '客户甲' },
+      { id: 'customer-b', name: '客户乙' },
+    ]);
+    prisma.feishuHandoffProfile.findMany.mockResolvedValue([
+      {
+        externalRecordId: 'r1',
+        customerId: 'customer-a',
+        linkSource: 'AUTO',
+        linkedAt: new Date('2026-08-01T00:00:00.000Z'),
+        linkedById: null,
+        deletedAt: null,
+        customer: { deletedAt: null },
+      },
+    ]);
+
+    await service.run();
+
+    expect(lastArgument(prisma.feishuHandoffProfile.upsert)).toMatchObject({
+      update: {
+        customerId: 'customer-b',
+        linkSource: 'AUTO',
+        linkedById: null,
+      },
+    });
+    const renamedLink = lastArgument(prisma.feishuHandoffProfile.upsert) as {
+      update: { linkedAt: unknown };
+    };
+    expect(renamedLink.update.linkedAt).toBeInstanceOf(Date);
   });
 
   it('drops a link to a soft-deleted customer and relinks only through a unique active name match', async () => {
@@ -250,7 +365,7 @@ describe('HandoffSyncService', () => {
 
     await service.run();
 
-    expect(prisma.$transaction).toHaveBeenCalledTimes(2);
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
     expect(secrets.encrypt).toHaveBeenCalledWith(
       { externalRecordId: 'r-secret', fieldName: 'deploymentChecklist' },
       plaintext,
@@ -309,16 +424,13 @@ describe('HandoffSyncService', () => {
       sourceRecord('bad', '客户甲', plaintext),
       sourceRecord('good', '客户甲', null),
     ]);
-    prisma.$transaction
-      .mockRejectedValueOnce(new Error(`database rejected ${plaintext}`))
-      .mockImplementationOnce(
-        (operation: (client: typeof prisma) => Promise<unknown>) =>
-          operation(prisma),
-      );
+    prisma.feishuHandoffProfile.upsert.mockRejectedValueOnce(
+      new Error(`database rejected ${plaintext}`),
+    );
 
     await service.run();
 
-    expect(prisma.$transaction).toHaveBeenCalledTimes(3);
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
     expect(lastArgument(prisma.handoffSyncRun.update)).toMatchObject({
       data: {
         status: 'SUCCESS',
@@ -330,6 +442,44 @@ describe('HandoffSyncService', () => {
     expect(
       JSON.stringify(prisma.handoffSyncRun.update.mock.calls),
     ).not.toContain(plaintext);
+  });
+
+  it('rolls back a profile to its savepoint when secret persistence fails and continues', async () => {
+    feishu.listAllRecords.mockResolvedValue([
+      sourceRecord('bad-secret'),
+      sourceRecord('good', '客户甲', null),
+    ]);
+    let persistedProfileIds: string[] = [];
+    let savepointSnapshot: string[] = [];
+    prisma.$executeRawUnsafe.mockImplementation((statement: string) => {
+      if (statement.startsWith('SAVEPOINT')) {
+        savepointSnapshot = [...persistedProfileIds];
+      } else if (statement.startsWith('ROLLBACK TO SAVEPOINT')) {
+        persistedProfileIds = [...savepointSnapshot];
+      }
+      return Promise.resolve(0);
+    });
+    prisma.feishuHandoffProfile.upsert.mockImplementation(
+      ({ where }: { where: { externalRecordId: string } }) => {
+        persistedProfileIds.push(where.externalRecordId);
+        return Promise.resolve({ id: `profile-${where.externalRecordId}` });
+      },
+    );
+    prisma.feishuHandoffSecret.upsert.mockRejectedValueOnce(
+      new Error('secret persistence failed'),
+    );
+
+    const result = await service.run();
+
+    expect(result).toMatchObject({
+      status: 'SUCCESS',
+      createdCount: 1,
+      failedCount: 1,
+    });
+    expect(persistedProfileIds).toEqual(['good']);
+    expect(prisma.$executeRawUnsafe).toHaveBeenCalledWith(
+      'ROLLBACK TO SAVEPOINT handoff_record_0',
+    );
   });
 
   it('limits the safe error summary to twenty records', async () => {
@@ -389,6 +539,53 @@ describe('HandoffSyncService', () => {
       data: { deletedAt: unknown };
     };
     expect(deletion.data.deletedAt).toBeInstanceOf(Date);
+    expect(deletion.data).toMatchObject({
+      customerId: null,
+      linkSource: null,
+      linkedAt: null,
+      linkedById: null,
+    });
+  });
+
+  it('releases a missing profile link before recreating the same customer under a new external ID', async () => {
+    feishu.listAllRecords.mockResolvedValue([
+      sourceRecord('new-record', '客户甲', null),
+    ]);
+    prisma.feishuHandoffProfile.findMany.mockResolvedValue([
+      {
+        externalRecordId: 'old-record',
+        customerId: 'customer-1',
+        linkSource: 'AUTO',
+        linkedAt: new Date('2026-08-01T00:00:00.000Z'),
+        linkedById: null,
+        deletedAt: null,
+        customer: { deletedAt: null },
+      },
+    ]);
+    let customerOwner: string | null = 'old-record';
+    prisma.feishuHandoffProfile.updateMany.mockImplementation(() => {
+      customerOwner = null;
+      return Promise.resolve({ count: 1 });
+    });
+    prisma.feishuHandoffProfile.upsert.mockImplementation(
+      ({ where }: { where: { externalRecordId: string } }) => {
+        if (customerOwner) {
+          throw new Error('unique customerId constraint');
+        }
+        customerOwner = where.externalRecordId;
+        return Promise.resolve({ id: `profile-${where.externalRecordId}` });
+      },
+    );
+
+    const result = await service.run();
+
+    expect(result).toMatchObject({
+      status: 'SUCCESS',
+      createdCount: 1,
+      deletedCount: 1,
+      failedCount: 0,
+    });
+    expect(customerOwner).toBe('new-record');
   });
 
   it('rolls back missing-profile deletion when the final SUCCESS update fails and then marks the run FAILED', async () => {
@@ -500,6 +697,52 @@ describe('HandoffSyncService', () => {
     expect(service.isRunning).toBe(false);
   });
 
+  it('allows only one of two service instances sharing a lease row to acquire the lease', async () => {
+    const second = new HandoffSyncService(
+      prisma as never,
+      { listAllRecords: jest.fn().mockResolvedValue([]) } as never,
+      config as never,
+      secrets as never,
+    );
+
+    const attempts = await Promise.allSettled([
+      service.acquireLease(),
+      second.acquireLease(),
+    ]);
+
+    expect(
+      attempts.filter((attempt) => attempt.status === 'fulfilled'),
+    ).toHaveLength(1);
+    expect(
+      attempts.filter((attempt) => attempt.status === 'rejected'),
+    ).toHaveLength(1);
+  });
+
+  it('does not let a non-owner release another instance lease', async () => {
+    const ownerId = await service.acquireLease();
+
+    await (
+      service as unknown as {
+        releaseLease(candidateOwnerId: string): Promise<void>;
+      }
+    ).releaseLease('not-the-owner');
+
+    expect(prisma.leaseState.ownerId).toBe(ownerId);
+  });
+
+  it('reclaims an expired lease', async () => {
+    prisma.leaseState.ownerId = 'expired-owner';
+    prisma.leaseState.expiresAt = new Date('2026-08-20T17:59:59.000Z');
+
+    const ownerId = await service.acquireLease();
+
+    expect(ownerId).not.toBe('expired-owner');
+    expect(prisma.leaseState.ownerId).toBe(ownerId);
+    expect(prisma.leaseState.expiresAt).toEqual(
+      new Date('2026-08-20T18:30:00.000Z'),
+    );
+  });
+
   it('recovers interrupted runs on startup', async () => {
     await service.onModuleInit();
 
@@ -514,6 +757,15 @@ describe('HandoffSyncService', () => {
       data: { finishedAt: unknown };
     };
     expect(recovery.data.finishedAt).toBeInstanceOf(Date);
+  });
+
+  it('does not mark RUNNING jobs failed on startup while another instance has an effective lease', async () => {
+    prisma.leaseState.ownerId = 'active-owner';
+    prisma.leaseState.expiresAt = new Date('2026-08-20T18:30:00.000Z');
+
+    await service.onModuleInit();
+
+    expect(prisma.handoffSyncRun.updateMany).not.toHaveBeenCalled();
   });
 
   it('uses the 02:30 Asia/Shanghai cron and skips disabled schedules', async () => {

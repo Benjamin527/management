@@ -28,6 +28,9 @@ export type FeishuHandoffProfileMinAggregateOutputType = {
   id: string | null;
   externalRecordId: string | null;
   customerId: string | null;
+  linkSource: $Enums.HandoffLinkSource | null;
+  linkedAt: Date | null;
+  linkedById: string | null;
   customerName: string | null;
   normalizedCustomerName: string | null;
   deploymentType: string | null;
@@ -54,6 +57,9 @@ export type FeishuHandoffProfileMaxAggregateOutputType = {
   id: string | null;
   externalRecordId: string | null;
   customerId: string | null;
+  linkSource: $Enums.HandoffLinkSource | null;
+  linkedAt: Date | null;
+  linkedById: string | null;
   customerName: string | null;
   normalizedCustomerName: string | null;
   deploymentType: string | null;
@@ -80,6 +86,9 @@ export type FeishuHandoffProfileCountAggregateOutputType = {
   id: number;
   externalRecordId: number;
   customerId: number;
+  linkSource: number;
+  linkedAt: number;
+  linkedById: number;
   customerName: number;
   normalizedCustomerName: number;
   deploymentType: number;
@@ -114,6 +123,9 @@ export type FeishuHandoffProfileMinAggregateInputType = {
   id?: true;
   externalRecordId?: true;
   customerId?: true;
+  linkSource?: true;
+  linkedAt?: true;
+  linkedById?: true;
   customerName?: true;
   normalizedCustomerName?: true;
   deploymentType?: true;
@@ -140,6 +152,9 @@ export type FeishuHandoffProfileMaxAggregateInputType = {
   id?: true;
   externalRecordId?: true;
   customerId?: true;
+  linkSource?: true;
+  linkedAt?: true;
+  linkedById?: true;
   customerName?: true;
   normalizedCustomerName?: true;
   deploymentType?: true;
@@ -166,6 +181,9 @@ export type FeishuHandoffProfileCountAggregateInputType = {
   id?: true;
   externalRecordId?: true;
   customerId?: true;
+  linkSource?: true;
+  linkedAt?: true;
+  linkedById?: true;
   customerName?: true;
   normalizedCustomerName?: true;
   deploymentType?: true;
@@ -284,6 +302,9 @@ export type FeishuHandoffProfileGroupByOutputType = {
   id: string;
   externalRecordId: string;
   customerId: string | null;
+  linkSource: $Enums.HandoffLinkSource | null;
+  linkedAt: Date | null;
+  linkedById: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType: string | null;
@@ -343,6 +364,17 @@ export type FeishuHandoffProfileWhereInput = {
   id?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
   externalRecordId?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
   customerId?:
+    Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
+  linkSource?:
+    | Prisma.EnumHandoffLinkSourceNullableFilter<'FeishuHandoffProfile'>
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    | Prisma.DateTimeNullableFilter<'FeishuHandoffProfile'>
+    | Date
+    | string
+    | null;
+  linkedById?:
     Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
   customerName?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
   normalizedCustomerName?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
@@ -410,6 +442,9 @@ export type FeishuHandoffProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   externalRecordId?: Prisma.SortOrder;
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  linkSource?: Prisma.SortOrderInput | Prisma.SortOrder;
+  linkedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+  linkedById?: Prisma.SortOrderInput | Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
   deploymentType?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -455,6 +490,17 @@ export type FeishuHandoffProfileWhereUniqueInput = Prisma.AtLeast<
     NOT?:
       | Prisma.FeishuHandoffProfileWhereInput
       | Prisma.FeishuHandoffProfileWhereInput[];
+    linkSource?:
+      | Prisma.EnumHandoffLinkSourceNullableFilter<'FeishuHandoffProfile'>
+      | $Enums.HandoffLinkSource
+      | null;
+    linkedAt?:
+      | Prisma.DateTimeNullableFilter<'FeishuHandoffProfile'>
+      | Date
+      | string
+      | null;
+    linkedById?:
+      Prisma.StringNullableFilter<'FeishuHandoffProfile'> | string | null;
     customerName?: Prisma.StringFilter<'FeishuHandoffProfile'> | string;
     normalizedCustomerName?:
       Prisma.StringFilter<'FeishuHandoffProfile'> | string;
@@ -524,6 +570,9 @@ export type FeishuHandoffProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   externalRecordId?: Prisma.SortOrder;
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder;
+  linkSource?: Prisma.SortOrderInput | Prisma.SortOrder;
+  linkedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+  linkedById?: Prisma.SortOrderInput | Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
   deploymentType?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -568,6 +617,19 @@ export type FeishuHandoffProfileScalarWhereWithAggregatesInput = {
   externalRecordId?:
     Prisma.StringWithAggregatesFilter<'FeishuHandoffProfile'> | string;
   customerId?:
+    | Prisma.StringNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | string
+    | null;
+  linkSource?:
+    | Prisma.EnumHandoffLinkSourceNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'FeishuHandoffProfile'>
+    | Date
+    | string
+    | null;
+  linkedById?:
     | Prisma.StringNullableWithAggregatesFilter<'FeishuHandoffProfile'>
     | string
     | null;
@@ -657,6 +719,9 @@ export type FeishuHandoffProfileScalarWhereWithAggregatesInput = {
 export type FeishuHandoffProfileCreateInput = {
   id?: string;
   externalRecordId: string;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -693,6 +758,9 @@ export type FeishuHandoffProfileUncheckedCreateInput = {
   id?: string;
   externalRecordId: string;
   customerId?: string | null;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -727,6 +795,13 @@ export type FeishuHandoffProfileUncheckedCreateInput = {
 export type FeishuHandoffProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -775,6 +850,13 @@ export type FeishuHandoffProfileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -822,6 +904,9 @@ export type FeishuHandoffProfileCreateManyInput = {
   id?: string;
   externalRecordId: string;
   customerId?: string | null;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -854,6 +939,13 @@ export type FeishuHandoffProfileCreateManyInput = {
 export type FeishuHandoffProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -899,6 +991,13 @@ export type FeishuHandoffProfileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -957,6 +1056,9 @@ export type FeishuHandoffProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   externalRecordId?: Prisma.SortOrder;
   customerId?: Prisma.SortOrder;
+  linkSource?: Prisma.SortOrder;
+  linkedAt?: Prisma.SortOrder;
+  linkedById?: Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
   deploymentType?: Prisma.SortOrder;
@@ -990,6 +1092,9 @@ export type FeishuHandoffProfileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   externalRecordId?: Prisma.SortOrder;
   customerId?: Prisma.SortOrder;
+  linkSource?: Prisma.SortOrder;
+  linkedAt?: Prisma.SortOrder;
+  linkedById?: Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
   deploymentType?: Prisma.SortOrder;
@@ -1016,6 +1121,9 @@ export type FeishuHandoffProfileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   externalRecordId?: Prisma.SortOrder;
   customerId?: Prisma.SortOrder;
+  linkSource?: Prisma.SortOrder;
+  linkedAt?: Prisma.SortOrder;
+  linkedById?: Prisma.SortOrder;
   customerName?: Prisma.SortOrder;
   normalizedCustomerName?: Prisma.SortOrder;
   deploymentType?: Prisma.SortOrder;
@@ -1099,6 +1207,10 @@ export type FeishuHandoffProfileUncheckedUpdateOneWithoutCustomerNestedInput = {
   >;
 };
 
+export type NullableEnumHandoffLinkSourceFieldUpdateOperationsInput = {
+  set?: $Enums.HandoffLinkSource | null;
+};
+
 export type FeishuHandoffProfileCreateNestedOneWithoutSecretsInput = {
   create?: Prisma.XOR<
     Prisma.FeishuHandoffProfileCreateWithoutSecretsInput,
@@ -1154,6 +1266,9 @@ export type FeishuHandoffProfileUpdateOneRequiredWithoutAuditsNestedInput = {
 export type FeishuHandoffProfileCreateWithoutCustomerInput = {
   id?: string;
   externalRecordId: string;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -1188,6 +1303,9 @@ export type FeishuHandoffProfileCreateWithoutCustomerInput = {
 export type FeishuHandoffProfileUncheckedCreateWithoutCustomerInput = {
   id?: string;
   externalRecordId: string;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -1250,6 +1368,13 @@ export type FeishuHandoffProfileUpdateToOneWithWhereWithoutCustomerInput = {
 export type FeishuHandoffProfileUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -1296,6 +1421,13 @@ export type FeishuHandoffProfileUpdateWithoutCustomerInput = {
 export type FeishuHandoffProfileUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -1342,6 +1474,9 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutCustomerInput = {
 export type FeishuHandoffProfileCreateWithoutSecretsInput = {
   id?: string;
   externalRecordId: string;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -1377,6 +1512,9 @@ export type FeishuHandoffProfileUncheckedCreateWithoutSecretsInput = {
   id?: string;
   externalRecordId: string;
   customerId?: string | null;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -1438,6 +1576,13 @@ export type FeishuHandoffProfileUpdateToOneWithWhereWithoutSecretsInput = {
 export type FeishuHandoffProfileUpdateWithoutSecretsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -1485,6 +1630,13 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutSecretsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -1530,6 +1682,9 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutSecretsInput = {
 export type FeishuHandoffProfileCreateWithoutAuditsInput = {
   id?: string;
   externalRecordId: string;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -1565,6 +1720,9 @@ export type FeishuHandoffProfileUncheckedCreateWithoutAuditsInput = {
   id?: string;
   externalRecordId: string;
   customerId?: string | null;
+  linkSource?: $Enums.HandoffLinkSource | null;
+  linkedAt?: Date | string | null;
+  linkedById?: string | null;
   customerName: string;
   normalizedCustomerName: string;
   deploymentType?: string | null;
@@ -1626,6 +1784,13 @@ export type FeishuHandoffProfileUpdateToOneWithWhereWithoutAuditsInput = {
 export type FeishuHandoffProfileUpdateWithoutAuditsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -1673,6 +1838,13 @@ export type FeishuHandoffProfileUncheckedUpdateWithoutAuditsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   externalRecordId?: Prisma.StringFieldUpdateOperationsInput | string;
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  linkSource?:
+    | Prisma.NullableEnumHandoffLinkSourceFieldUpdateOperationsInput
+    | $Enums.HandoffLinkSource
+    | null;
+  linkedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  linkedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   customerName?: Prisma.StringFieldUpdateOperationsInput | string;
   normalizedCustomerName?: Prisma.StringFieldUpdateOperationsInput | string;
   deploymentType?:
@@ -1773,6 +1945,9 @@ export type FeishuHandoffProfileSelect<
     id?: boolean;
     externalRecordId?: boolean;
     customerId?: boolean;
+    linkSource?: boolean;
+    linkedAt?: boolean;
+    linkedById?: boolean;
     customerName?: boolean;
     normalizedCustomerName?: boolean;
     deploymentType?: boolean;
@@ -1813,6 +1988,9 @@ export type FeishuHandoffProfileSelectScalar = {
   id?: boolean;
   externalRecordId?: boolean;
   customerId?: boolean;
+  linkSource?: boolean;
+  linkedAt?: boolean;
+  linkedById?: boolean;
   customerName?: boolean;
   normalizedCustomerName?: boolean;
   deploymentType?: boolean;
@@ -1849,6 +2027,9 @@ export type FeishuHandoffProfileOmit<
   | 'id'
   | 'externalRecordId'
   | 'customerId'
+  | 'linkSource'
+  | 'linkedAt'
+  | 'linkedById'
   | 'customerName'
   | 'normalizedCustomerName'
   | 'deploymentType'
@@ -1904,6 +2085,9 @@ export type $FeishuHandoffProfilePayload<
       id: string;
       externalRecordId: string;
       customerId: string | null;
+      linkSource: $Enums.HandoffLinkSource | null;
+      linkedAt: Date | null;
+      linkedById: string | null;
       customerName: string;
       normalizedCustomerName: string;
       deploymentType: string | null;
@@ -2499,6 +2683,12 @@ export interface FeishuHandoffProfileFieldRefs {
   readonly id: Prisma.FieldRef<'FeishuHandoffProfile', 'String'>;
   readonly externalRecordId: Prisma.FieldRef<'FeishuHandoffProfile', 'String'>;
   readonly customerId: Prisma.FieldRef<'FeishuHandoffProfile', 'String'>;
+  readonly linkSource: Prisma.FieldRef<
+    'FeishuHandoffProfile',
+    'HandoffLinkSource'
+  >;
+  readonly linkedAt: Prisma.FieldRef<'FeishuHandoffProfile', 'DateTime'>;
+  readonly linkedById: Prisma.FieldRef<'FeishuHandoffProfile', 'String'>;
   readonly customerName: Prisma.FieldRef<'FeishuHandoffProfile', 'String'>;
   readonly normalizedCustomerName: Prisma.FieldRef<
     'FeishuHandoffProfile',

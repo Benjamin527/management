@@ -13,6 +13,7 @@ export type * from './models/FeishuHandoffProfile';
 export type * from './models/FeishuHandoffSecret';
 export type * from './models/SensitiveAccessAudit';
 export type * from './models/HandoffSyncRun';
+export type * from './models/HandoffSyncLease';
 export type * from './models/FeishuServiceRecord';
 export type * from './models/ServiceSyncRun';
 export type * from './models/ServiceIssue';

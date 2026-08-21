@@ -197,6 +197,19 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
 };
 
+export type EnumHandoffLinkSourceNullableFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.HandoffLinkSource
+    | Prisma.EnumHandoffLinkSourceFieldRefInput<$PrismaModel>
+    | null;
+  in?: $Enums.HandoffLinkSource[] | null;
+  notIn?: $Enums.HandoffLinkSource[] | null;
+  not?:
+    | Prisma.NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel>
+    | $Enums.HandoffLinkSource
+    | null;
+};
+
 export type JsonNullableFilter<$PrismaModel = never> =
   | Prisma.PatchUndefined<
       Prisma.Either<
@@ -269,6 +282,24 @@ export type JsonFilterBase<$PrismaModel = never> = {
     | runtime.InputJsonValue
     | Prisma.JsonFieldRefInput<$PrismaModel>
     | Prisma.JsonNullValueFilter;
+};
+
+export type EnumHandoffLinkSourceNullableWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.HandoffLinkSource
+    | Prisma.EnumHandoffLinkSourceFieldRefInput<$PrismaModel>
+    | null;
+  in?: $Enums.HandoffLinkSource[] | null;
+  notIn?: $Enums.HandoffLinkSource[] | null;
+  not?:
+    | Prisma.NestedEnumHandoffLinkSourceNullableWithAggregatesFilter<$PrismaModel>
+    | $Enums.HandoffLinkSource
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel>;
 };
 
 export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
@@ -944,6 +975,37 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
   _min?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
   _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>;
+};
+
+export type NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel = never> = {
+  equals?:
+    | $Enums.HandoffLinkSource
+    | Prisma.EnumHandoffLinkSourceFieldRefInput<$PrismaModel>
+    | null;
+  in?: $Enums.HandoffLinkSource[] | null;
+  notIn?: $Enums.HandoffLinkSource[] | null;
+  not?:
+    | Prisma.NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel>
+    | $Enums.HandoffLinkSource
+    | null;
+};
+
+export type NestedEnumHandoffLinkSourceNullableWithAggregatesFilter<
+  $PrismaModel = never,
+> = {
+  equals?:
+    | $Enums.HandoffLinkSource
+    | Prisma.EnumHandoffLinkSourceFieldRefInput<$PrismaModel>
+    | null;
+  in?: $Enums.HandoffLinkSource[] | null;
+  notIn?: $Enums.HandoffLinkSource[] | null;
+  not?:
+    | Prisma.NestedEnumHandoffLinkSourceNullableWithAggregatesFilter<$PrismaModel>
+    | $Enums.HandoffLinkSource
+    | null;
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>;
+  _min?: Prisma.NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel>;
+  _max?: Prisma.NestedEnumHandoffLinkSourceNullableFilter<$PrismaModel>;
 };
 
 export type NestedJsonNullableFilter<$PrismaModel = never> =
