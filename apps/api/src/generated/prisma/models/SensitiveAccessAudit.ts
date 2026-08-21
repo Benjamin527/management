@@ -27,6 +27,9 @@ export type AggregateSensitiveAccessAudit = {
 export type SensitiveAccessAuditMinAggregateOutputType = {
   id: string | null;
   profileId: string | null;
+  customerIdSnapshot: string | null;
+  customerNameSnapshot: string | null;
+  externalRecordIdSnapshot: string | null;
   userId: string | null;
   fieldName: string | null;
   ipAddress: string | null;
@@ -36,6 +39,9 @@ export type SensitiveAccessAuditMinAggregateOutputType = {
 export type SensitiveAccessAuditMaxAggregateOutputType = {
   id: string | null;
   profileId: string | null;
+  customerIdSnapshot: string | null;
+  customerNameSnapshot: string | null;
+  externalRecordIdSnapshot: string | null;
   userId: string | null;
   fieldName: string | null;
   ipAddress: string | null;
@@ -45,6 +51,9 @@ export type SensitiveAccessAuditMaxAggregateOutputType = {
 export type SensitiveAccessAuditCountAggregateOutputType = {
   id: number;
   profileId: number;
+  customerIdSnapshot: number;
+  customerNameSnapshot: number;
+  externalRecordIdSnapshot: number;
   userId: number;
   fieldName: number;
   ipAddress: number;
@@ -55,6 +64,9 @@ export type SensitiveAccessAuditCountAggregateOutputType = {
 export type SensitiveAccessAuditMinAggregateInputType = {
   id?: true;
   profileId?: true;
+  customerIdSnapshot?: true;
+  customerNameSnapshot?: true;
+  externalRecordIdSnapshot?: true;
   userId?: true;
   fieldName?: true;
   ipAddress?: true;
@@ -64,6 +76,9 @@ export type SensitiveAccessAuditMinAggregateInputType = {
 export type SensitiveAccessAuditMaxAggregateInputType = {
   id?: true;
   profileId?: true;
+  customerIdSnapshot?: true;
+  customerNameSnapshot?: true;
+  externalRecordIdSnapshot?: true;
   userId?: true;
   fieldName?: true;
   ipAddress?: true;
@@ -73,6 +88,9 @@ export type SensitiveAccessAuditMaxAggregateInputType = {
 export type SensitiveAccessAuditCountAggregateInputType = {
   id?: true;
   profileId?: true;
+  customerIdSnapshot?: true;
+  customerNameSnapshot?: true;
+  externalRecordIdSnapshot?: true;
   userId?: true;
   fieldName?: true;
   ipAddress?: true;
@@ -167,6 +185,9 @@ export type SensitiveAccessAuditGroupByArgs<
 export type SensitiveAccessAuditGroupByOutputType = {
   id: string;
   profileId: string;
+  customerIdSnapshot: string | null;
+  customerNameSnapshot: string | null;
+  externalRecordIdSnapshot: string;
   userId: string;
   fieldName: string;
   ipAddress: string | null;
@@ -202,6 +223,12 @@ export type SensitiveAccessAuditWhereInput = {
     | Prisma.SensitiveAccessAuditWhereInput[];
   id?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   profileId?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
+  customerIdSnapshot?:
+    Prisma.StringNullableFilter<'SensitiveAccessAudit'> | string | null;
+  customerNameSnapshot?:
+    Prisma.StringNullableFilter<'SensitiveAccessAudit'> | string | null;
+  externalRecordIdSnapshot?:
+    Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   userId?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   fieldName?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   ipAddress?:
@@ -217,6 +244,9 @@ export type SensitiveAccessAuditWhereInput = {
 export type SensitiveAccessAuditOrderByWithRelationInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
+  customerIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder;
+  customerNameSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder;
+  externalRecordIdSnapshot?: Prisma.SortOrder;
   userId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
   ipAddress?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -237,6 +267,12 @@ export type SensitiveAccessAuditWhereUniqueInput = Prisma.AtLeast<
       | Prisma.SensitiveAccessAuditWhereInput
       | Prisma.SensitiveAccessAuditWhereInput[];
     profileId?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
+    customerIdSnapshot?:
+      Prisma.StringNullableFilter<'SensitiveAccessAudit'> | string | null;
+    customerNameSnapshot?:
+      Prisma.StringNullableFilter<'SensitiveAccessAudit'> | string | null;
+    externalRecordIdSnapshot?:
+      Prisma.StringFilter<'SensitiveAccessAudit'> | string;
     userId?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
     fieldName?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
     ipAddress?:
@@ -254,6 +290,9 @@ export type SensitiveAccessAuditWhereUniqueInput = Prisma.AtLeast<
 export type SensitiveAccessAuditOrderByWithAggregationInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
+  customerIdSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder;
+  customerNameSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder;
+  externalRecordIdSnapshot?: Prisma.SortOrder;
   userId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
   ipAddress?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -274,6 +313,16 @@ export type SensitiveAccessAuditScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<'SensitiveAccessAudit'> | string;
   profileId?:
     Prisma.StringWithAggregatesFilter<'SensitiveAccessAudit'> | string;
+  customerIdSnapshot?:
+    | Prisma.StringNullableWithAggregatesFilter<'SensitiveAccessAudit'>
+    | string
+    | null;
+  customerNameSnapshot?:
+    | Prisma.StringNullableWithAggregatesFilter<'SensitiveAccessAudit'>
+    | string
+    | null;
+  externalRecordIdSnapshot?:
+    Prisma.StringWithAggregatesFilter<'SensitiveAccessAudit'> | string;
   userId?: Prisma.StringWithAggregatesFilter<'SensitiveAccessAudit'> | string;
   fieldName?:
     Prisma.StringWithAggregatesFilter<'SensitiveAccessAudit'> | string;
@@ -287,6 +336,9 @@ export type SensitiveAccessAuditScalarWhereWithAggregatesInput = {
 
 export type SensitiveAccessAuditCreateInput = {
   id?: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   fieldName: string;
   ipAddress?: string | null;
   createdAt?: Date | string;
@@ -297,6 +349,9 @@ export type SensitiveAccessAuditCreateInput = {
 export type SensitiveAccessAuditUncheckedCreateInput = {
   id?: string;
   profileId: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   userId: string;
   fieldName: string;
   ipAddress?: string | null;
@@ -305,6 +360,11 @@ export type SensitiveAccessAuditUncheckedCreateInput = {
 
 export type SensitiveAccessAuditUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -315,6 +375,11 @@ export type SensitiveAccessAuditUpdateInput = {
 export type SensitiveAccessAuditUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   profileId?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   userId?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -324,6 +389,9 @@ export type SensitiveAccessAuditUncheckedUpdateInput = {
 export type SensitiveAccessAuditCreateManyInput = {
   id?: string;
   profileId: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   userId: string;
   fieldName: string;
   ipAddress?: string | null;
@@ -332,6 +400,11 @@ export type SensitiveAccessAuditCreateManyInput = {
 
 export type SensitiveAccessAuditUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -340,6 +413,11 @@ export type SensitiveAccessAuditUpdateManyMutationInput = {
 export type SensitiveAccessAuditUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   profileId?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   userId?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -367,6 +445,9 @@ export type SensitiveAccessAuditOrderByRelevanceInput = {
 export type SensitiveAccessAuditCountOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
+  customerIdSnapshot?: Prisma.SortOrder;
+  customerNameSnapshot?: Prisma.SortOrder;
+  externalRecordIdSnapshot?: Prisma.SortOrder;
   userId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
   ipAddress?: Prisma.SortOrder;
@@ -376,6 +457,9 @@ export type SensitiveAccessAuditCountOrderByAggregateInput = {
 export type SensitiveAccessAuditMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
+  customerIdSnapshot?: Prisma.SortOrder;
+  customerNameSnapshot?: Prisma.SortOrder;
+  externalRecordIdSnapshot?: Prisma.SortOrder;
   userId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
   ipAddress?: Prisma.SortOrder;
@@ -385,6 +469,9 @@ export type SensitiveAccessAuditMaxOrderByAggregateInput = {
 export type SensitiveAccessAuditMinOrderByAggregateInput = {
   id?: Prisma.SortOrder;
   profileId?: Prisma.SortOrder;
+  customerIdSnapshot?: Prisma.SortOrder;
+  customerNameSnapshot?: Prisma.SortOrder;
+  externalRecordIdSnapshot?: Prisma.SortOrder;
   userId?: Prisma.SortOrder;
   fieldName?: Prisma.SortOrder;
   ipAddress?: Prisma.SortOrder;
@@ -613,6 +700,9 @@ export type SensitiveAccessAuditUncheckedUpdateManyWithoutProfileNestedInput = {
 
 export type SensitiveAccessAuditCreateWithoutUserInput = {
   id?: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   fieldName: string;
   ipAddress?: string | null;
   createdAt?: Date | string;
@@ -622,6 +712,9 @@ export type SensitiveAccessAuditCreateWithoutUserInput = {
 export type SensitiveAccessAuditUncheckedCreateWithoutUserInput = {
   id?: string;
   profileId: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   fieldName: string;
   ipAddress?: string | null;
   createdAt?: Date | string;
@@ -680,6 +773,12 @@ export type SensitiveAccessAuditScalarWhereInput = {
     | Prisma.SensitiveAccessAuditScalarWhereInput[];
   id?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   profileId?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
+  customerIdSnapshot?:
+    Prisma.StringNullableFilter<'SensitiveAccessAudit'> | string | null;
+  customerNameSnapshot?:
+    Prisma.StringNullableFilter<'SensitiveAccessAudit'> | string | null;
+  externalRecordIdSnapshot?:
+    Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   userId?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   fieldName?: Prisma.StringFilter<'SensitiveAccessAudit'> | string;
   ipAddress?:
@@ -689,6 +788,9 @@ export type SensitiveAccessAuditScalarWhereInput = {
 
 export type SensitiveAccessAuditCreateWithoutProfileInput = {
   id?: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   fieldName: string;
   ipAddress?: string | null;
   createdAt?: Date | string;
@@ -697,6 +799,9 @@ export type SensitiveAccessAuditCreateWithoutProfileInput = {
 
 export type SensitiveAccessAuditUncheckedCreateWithoutProfileInput = {
   id?: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   userId: string;
   fieldName: string;
   ipAddress?: string | null;
@@ -749,6 +854,9 @@ export type SensitiveAccessAuditUpdateManyWithWhereWithoutProfileInput = {
 export type SensitiveAccessAuditCreateManyUserInput = {
   id?: string;
   profileId: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   fieldName: string;
   ipAddress?: string | null;
   createdAt?: Date | string;
@@ -756,6 +864,11 @@ export type SensitiveAccessAuditCreateManyUserInput = {
 
 export type SensitiveAccessAuditUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -765,6 +878,11 @@ export type SensitiveAccessAuditUpdateWithoutUserInput = {
 export type SensitiveAccessAuditUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   profileId?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -773,6 +891,11 @@ export type SensitiveAccessAuditUncheckedUpdateWithoutUserInput = {
 export type SensitiveAccessAuditUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
   profileId?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -780,6 +903,9 @@ export type SensitiveAccessAuditUncheckedUpdateManyWithoutUserInput = {
 
 export type SensitiveAccessAuditCreateManyProfileInput = {
   id?: string;
+  customerIdSnapshot?: string | null;
+  customerNameSnapshot?: string | null;
+  externalRecordIdSnapshot: string;
   userId: string;
   fieldName: string;
   ipAddress?: string | null;
@@ -788,6 +914,11 @@ export type SensitiveAccessAuditCreateManyProfileInput = {
 
 export type SensitiveAccessAuditUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -796,6 +927,11 @@ export type SensitiveAccessAuditUpdateWithoutProfileInput = {
 
 export type SensitiveAccessAuditUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   userId?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -804,6 +940,11 @@ export type SensitiveAccessAuditUncheckedUpdateWithoutProfileInput = {
 
 export type SensitiveAccessAuditUncheckedUpdateManyWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string;
+  customerIdSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  customerNameSnapshot?:
+    Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  externalRecordIdSnapshot?: Prisma.StringFieldUpdateOperationsInput | string;
   userId?: Prisma.StringFieldUpdateOperationsInput | string;
   fieldName?: Prisma.StringFieldUpdateOperationsInput | string;
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -817,6 +958,9 @@ export type SensitiveAccessAuditSelect<
   {
     id?: boolean;
     profileId?: boolean;
+    customerIdSnapshot?: boolean;
+    customerNameSnapshot?: boolean;
+    externalRecordIdSnapshot?: boolean;
     userId?: boolean;
     fieldName?: boolean;
     ipAddress?: boolean;
@@ -830,6 +974,9 @@ export type SensitiveAccessAuditSelect<
 export type SensitiveAccessAuditSelectScalar = {
   id?: boolean;
   profileId?: boolean;
+  customerIdSnapshot?: boolean;
+  customerNameSnapshot?: boolean;
+  externalRecordIdSnapshot?: boolean;
   userId?: boolean;
   fieldName?: boolean;
   ipAddress?: boolean;
@@ -840,7 +987,15 @@ export type SensitiveAccessAuditOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'profileId' | 'userId' | 'fieldName' | 'ipAddress' | 'createdAt',
+  | 'id'
+  | 'profileId'
+  | 'customerIdSnapshot'
+  | 'customerNameSnapshot'
+  | 'externalRecordIdSnapshot'
+  | 'userId'
+  | 'fieldName'
+  | 'ipAddress'
+  | 'createdAt',
   ExtArgs['result']['sensitiveAccessAudit']
 >;
 export type SensitiveAccessAuditInclude<
@@ -864,6 +1019,9 @@ export type $SensitiveAccessAuditPayload<
     {
       id: string;
       profileId: string;
+      customerIdSnapshot: string | null;
+      customerNameSnapshot: string | null;
+      externalRecordIdSnapshot: string;
       userId: string;
       fieldName: string;
       ipAddress: string | null;
@@ -1428,6 +1586,18 @@ export interface Prisma__SensitiveAccessAuditClient<
 export interface SensitiveAccessAuditFieldRefs {
   readonly id: Prisma.FieldRef<'SensitiveAccessAudit', 'String'>;
   readonly profileId: Prisma.FieldRef<'SensitiveAccessAudit', 'String'>;
+  readonly customerIdSnapshot: Prisma.FieldRef<
+    'SensitiveAccessAudit',
+    'String'
+  >;
+  readonly customerNameSnapshot: Prisma.FieldRef<
+    'SensitiveAccessAudit',
+    'String'
+  >;
+  readonly externalRecordIdSnapshot: Prisma.FieldRef<
+    'SensitiveAccessAudit',
+    'String'
+  >;
   readonly userId: Prisma.FieldRef<'SensitiveAccessAudit', 'String'>;
   readonly fieldName: Prisma.FieldRef<'SensitiveAccessAudit', 'String'>;
   readonly ipAddress: Prisma.FieldRef<'SensitiveAccessAudit', 'String'>;

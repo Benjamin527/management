@@ -176,7 +176,7 @@ model FeishuHandoffSecret {
   profileId  String
   profile    FeishuHandoffProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
   fieldName  String
-  ciphertext String                @db.Text
+  ciphertext String                @db.LongText
   iv         String
   authTag    String
   createdAt  DateTime              @default(now())
@@ -187,13 +187,16 @@ model FeishuHandoffSecret {
 
 model SensitiveAccessAudit {
   id        String                @id @default(cuid())
-  profileId String
-  profile   FeishuHandoffProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User                  @relation(fields: [userId], references: [id])
-  fieldName String
-  ipAddress String?
-  createdAt DateTime              @default(now())
+  profileId               String
+  profile                 FeishuHandoffProfile @relation(fields: [profileId], references: [id], onDelete: Restrict)
+  customerIdSnapshot      String?
+  customerNameSnapshot    String?
+  externalRecordIdSnapshot String
+  userId                  String
+  user                    User                  @relation(fields: [userId], references: [id])
+  fieldName               String
+  ipAddress               String?
+  createdAt               DateTime              @default(now())
 
   @@index([profileId, createdAt])
   @@index([userId, createdAt])
@@ -215,6 +218,7 @@ model HandoffSyncRun {
   createdAt      DateTime          @default(now())
 
   @@index([status, startedAt])
+  @@index([startedAt])
 }
 
 model FeishuServiceRecord {

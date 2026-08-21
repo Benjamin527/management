@@ -44,7 +44,7 @@ CREATE TABLE `FeishuHandoffSecret` (
     `id` VARCHAR(191) NOT NULL,
     `profileId` VARCHAR(191) NOT NULL,
     `fieldName` VARCHAR(191) NOT NULL,
-    `ciphertext` TEXT NOT NULL,
+    `ciphertext` LONGTEXT NOT NULL,
     `iv` VARCHAR(191) NOT NULL,
     `authTag` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -58,6 +58,9 @@ CREATE TABLE `FeishuHandoffSecret` (
 CREATE TABLE `SensitiveAccessAudit` (
     `id` VARCHAR(191) NOT NULL,
     `profileId` VARCHAR(191) NOT NULL,
+    `customerIdSnapshot` VARCHAR(191) NULL,
+    `customerNameSnapshot` VARCHAR(191) NULL,
+    `externalRecordIdSnapshot` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `fieldName` VARCHAR(191) NOT NULL,
     `ipAddress` VARCHAR(191) NULL,
@@ -85,6 +88,7 @@ CREATE TABLE `HandoffSyncRun` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `HandoffSyncRun_status_startedAt_idx`(`status`, `startedAt`),
+    INDEX `HandoffSyncRun_startedAt_idx`(`startedAt`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -95,7 +99,7 @@ ALTER TABLE `FeishuHandoffProfile` ADD CONSTRAINT `FeishuHandoffProfile_customer
 ALTER TABLE `FeishuHandoffSecret` ADD CONSTRAINT `FeishuHandoffSecret_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `FeishuHandoffProfile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `SensitiveAccessAudit` ADD CONSTRAINT `SensitiveAccessAudit_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `FeishuHandoffProfile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `SensitiveAccessAudit` ADD CONSTRAINT `SensitiveAccessAudit_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `FeishuHandoffProfile`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `SensitiveAccessAudit` ADD CONSTRAINT `SensitiveAccessAudit_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

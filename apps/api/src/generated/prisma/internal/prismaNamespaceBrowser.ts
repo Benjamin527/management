@@ -168,6 +168,9 @@ export type FeishuHandoffSecretScalarFieldEnum =
 export const SensitiveAccessAuditScalarFieldEnum = {
   id: 'id',
   profileId: 'profileId',
+  customerIdSnapshot: 'customerIdSnapshot',
+  customerNameSnapshot: 'customerNameSnapshot',
+  externalRecordIdSnapshot: 'externalRecordIdSnapshot',
   userId: 'userId',
   fieldName: 'fieldName',
   ipAddress: 'ipAddress',
@@ -455,6 +458,9 @@ export type FeishuHandoffSecretOrderByRelevanceFieldEnum =
 export const SensitiveAccessAuditOrderByRelevanceFieldEnum = {
   id: 'id',
   profileId: 'profileId',
+  customerIdSnapshot: 'customerIdSnapshot',
+  customerNameSnapshot: 'customerNameSnapshot',
+  externalRecordIdSnapshot: 'externalRecordIdSnapshot',
   userId: 'userId',
   fieldName: 'fieldName',
   ipAddress: 'ipAddress',
