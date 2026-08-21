@@ -62,6 +62,34 @@ describe('consumption analysis', () => {
     expect(validateSync(query)).not.toHaveLength(0);
   });
 
+  it.each([7, 14])('accepts a %i-day period', (period) => {
+    const query = Object.assign(new ConsumptionQueryDto(), { period });
+    expect(validateSync(query)).toHaveLength(0);
+  });
+
+  it.each([1, 30, 'week'])('rejects unsupported period %s', (period) => {
+    const query = Object.assign(new ConsumptionQueryDto(), { period });
+    expect(validateSync(query)).not.toHaveLength(0);
+  });
+
+  it.each(['ALL', 'SILENT', 'DROP', 'RISE', 'NORMAL'])(
+    'accepts anomaly status %s',
+    (anomalyStatus) => {
+      const query = Object.assign(new ConsumptionQueryDto(), {
+        anomalyStatus,
+      });
+      expect(validateSync(query)).toHaveLength(0);
+    },
+  );
+
+  it.each(['ALL', 'UP', 'DOWN', 'FLAT', 'UNCOMPARABLE'])(
+    'accepts direction %s',
+    (direction) => {
+      const query = Object.assign(new ConsumptionQueryDto(), { direction });
+      expect(validateSync(query)).toHaveLength(0);
+    },
+  );
+
   it('returns a fixed 14-day window and compares the two seven-day halves', () => {
     const result = analyzeConsumption(
       [row('2026-08-07', 100), row('2026-08-14', 20), row('2026-08-20', 30)],
