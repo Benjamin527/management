@@ -1,8 +1,17 @@
 import { consumptionWindow, dateKey } from './consumption-window';
 
 describe('consumption window', () => {
-  it('builds fourteen inclusive dates ending at the latest business day', () => {
+  it('builds twenty-eight inclusive dates ending at the latest business day', () => {
     expect(consumptionWindow(new Date('2026-08-19T00:00:00.000Z'))).toEqual({
+      start: new Date('2026-07-23T00:00:00.000Z'),
+      end: new Date('2026-08-19T00:00:00.000Z'),
+    });
+  });
+
+  it('can build a shorter inclusive analysis window', () => {
+    expect(
+      consumptionWindow(new Date('2026-08-19T00:00:00.000Z'), 14),
+    ).toEqual({
       start: new Date('2026-08-06T00:00:00.000Z'),
       end: new Date('2026-08-19T00:00:00.000Z'),
     });
