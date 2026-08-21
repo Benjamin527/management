@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { createHash } from 'node:crypto';
 import { AppEnvironment } from '../config/env.validation';
+import { FeishuHandoffSecret } from '../generated/prisma/client';
 import {
   EncryptedHandoffSecret,
   HandoffSecretService,
@@ -214,6 +215,24 @@ describe('HandoffSecretService', () => {
     expect(newEnvelope.keyId).not.toBe(oldEnvelope.keyId);
   });
 
+  it('accepts the numeric format version returned by Prisma', () => {
+    const service = createService();
+    const plaintext = 'persisted Prisma secret';
+    const encrypted = service.encrypt(
+      context,
+      plaintext,
+    ) as EncryptedHandoffSecret;
+    const persistedRecord: Pick<
+      FeishuHandoffSecret,
+      'formatVersion' | 'keyId' | 'ciphertext' | 'iv' | 'authTag'
+    > = {
+      ...encrypted,
+      formatVersion: Number(encrypted.formatVersion),
+    };
+
+    expect(service.decrypt(context, persistedRecord)).toBe(plaintext);
+  });
+
   it.each([
     ['an unknown envelope version', { formatVersion: 2 }],
     ['an unknown key ID', { keyId: '0'.repeat(64) }],
@@ -229,7 +248,7 @@ describe('HandoffSecretService', () => {
       service.decrypt(context, {
         ...encrypted,
         ...override,
-      } as EncryptedHandoffSecret),
+      }),
     );
 
     expect(error.message).toBe('Unable to decrypt protected handoff field');

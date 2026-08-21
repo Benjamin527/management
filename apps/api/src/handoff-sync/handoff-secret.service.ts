@@ -8,12 +8,16 @@ import {
 } from 'node:crypto';
 import { AppEnvironment } from '../config/env.validation';
 
-export interface EncryptedHandoffSecret {
-  formatVersion: 1;
+export interface PersistedHandoffSecret {
+  formatVersion: number;
   keyId: string;
   ciphertext: string;
   iv: string;
   authTag: string;
+}
+
+export interface EncryptedHandoffSecret extends PersistedHandoffSecret {
+  formatVersion: 1;
 }
 
 export interface HandoffSecretContext {
@@ -85,7 +89,7 @@ export class HandoffSecretService {
 
   decrypt(
     context: HandoffSecretContext,
-    payload: EncryptedHandoffSecret,
+    payload: PersistedHandoffSecret,
   ): string {
     try {
       if (payload.formatVersion !== 1) throw new Error(DECRYPTION_ERROR);
