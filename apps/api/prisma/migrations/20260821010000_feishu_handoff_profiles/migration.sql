@@ -59,7 +59,7 @@ CREATE TABLE `SensitiveAccessAudit` (
     `id` VARCHAR(191) NOT NULL,
     `profileId` VARCHAR(191) NOT NULL,
     `customerIdSnapshot` VARCHAR(191) NULL,
-    `customerNameSnapshot` VARCHAR(191) NULL,
+    `customerNameSnapshot` VARCHAR(191) NOT NULL,
     `externalRecordIdSnapshot` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `fieldName` VARCHAR(191) NOT NULL,

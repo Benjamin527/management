@@ -190,7 +190,7 @@ model SensitiveAccessAudit {
   profileId               String
   profile                 FeishuHandoffProfile @relation(fields: [profileId], references: [id], onDelete: Restrict)
   customerIdSnapshot      String?
-  customerNameSnapshot    String?
+  customerNameSnapshot    String
   externalRecordIdSnapshot String
   userId                  String
   user                    User                  @relation(fields: [userId], references: [id])
