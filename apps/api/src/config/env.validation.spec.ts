@@ -96,11 +96,32 @@ describe('validateEnv', () => {
         FEISHU_HANDOFF_BASE_APP_TOKEN: 'handoff_base_token',
         FEISHU_HANDOFF_TABLE_ID: 'tblHandoff123',
         FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/example',
+        FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
         HANDOFF_SECRET_ENCRYPTION_KEY:
           '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
         ...override,
       }),
     ).toThrow(`${missing} is required when Feishu handoff sync is enabled`);
+  });
+
+  it.each([
+    ['missing', {}],
+    ['blank', { FEISHU_HANDOFF_SYNC_CRON: '   ' }],
+  ])('rejects handoff sync with a %s cron', (_description, override) => {
+    expect(() =>
+      validateEnv({
+        DATABASE_URL: 'mysql://user:pass@localhost:3306/after_sales',
+        JWT_SECRET: '12345678901234567890123456789012',
+        FEISHU_HANDOFF_BASE_APP_TOKEN: 'handoff_base_token',
+        FEISHU_HANDOFF_TABLE_ID: 'tblHandoff123',
+        FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/example',
+        HANDOFF_SECRET_ENCRYPTION_KEY:
+          '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+        ...override,
+      }),
+    ).toThrow(
+      'FEISHU_HANDOFF_SYNC_CRON is required when Feishu handoff sync is enabled',
+    );
   });
 
   it('rejects a handoff encryption key that is not 64 hexadecimal characters', () => {
@@ -111,6 +132,7 @@ describe('validateEnv', () => {
         FEISHU_HANDOFF_BASE_APP_TOKEN: 'handoff_base_token',
         FEISHU_HANDOFF_TABLE_ID: 'tblHandoff123',
         FEISHU_HANDOFF_BASE_URL: 'https://example.feishu.cn/base/example',
+        FEISHU_HANDOFF_SYNC_CRON: '30 2 * * *',
         HANDOFF_SECRET_ENCRYPTION_KEY: 'g'.repeat(64),
       }),
     ).toThrow(

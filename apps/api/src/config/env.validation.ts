@@ -99,6 +99,7 @@ function validateHandoffConfig(
   const required = [
     'FEISHU_HANDOFF_TABLE_ID',
     'FEISHU_HANDOFF_BASE_URL',
+    'FEISHU_HANDOFF_SYNC_CRON',
     'HANDOFF_SECRET_ENCRYPTION_KEY',
   ] as const;
   const values = Object.fromEntries(
@@ -111,7 +112,7 @@ function validateHandoffConfig(
     );
   }
 
-  const cron = stringValue(input.FEISHU_HANDOFF_SYNC_CRON, '30 2 * * *').trim();
+  const cron = values.FEISHU_HANDOFF_SYNC_CRON;
   if (cron.split(/\s+/).length !== 5) {
     throw new Error(
       'FEISHU_HANDOFF_SYNC_CRON must be a five-field cron expression',
