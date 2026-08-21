@@ -199,20 +199,38 @@ export class HandoffSyncService implements OnModuleInit {
             !fetchedIds.has(profile.externalRecordId),
         )
         .map((profile) => profile.externalRecordId);
-      const deleted = missingIds.length
-        ? await this.prisma.feishuHandoffProfile.updateMany({
-            where: {
-              externalRecordId: { in: missingIds },
-              deletedAt: null,
-            },
-            data: { deletedAt: new Date() },
-          })
-        : { count: 0 };
-
       const finishedAt = new Date();
       const errorSummary = failures.length
         ? failures.slice(0, 20).join('\n')
         : null;
+      const deletedCount = await this.prisma.$transaction(
+        async (transaction) => {
+          const deleted = missingIds.length
+            ? await transaction.feishuHandoffProfile.updateMany({
+                where: {
+                  externalRecordId: { in: missingIds },
+                  deletedAt: null,
+                },
+                data: { deletedAt: new Date() },
+              })
+            : { count: 0 };
+          await transaction.handoffSyncRun.update({
+            where: { id: run.id },
+            data: {
+              status: HandoffSyncStatus.SUCCESS,
+              readCount: sourceRecords.length,
+              createdCount,
+              updatedCount,
+              unlinkedCount,
+              deletedCount: deleted.count,
+              failedCount: failures.length,
+              errorSummary,
+              finishedAt,
+            },
+          });
+          return deleted.count;
+        },
+      );
       const result: HandoffSyncResult = {
         id: run.id,
         status: 'SUCCESS',
@@ -220,25 +238,11 @@ export class HandoffSyncService implements OnModuleInit {
         createdCount,
         updatedCount,
         unlinkedCount,
-        deletedCount: deleted.count,
+        deletedCount,
         failedCount: failures.length,
         errorSummary,
         finishedAt,
       };
-      await this.prisma.handoffSyncRun.update({
-        where: { id: run.id },
-        data: {
-          status: HandoffSyncStatus.SUCCESS,
-          readCount: result.readCount,
-          createdCount,
-          updatedCount,
-          unlinkedCount,
-          deletedCount: result.deletedCount,
-          failedCount: result.failedCount,
-          errorSummary,
-          finishedAt,
-        },
-      });
       return result;
     } catch (error) {
       if (runId) {

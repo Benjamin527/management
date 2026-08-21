@@ -250,7 +250,7 @@ describe('HandoffSyncService', () => {
 
     await service.run();
 
-    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.$transaction).toHaveBeenCalledTimes(2);
     expect(secrets.encrypt).toHaveBeenCalledWith(
       { externalRecordId: 'r-secret', fieldName: 'deploymentChecklist' },
       plaintext,
@@ -318,7 +318,7 @@ describe('HandoffSyncService', () => {
 
     await service.run();
 
-    expect(prisma.$transaction).toHaveBeenCalledTimes(2);
+    expect(prisma.$transaction).toHaveBeenCalledTimes(3);
     expect(lastArgument(prisma.handoffSyncRun.update)).toMatchObject({
       data: {
         status: 'SUCCESS',
@@ -389,6 +389,72 @@ describe('HandoffSyncService', () => {
       data: { deletedAt: unknown };
     };
     expect(deletion.data.deletedAt).toBeInstanceOf(Date);
+  });
+
+  it('rolls back missing-profile deletion when the final SUCCESS update fails and then marks the run FAILED', async () => {
+    feishu.listAllRecords.mockResolvedValue([]);
+    prisma.feishuHandoffProfile.findMany.mockResolvedValue([
+      {
+        externalRecordId: 'missing',
+        customerId: null,
+        deletedAt: null,
+        customer: null,
+      },
+    ]);
+    let deletionCommitted = false;
+    const transactionDelete = jest.fn().mockResolvedValue({ count: 1 });
+    const transactionRunUpdate = jest
+      .fn()
+      .mockRejectedValue(new Error('final SUCCESS update failed'));
+    prisma.$transaction.mockImplementationOnce(
+      async (operation: (client: typeof prisma) => Promise<unknown>) => {
+        const transaction = {
+          ...prisma,
+          feishuHandoffProfile: {
+            ...prisma.feishuHandoffProfile,
+            updateMany: transactionDelete,
+          },
+          handoffSyncRun: {
+            ...prisma.handoffSyncRun,
+            update: transactionRunUpdate,
+          },
+        };
+        try {
+          const result = await operation(transaction);
+          deletionCommitted = true;
+          return result;
+        } catch (error) {
+          deletionCommitted = false;
+          throw error;
+        }
+      },
+    );
+
+    await expect(service.run()).rejects.toThrow('final SUCCESS update failed');
+
+    expect(lastArgument(transactionDelete)).toMatchObject({
+      where: {
+        externalRecordId: { in: ['missing'] },
+        deletedAt: null,
+      },
+    });
+    const stagedDeletion = lastArgument(transactionDelete) as {
+      data: { deletedAt: unknown };
+    };
+    expect(stagedDeletion.data.deletedAt).toBeInstanceOf(Date);
+    expect(lastArgument(transactionRunUpdate)).toMatchObject({
+      where: { id: 'run-1' },
+      data: { status: 'SUCCESS', deletedCount: 1 },
+    });
+    expect(deletionCommitted).toBe(false);
+    expect(prisma.feishuHandoffProfile.updateMany).not.toHaveBeenCalled();
+    expect(lastArgument(prisma.handoffSyncRun.update)).toMatchObject({
+      where: { id: 'run-1' },
+      data: {
+        status: 'FAILED',
+        errorSummary: 'Handoff synchronization failed',
+      },
+    });
   });
 
   it('never soft-deletes when the full fetch fails, marks the run failed safely, and resets running', async () => {
