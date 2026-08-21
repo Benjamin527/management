@@ -115,6 +115,68 @@ describe('FeishuClientService', () => {
     expect(body).toEqual({});
   });
 
+  it('lists and combines every record page from the requested Base source', async () => {
+    fetchMock
+      .mockResolvedValueOnce(tokenResponse())
+      .mockResolvedValueOnce(recordsResponse(['r1'], true, 'next'))
+      .mockResolvedValueOnce(recordsResponse(['r2']));
+
+    const records = await service.listAllRecords({
+      appToken: 'handoff-base',
+      tableId: 'handoff-table',
+    });
+
+    expect(records.map((item) => item.record_id)).toEqual(['r1', 'r2']);
+    expect(fetchUrl(fetchMock.mock.calls[1][0])).toBe(
+      'https://open.feishu.cn/open-apis/bitable/v1/apps/handoff-base/tables/handoff-table/records/search?page_size=500',
+    );
+    expect(fetchUrl(fetchMock.mock.calls[2][0])).toBe(
+      'https://open.feishu.cn/open-apis/bitable/v1/apps/handoff-base/tables/handoff-table/records/search?page_size=500&page_token=next',
+    );
+  });
+
+  it('rejects a paginated Base response that omits its next page token', async () => {
+    fetchMock
+      .mockResolvedValueOnce(tokenResponse())
+      .mockResolvedValueOnce(recordsResponse(['r1'], true));
+
+    await expect(
+      service.listAllRecords({
+        appToken: 'handoff-base',
+        tableId: 'handoff-table',
+      }),
+    ).rejects.toThrow(
+      'Feishu record search returned has_more without page_token',
+    );
+  });
+
+  it.each([
+    ['an HTTP 401', 401, 0],
+    ['a Feishu authentication error', 400, 99991661],
+  ])(
+    'refreshes the tenant token and retries generic Base reads after %s',
+    async (_description, status, code) => {
+      fetchMock
+        .mockResolvedValueOnce(tokenResponse('tenant-token-1'))
+        .mockResolvedValueOnce(jsonResponse({ code, msg: 'expired' }, status))
+        .mockResolvedValueOnce(tokenResponse('tenant-token-2'))
+        .mockResolvedValueOnce(recordsResponse(['r1']));
+
+      await expect(
+        service.listAllRecords({
+          appToken: 'handoff-base',
+          tableId: 'handoff-table',
+        }),
+      ).resolves.toEqual([expect.objectContaining({ record_id: 'r1' })]);
+      expect(fetchMock.mock.calls[1][1]).toMatchObject({
+        headers: { Authorization: 'Bearer tenant-token-1' },
+      });
+      expect(fetchMock.mock.calls[3][1]).toMatchObject({
+        headers: { Authorization: 'Bearer tenant-token-2' },
+      });
+    },
+  );
+
   it('keeps only records whose start date is inside the requested range', async () => {
     const start = new Date('2026-01-01T00:00:00+08:00');
     const end = new Date('2026-01-02T00:00:00+08:00');

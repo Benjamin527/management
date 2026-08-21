@@ -11,6 +11,11 @@ export interface FeishuBaseRecord {
   last_modified_time?: number;
 }
 
+export interface FeishuBaseSource {
+  appToken: string;
+  tableId: string;
+}
+
 export interface RecordSearchRange {
   start: Date;
   end: Date;
@@ -62,16 +67,23 @@ export class FeishuClientService {
   ) {}
 
   async searchRecords(range: RecordSearchRange): Promise<FeishuBaseRecord[]> {
+    const source: FeishuBaseSource = {
+      appToken: this.config.getOrThrow<string>('FEISHU_BASE_APP_TOKEN'),
+      tableId: this.config.getOrThrow<string>('FEISHU_SERVICE_TABLE_ID'),
+    };
+    const records = await this.listAllRecords(source);
+    return records.filter((record) =>
+      this.isWithinRange(record.fields['开始日期'], range),
+    );
+  }
+
+  async listAllRecords(source: FeishuBaseSource): Promise<FeishuBaseRecord[]> {
     const records: FeishuBaseRecord[] = [];
     let pageToken: string | undefined;
 
     do {
-      const page = await this.searchPage(pageToken);
-      records.push(
-        ...(page.items ?? []).filter((record) =>
-          this.isWithinRange(record.fields['开始日期'], range),
-        ),
-      );
+      const page = await this.searchPage(source, pageToken);
+      records.push(...(page.items ?? []));
       pageToken = page.has_more ? page.page_token : undefined;
       if (page.has_more && !pageToken) {
         throw new Error(
@@ -83,26 +95,28 @@ export class FeishuClientService {
     return records;
   }
 
-  private async searchPage(pageToken?: string): Promise<RecordPage> {
+  private async searchPage(
+    source: FeishuBaseSource,
+    pageToken?: string,
+  ): Promise<RecordPage> {
     try {
-      return await this.requestRecordPage(pageToken);
+      return await this.requestRecordPage(source, pageToken);
     } catch (error) {
       if (!(error instanceof FeishuApiError) || !error.authenticationFailure) {
         throw error;
       }
       this.token = null;
-      return this.requestRecordPage(pageToken);
+      return this.requestRecordPage(source, pageToken);
     }
   }
 
-  private async requestRecordPage(pageToken?: string): Promise<RecordPage> {
+  private async requestRecordPage(
+    source: FeishuBaseSource,
+    pageToken?: string,
+  ): Promise<RecordPage> {
     const token = await this.getTenantToken();
-    const appToken = encodeURIComponent(
-      this.config.getOrThrow<string>('FEISHU_BASE_APP_TOKEN'),
-    );
-    const tableId = encodeURIComponent(
-      this.config.getOrThrow<string>('FEISHU_SERVICE_TABLE_ID'),
-    );
+    const appToken = encodeURIComponent(source.appToken);
+    const tableId = encodeURIComponent(source.tableId);
     const query = new URLSearchParams({ page_size: '500' });
     if (pageToken) query.set('page_token', pageToken);
     const url = `https://open.feishu.cn/open-apis/bitable/v1/apps/${appToken}/tables/${tableId}/records/search?${query.toString()}`;
