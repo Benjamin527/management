@@ -39,6 +39,7 @@ export interface Customer {
 
 export interface CustomerDetail extends Customer {
   owner: { id: string; name: string; email?: string } | null;
+  handoffProfile: HandoffProfileDetail | null;
   service2026: {
     total: number;
     open: number;
@@ -46,6 +47,31 @@ export interface CustomerDetail extends Customer {
     monthlyTrend: Array<{ month: string; count: number }>;
     topIssueTypes: Array<{ issueType: string; count: number }>;
   };
+}
+
+export interface HandoffProfileDetail {
+  profileId: string;
+  externalRecordId: string;
+  deploymentType: string | null;
+  deploymentChecklistMasked: string | null;
+  saasSites: string[];
+  featureUsage: string[];
+  logCollection: string[];
+  logCollectionNotes: string | null;
+  apmProbes: string[];
+  apmNotes: string | null;
+  rumApps: string[];
+  rumNotes: string | null;
+  customFeatures: string | null;
+  handoffPeople: string[];
+  handoffAt: string | null;
+  handoffStatus: string | null;
+  importantIssues: string | null;
+  legacyIssues: string | null;
+  communicationChannel: string | null;
+  contactInfo: string | null;
+  sourceUpdatedAt: string | null;
+  syncedAt: string | null;
 }
 
 export interface CustomerDraft {

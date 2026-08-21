@@ -22,3 +22,12 @@ export const linkHandoffProfile = (profileId: string, customerId: string) =>
     method: "PATCH",
     body: JSON.stringify({ customerId }),
   });
+
+export const revealHandoffSecret = (
+  profileId: string,
+  field = "deploymentChecklist",
+) =>
+  apiRequest<{ field: string; value: string }>(
+    `/handoff-profiles/${encodeURIComponent(profileId)}/secrets/${encodeURIComponent(field)}/reveal`,
+    { method: "POST" },
+  );
