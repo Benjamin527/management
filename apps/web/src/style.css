@@ -34,4 +34,4 @@ html,body,#app{height:100%;overflow:hidden}
 .app-main>.page-stack{flex:1;min-height:0;overflow:auto;padding-bottom:48px;overscroll-behavior:contain}
 .dialog-card{overscroll-behavior:contain}
 @media(max-width:980px){.app-shell>.app-main{padding:0 22px}.app-main>.page-stack{padding-bottom:34px}}
-@media(max-width:680px){html,body,#app{height:auto;overflow:visible}.app-shell{height:auto;min-height:100vh;overflow:visible}.app-shell>.app-main{height:auto;min-height:100vh;overflow:visible;padding:0 14px}.app-main>.page-stack{overflow:visible;padding-bottom:28px}.app-topbar{flex-basis:84px}}
+@media(max-width:680px){html,body,#app{height:auto;overflow:visible}.app-shell{height:auto;min-height:100vh;overflow:visible}.service-rail{height:auto}.app-shell>.app-main{height:auto;min-height:100vh;overflow:visible;padding:0 14px}.app-main>.page-stack{overflow:visible;padding-bottom:28px}.app-topbar{flex-basis:84px}}
