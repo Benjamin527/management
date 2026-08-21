@@ -339,40 +339,27 @@ export class HandoffSyncService implements OnModuleInit, OnModuleDestroy {
         let updatedCount = 0;
         let unlinkedCount = 0;
         const failures: string[] = [];
-        for (const [index, sourceRecord] of sourceRecords.entries()) {
-          let savepoint: string | null = null;
+        for (const sourceRecord of sourceRecords) {
+          let mapped: MappedHandoffRecord;
           try {
-            const mapped = mapHandoffRecord(sourceRecord);
-            const existing = profilesByRecordId.get(sourceRecord.record_id);
-            const link = this.resolveLink(
-              mapped,
-              existing,
-              customerIdsByName,
-              reconciledAt,
-            );
-            savepoint = `handoff_record_${index}`;
-            await transaction.$executeRawUnsafe(`SAVEPOINT ${savepoint}`);
-            await this.persistRecord(transaction, mapped, link);
-            await transaction.$executeRawUnsafe(
-              `RELEASE SAVEPOINT ${savepoint}`,
-            );
-            savepoint = null;
-            if (existing) updatedCount += 1;
-            else createdCount += 1;
-            if (!link.customerId) unlinkedCount += 1;
+            mapped = mapHandoffRecord(sourceRecord);
           } catch (error) {
-            if (savepoint) {
-              await transaction.$executeRawUnsafe(
-                `ROLLBACK TO SAVEPOINT ${savepoint}`,
-              );
-              await transaction.$executeRawUnsafe(
-                `RELEASE SAVEPOINT ${savepoint}`,
-              );
-            }
             failures.push(
               `${sourceRecord.record_id}: ${this.safeRecordError(error)}`,
             );
+            continue;
           }
+          const existing = profilesByRecordId.get(sourceRecord.record_id);
+          const link = this.resolveLink(
+            mapped,
+            existing,
+            customerIdsByName,
+            reconciledAt,
+          );
+          await this.persistRecord(transaction, mapped, link);
+          if (existing) updatedCount += 1;
+          else createdCount += 1;
+          if (!link.customerId) unlinkedCount += 1;
         }
 
         const finishedAt = new Date();

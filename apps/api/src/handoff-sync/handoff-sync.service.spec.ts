@@ -472,15 +472,11 @@ describe('HandoffSyncService', () => {
     });
   });
 
-  it('records a safe per-record failure and continues without leaking an unknown error', async () => {
-    const plaintext = 'top-secret-source-value';
+  it('records a safe mapping failure and continues with valid records', async () => {
     feishu.listAllRecords.mockResolvedValue([
-      sourceRecord('bad', '客户甲', plaintext),
+      { record_id: 'bad', fields: {} },
       sourceRecord('good', '客户甲', null),
     ]);
-    prisma.feishuHandoffProfile.upsert.mockRejectedValueOnce(
-      new Error(`database rejected ${plaintext}`),
-    );
 
     await service.run();
 
@@ -490,50 +486,31 @@ describe('HandoffSyncService', () => {
         status: 'SUCCESS',
         createdCount: 1,
         failedCount: 1,
-        errorSummary: 'bad: record mapping or persistence failed',
+        errorSummary: 'bad: 客户名称 is required',
+      },
+    });
+  });
+
+  it('fails the full reconciliation safely when secret persistence fails', async () => {
+    feishu.listAllRecords.mockResolvedValue([sourceRecord('bad-secret')]);
+    prisma.feishuHandoffSecret.upsert.mockRejectedValueOnce(
+      new Error('secret persistence failed with plaintext-value'),
+    );
+
+    await expect(service.run()).rejects.toThrow(
+      'secret persistence failed with plaintext-value',
+    );
+
+    expect(lastArgument(prisma.handoffSyncRun.update)).toMatchObject({
+      data: {
+        status: 'FAILED',
+        errorSummary: 'Handoff synchronization failed',
       },
     });
     expect(
       JSON.stringify(prisma.handoffSyncRun.update.mock.calls),
-    ).not.toContain(plaintext);
-  });
-
-  it('rolls back a profile to its savepoint when secret persistence fails and continues', async () => {
-    feishu.listAllRecords.mockResolvedValue([
-      sourceRecord('bad-secret'),
-      sourceRecord('good', '客户甲', null),
-    ]);
-    let persistedProfileIds: string[] = [];
-    let savepointSnapshot: string[] = [];
-    prisma.$executeRawUnsafe.mockImplementation((statement: string) => {
-      if (statement.startsWith('SAVEPOINT')) {
-        savepointSnapshot = [...persistedProfileIds];
-      } else if (statement.startsWith('ROLLBACK TO SAVEPOINT')) {
-        persistedProfileIds = [...savepointSnapshot];
-      }
-      return Promise.resolve(0);
-    });
-    prisma.feishuHandoffProfile.upsert.mockImplementation(
-      ({ where }: { where: { externalRecordId: string } }) => {
-        persistedProfileIds.push(where.externalRecordId);
-        return Promise.resolve({ id: `profile-${where.externalRecordId}` });
-      },
-    );
-    prisma.feishuHandoffSecret.upsert.mockRejectedValueOnce(
-      new Error('secret persistence failed'),
-    );
-
-    const result = await service.run();
-
-    expect(result).toMatchObject({
-      status: 'SUCCESS',
-      createdCount: 1,
-      failedCount: 1,
-    });
-    expect(persistedProfileIds).toEqual(['good']);
-    expect(prisma.$executeRawUnsafe).toHaveBeenCalledWith(
-      'ROLLBACK TO SAVEPOINT handoff_record_0',
-    );
+    ).not.toContain('plaintext-value');
+    expect(prisma.$executeRawUnsafe).not.toHaveBeenCalled();
   });
 
   it('limits the safe error summary to twenty records', async () => {

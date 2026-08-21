@@ -17,8 +17,8 @@ DATABASE_URL="$HANDOFF_TEST_DATABASE_URL" npm run prisma:migrate --workspace=api
 From the repository root:
 
 ```sh
-npm run test --workspace=api -- handoff-sync.transaction.int-spec.ts --runInBand
-npm run test --workspace=api -- handoff-profiles.concurrent.int-spec.ts --runInBand
+NODE_OPTIONS=--experimental-vm-modules npm run test --workspace=api -- handoff-sync.transaction.int-spec.ts --runInBand
+NODE_OPTIONS=--experimental-vm-modules npm run test --workspace=api -- handoff-profiles.concurrent.int-spec.ts --runInBand
 ```
 
 The concurrency suite verifies that two manual-link targets cannot overwrite
