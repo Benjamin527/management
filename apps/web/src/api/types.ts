@@ -150,63 +150,92 @@ export interface IssueDraft {
   assigneeId?: string;
 }
 
+export type ConsumptionPeriod = 7 | 14;
+export type ConsumptionSourceFilter = "ALL" | "DOMESTIC" | "OVERSEAS";
+export type ConsumptionAnomalyStatus =
+  | "ALL" | "SILENT" | "DROP" | "RISE" | "NORMAL";
+export type ConsumptionDirection =
+  | "ALL" | "UP" | "DOWN" | "FLAT" | "UNCOMPARABLE";
+export type ConsumptionAnomalyState = Exclude<ConsumptionAnomalyStatus, "ALL">;
+export type ConsumptionDirectionState = Exclude<ConsumptionDirection, "ALL">;
+
+export interface ConsumptionFilters {
+  period: ConsumptionPeriod;
+  source: ConsumptionSourceFilter;
+  accountId: string;
+  product: string;
+  managerName: string;
+  anomalyStatus: ConsumptionAnomalyStatus;
+  direction: ConsumptionDirection;
+}
+
+export interface ConsumptionAccountResult {
+  accountId: string;
+  externalId: string;
+  accountName: string;
+  source: Exclude<ConsumptionSourceFilter, "ALL">;
+  managerName: string | null;
+  currentAmount: number;
+  previousAmount: number;
+  changeRate: number | null;
+  direction: ConsumptionDirectionState;
+  anomalyStatus: ConsumptionAnomalyState;
+  products: string[];
+  lastActiveDate: string | null;
+  reason: string | null;
+  confidence: "HIGH" | "LOW";
+}
+
 export interface ConsumptionAnalysis {
-  periodDays: 14;
-  source: "ALL" | "DOMESTIC" | "OVERSEAS";
-  range: { from: string; to: string };
+  periodDays: ConsumptionPeriod;
+  source: ConsumptionSourceFilter;
+  range: {
+    current: { from: string; to: string };
+    previous: { from: string; to: string };
+  };
   dataThrough: string;
   lastSyncedAt: string | null;
   unit: "CNY";
   kpis: {
-    totalAmount: number;
-    recent7Amount: number;
-    previous7Amount: number;
+    currentAmount: number;
+    previousAmount: number;
     changeRate: number | null;
+    dailyAverage: number;
     activeAccounts: number;
     anomalyAccounts: number;
   };
-  trend: Array<{ date: string; amount: number }>;
+  trend: Array<{
+    index: number;
+    currentDate: string;
+    previousDate: string;
+    currentAmount: number | null;
+    previousAmount: number | null;
+  }>;
   coverage: Array<{ date: string; domestic: boolean; overseas: boolean }>;
-  availableDates: string[];
   missingDates: string[];
   productDistribution: Array<{
     product: string;
-    amount: number;
-    unit: string | null;
+    currentAmount: number;
+    previousAmount: number;
+    changeRate: number | null;
     share: number;
   }>;
-  accountRanking: Array<{
-    accountId: string;
-    externalId: string;
-    accountName: string;
-    source: "DOMESTIC" | "OVERSEAS";
-    managerName: string | null;
-    amount: number;
-    recent7Amount: number;
-    previous7Amount: number;
+  sourceDistribution: Array<{
+    source: Exclude<ConsumptionSourceFilter, "ALL">;
+    currentAmount: number;
+    previousAmount: number;
     changeRate: number | null;
-    products: string[];
-    lastActiveDate: string | null;
+    share: number;
   }>;
-  anomalies: Array<{
-    accountId: string;
-    externalId: string;
-    accountName: string;
-    source: "DOMESTIC" | "OVERSEAS";
-    managerName: string | null;
-    amount: number;
-    recent7Amount: number;
-    previous7Amount: number;
-    changeRate: number | null;
-    type: "DROP" | "RISE" | "SILENT";
-    reason: string;
-    confidence: "HIGH" | "LOW";
-  }>;
+  accountRanking: ConsumptionAccountResult[];
+  anomalies: ConsumptionAccountResult[];
+  summary: string[];
   filters: {
     products: string[];
+    managers: string[];
     accounts: Array<{
       id: string;
-      source: "DOMESTIC" | "OVERSEAS";
+      source: Exclude<ConsumptionSourceFilter, "ALL">;
       externalId: string;
       displayName: string;
       managerName: string | null;

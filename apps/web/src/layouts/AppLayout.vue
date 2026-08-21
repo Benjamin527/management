@@ -71,3 +71,7 @@ async function logout() {
     </main>
   </div>
 </template>
+
+<style scoped>
+@media(max-width:680px){.service-rail{height:auto}}
+</style>

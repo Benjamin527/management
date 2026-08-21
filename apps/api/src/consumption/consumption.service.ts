@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { analyzeConsumption } from './consumption-analysis';
-import { consumptionWindow } from './consumption-window';
+import { addUtcDays, consumptionWindow } from './consumption-window';
 import { ConsumptionQueryDto } from './dto/consumption-query.dto';
 
 @Injectable()
@@ -10,25 +10,24 @@ export class ConsumptionService {
 
   async analysis(query: ConsumptionQueryDto, now = new Date()) {
     const source = query.source ?? 'ALL';
+    const period = query.period ?? 14;
     const lastSuccessfulRun = await this.prisma.consumptionSyncRun.findFirst({
       where: { status: 'SUCCESS' },
       orderBy: { finishedAt: 'desc' },
       select: { rangeStart: true, rangeEnd: true, finishedAt: true },
     });
-    const range = lastSuccessfulRun
-      ? {
-          start: lastSuccessfulRun.rangeStart,
-          end: lastSuccessfulRun.rangeEnd,
-        }
-      : consumptionWindow(now);
+    const rangeEnd = lastSuccessfulRun?.rangeEnd ?? consumptionWindow(now).end;
+    const rangeStart = addUtcDays(rangeEnd, -(period - 1));
+    const previousRangeStart = addUtcDays(rangeStart, -period);
     const accountFilter = {
       ...(query.accountId ? { id: query.accountId } : {}),
       ...(source === 'ALL' ? {} : { source }),
+      ...(query.managerName ? { managerName: query.managerName } : {}),
     };
     const [rows, coverage] = await Promise.all([
       this.prisma.consumptionDaily.findMany({
         where: {
-          date: { gte: range.start, lte: range.end },
+          date: { gte: previousRangeStart, lte: rangeEnd },
           ...(query.product ? { product: query.product } : {}),
           ...(Object.keys(accountFilter).length
             ? { account: accountFilter }
@@ -48,15 +47,19 @@ export class ConsumptionService {
         orderBy: { date: 'asc' },
       }),
       this.prisma.consumptionSourceDay.findMany({
-        where: { date: { gte: range.start, lte: range.end } },
+        where: { date: { gte: previousRangeStart, lte: rangeEnd } },
         orderBy: { date: 'asc' },
       }),
     ]);
 
     return analyzeConsumption(rows, coverage, {
       source,
-      rangeStart: range.start,
-      rangeEnd: range.end,
+      period,
+      anomalyStatus: query.anomalyStatus ?? 'ALL',
+      direction: query.direction ?? 'ALL',
+      previousRangeStart,
+      rangeStart,
+      rangeEnd,
       lastSyncedAt: lastSuccessfulRun?.finishedAt ?? null,
     });
   }

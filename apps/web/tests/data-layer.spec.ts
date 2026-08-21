@@ -52,13 +52,17 @@ describe("typed data layer", () => {
 
   it("uses only independent consumption filters and exposes synchronization actions", async () => {
     await getConsumptionAnalysis({
+      period: 7,
       source: "OVERSEAS",
       accountId: "a1",
       product: "日志",
+      managerName: "王雨轩",
+      anomalyStatus: "RISE",
+      direction: "UP",
     });
     expect(fetch).toHaveBeenNthCalledWith(
       1,
-      "/api/consumption/analysis?source=OVERSEAS&accountId=a1&product=%E6%97%A5%E5%BF%97",
+      "/api/consumption/analysis?period=7&source=OVERSEAS&accountId=a1&product=%E6%97%A5%E5%BF%97&managerName=%E7%8E%8B%E9%9B%A8%E8%BD%A9&anomalyStatus=RISE&direction=UP",
       expect.any(Object),
     );
 

@@ -22,7 +22,10 @@ export function dateKey(value: Date) {
   return dateOnly(value).toISOString().slice(0, 10);
 }
 
-export function consumptionWindow(latest: Date) {
+export function consumptionWindow(latest: Date, days = 28) {
+  if (!Number.isInteger(days) || days < 1) {
+    throw new Error('Consumption window days must be a positive integer');
+  }
   const end = dateOnly(latest);
-  return { start: addUtcDays(end, -13), end };
+  return { start: addUtcDays(end, -(days - 1)), end };
 }

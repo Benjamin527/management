@@ -3,7 +3,7 @@
 ## 运行口径
 
 - 数据源：新版 `guance_crm_v2`，只读查询国内与海外消费。
-- 保留范围：以源库最新业务日为结束日，固定保留最近 14 个自然日。
+- 保留范围：以源库最新业务日为结束日，固定保留最近 28 个自然日，供 7/14 天本期与等长上一周期对比。
 - 本地模型：`ConsumptionAccount` 与售后 `Customer` 完全独立，不按名称自动关联，也不创建或修改客户档案。
 - 自动任务：每天 `13:00 Asia/Shanghai` 运行一次。
 - 页面/API 只读取管理系统本地 MySQL 快照；源库不可用时继续展示上一份成功快照。
@@ -22,7 +22,7 @@ CONSUMPTION_SYNC_CRON="0 13 * * *"
 
 ## 接口与权限
 
-- `GET /api/consumption/analysis?source=ALL|DOMESTIC|OVERSEAS&accountId=&product=`：读取本地 14 天分析。
+- `GET /api/consumption/analysis?period=7|14&source=ALL|DOMESTIC|OVERSEAS&accountId=&product=&managerName=&anomalyStatus=&direction=`：按周期、来源、账户、产品、负责人、异常状态和变化方向读取本地分析。
 - `GET /api/consumption/sync/status`：读取最近同步、运行状态和下次计划时间。
 - `POST /api/consumption/sync/run`：立即同步，只有 `ADMIN` 和 `MANAGER` 可执行。
 
@@ -52,7 +52,7 @@ curl -f http://127.0.0.1/api/health
 
 - 数据截至日与最近成功同步窗口一致。
 - “全部 / 国内 / 海外”金额分别与本地快照一致。
-- 14 个日期格能区分真实零金额与源汇总缺失。
+- 7/14 天分析都能与等长上一周期比较，并区分真实零金额与源汇总缺失。
 - 同步完成后页面自动刷新；失败时旧分析仍可读取。
 
 ## 故障处理

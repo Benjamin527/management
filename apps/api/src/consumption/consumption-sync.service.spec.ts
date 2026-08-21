@@ -105,9 +105,17 @@ describe('ConsumptionSyncService', () => {
     );
   });
 
-  it('replaces the local 14-day snapshot without touching Customer', async () => {
+  it('replaces the local 28-day snapshot without touching Customer', async () => {
     const result = await service.run();
 
+    expect(source.readWindow).toHaveBeenCalledWith({
+      start: new Date('2026-07-23T00:00:00.000Z'),
+      end: new Date('2026-08-19T00:00:00.000Z'),
+    });
+    expect(source.readCoverage).toHaveBeenCalledWith({
+      start: new Date('2026-07-23T00:00:00.000Z'),
+      end: new Date('2026-08-19T00:00:00.000Z'),
+    });
     expect(prisma.customer.create).not.toHaveBeenCalled();
     expect(prisma.customer.update).not.toHaveBeenCalled();
     expect(prisma.customer.upsert).not.toHaveBeenCalled();

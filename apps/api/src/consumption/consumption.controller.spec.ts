@@ -29,6 +29,19 @@ describe('ConsumptionController', () => {
     });
   });
 
+  it('passes dashboard filters to the analysis service', async () => {
+    const query = {
+      period: 7 as const,
+      source: 'OVERSEAS' as const,
+      product: 'APM',
+      managerName: '王雨轩',
+      anomalyStatus: 'RISE' as const,
+      direction: 'UP' as const,
+    };
+    await controller.analysis(query);
+    expect(analysis.analysis).toHaveBeenCalledWith(query);
+  });
+
   it.each(['ADMIN', 'MANAGER'])('lets %s trigger synchronization', (role) => {
     expect(
       controller.runSync({
