@@ -1,15 +1,16 @@
 import { ConsumptionService } from './consumption.service';
 
+type DailyQuery = {
+  where: {
+    date: { gte: Date; lte: Date };
+    product?: string;
+    account?: { id?: string; source?: string; managerName?: string };
+  };
+  include: { account: { select: Record<string, boolean> } };
+};
+
 describe('ConsumptionService', () => {
   it('queries independent consumption accounts in the latest successful window', async () => {
-    type DailyQuery = {
-      where: {
-        date: { gte: Date; lte: Date };
-        product?: string;
-        account?: { id?: string; source?: string; managerName?: string };
-      };
-      include: { account: { select: Record<string, boolean> } };
-    };
     let capturedQuery: DailyQuery | undefined;
     const prisma = {
       consumptionSyncRun: {
