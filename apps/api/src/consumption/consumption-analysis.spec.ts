@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { validateSync } from 'class-validator';
 import { analyzeConsumption } from './consumption-analysis';
+import { addUtcDays, dateKey } from './consumption-window';
 import { ConsumptionQueryDto } from './dto/consumption-query.dto';
 
 const account = (
@@ -30,12 +31,12 @@ const row = (
   account: account(accountId, accountName, source),
 });
 
-const coverage = (missingOverseasDate?: string) =>
-  Array.from({ length: 14 }, (_, index) => {
-    const date = new Date(Date.UTC(2026, 7, 7 + index));
+const coverage = (start: string, count: number, missingOverseasDate?: string) =>
+  Array.from({ length: count }, (_, index) => {
+    const date = addUtcDays(new Date(`${start}T00:00:00.000Z`), index);
     return [
       { source: 'DOMESTIC' as const, date, recordCount: 10, amount: 1 },
-      ...(date.toISOString().slice(0, 10) === missingOverseasDate
+      ...(dateKey(date) === missingOverseasDate
         ? []
         : [
             {
@@ -90,37 +91,78 @@ describe('consumption analysis', () => {
     },
   );
 
-  it('returns a fixed 14-day window and compares the two seven-day halves', () => {
+  it.each([
+    { period: 7 as const, currentStart: '2026-08-14', expectedCurrent: 50 },
+    { period: 14 as const, currentStart: '2026-08-07', expectedCurrent: 150 },
+  ])(
+    'compares $period days with an equal previous period',
+    ({ period, currentStart, expectedCurrent }) => {
+      const result = analyzeConsumption(
+        [
+          row('2026-07-24', 40),
+          row('2026-08-07', 100),
+          row('2026-08-14', 20),
+          row('2026-08-20', 30),
+        ],
+        coverage('2026-07-24', 28),
+        {
+          period,
+          source: 'ALL',
+          anomalyStatus: 'ALL',
+          direction: 'ALL',
+          rangeStart: new Date(`${currentStart}T00:00:00.000Z`),
+          rangeEnd: new Date('2026-08-20T00:00:00.000Z'),
+          previousRangeStart: new Date(
+            `${period === 7 ? '2026-08-07' : '2026-07-24'}T00:00:00.000Z`,
+          ),
+          lastSyncedAt: new Date('2026-08-20T05:00:00.000Z'),
+        },
+      );
+
+      expect(result.periodDays).toBe(period);
+      expect(result.range.current.from).toBe(currentStart);
+      expect(result.trend).toHaveLength(period);
+      expect(result.kpis.currentAmount).toBe(expectedCurrent);
+      expect(result.trend[0]).toHaveProperty('previousDate');
+      expect(result.trend[0]).toHaveProperty('currentAmount');
+      expect(result.trend[0]).toHaveProperty('previousAmount');
+    },
+  );
+
+  it('filters account aggregates before building every dashboard module', () => {
     const result = analyzeConsumption(
-      [row('2026-08-07', 100), row('2026-08-14', 20), row('2026-08-20', 30)],
-      coverage(),
+      [
+        row('2026-08-07', 100, 'drop', '下降账户', 'DOMESTIC', '日志'),
+        row('2026-08-14', 20, 'drop', '下降账户', 'DOMESTIC', '日志'),
+        row('2026-08-07', 10, 'rise', '增长账户', 'OVERSEAS', 'APM'),
+        row('2026-08-14', 30, 'rise', '增长账户', 'OVERSEAS', 'APM'),
+      ],
+      coverage('2026-08-07', 14),
       {
+        period: 7,
         source: 'ALL',
-        rangeStart: new Date('2026-08-07T00:00:00.000Z'),
+        anomalyStatus: 'DROP',
+        direction: 'DOWN',
+        previousRangeStart: new Date('2026-08-07T00:00:00.000Z'),
+        rangeStart: new Date('2026-08-14T00:00:00.000Z'),
         rangeEnd: new Date('2026-08-20T00:00:00.000Z'),
-        lastSyncedAt: new Date('2026-08-20T05:00:00.000Z'),
+        lastSyncedAt: null,
       },
     );
 
-    expect(result.periodDays).toBe(14);
-    expect(result.trend).toHaveLength(14);
-    expect(result.trend[1]).toEqual({ date: '2026-08-08', amount: 0 });
-    expect(result.kpis).toMatchObject({
-      totalAmount: 150,
-      previous7Amount: 100,
-      recent7Amount: 50,
-      changeRate: -50,
-      activeAccounts: 1,
-    });
-    expect(result.accountRanking[0]).toMatchObject({
-      accountId: 'a1',
-      accountName: '太保',
-      source: 'DOMESTIC',
-      amount: 150,
-    });
+    expect(result.accountRanking.map((item) => item.accountId)).toEqual([
+      'drop',
+    ]);
+    expect(result.kpis.currentAmount).toBe(20);
+    expect(result.productDistribution.map((item) => item.product)).toEqual([
+      '日志',
+    ]);
+    expect(result.sourceDistribution).toEqual([
+      expect.objectContaining({ source: 'DOMESTIC', currentAmount: 20 }),
+    ]);
   });
 
-  it('detects drop, rise, and silence with account identities', () => {
+  it('classifies silence, drop, rise, and normal accounts', () => {
     const result = analyzeConsumption(
       [
         row('2026-08-07', 100, 'drop', '下降账户'),
@@ -128,45 +170,63 @@ describe('consumption analysis', () => {
         row('2026-08-07', 10, 'rise', '增长账户'),
         row('2026-08-14', 30, 'rise', '增长账户'),
         row('2026-08-10', 40, 'silent', '沉默账户'),
+        row('2026-08-10', 20, 'normal', '正常账户'),
+        row('2026-08-18', 20, 'normal', '正常账户'),
       ],
-      coverage(),
+      coverage('2026-08-07', 14),
       {
+        period: 7,
         source: 'DOMESTIC',
-        rangeStart: new Date('2026-08-07T00:00:00.000Z'),
+        anomalyStatus: 'ALL',
+        direction: 'ALL',
+        previousRangeStart: new Date('2026-08-07T00:00:00.000Z'),
+        rangeStart: new Date('2026-08-14T00:00:00.000Z'),
         rangeEnd: new Date('2026-08-20T00:00:00.000Z'),
         lastSyncedAt: null,
       },
     );
 
-    expect(result.anomalies).toEqual(
+    expect(result.accountRanking).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ accountId: 'drop', type: 'DROP' }),
-        expect.objectContaining({ accountId: 'rise', type: 'RISE' }),
-        expect.objectContaining({ accountId: 'silent', type: 'SILENT' }),
+        expect.objectContaining({ accountId: 'drop', anomalyStatus: 'DROP' }),
+        expect.objectContaining({ accountId: 'rise', anomalyStatus: 'RISE' }),
+        expect.objectContaining({
+          accountId: 'silent',
+          anomalyStatus: 'SILENT',
+        }),
+        expect.objectContaining({
+          accountId: 'normal',
+          anomalyStatus: 'NORMAL',
+        }),
       ]),
     );
-    expect(result.anomalies.every((item) => item.confidence === 'HIGH')).toBe(
-      true,
-    );
+    expect(result.anomalies).toHaveLength(3);
   });
 
-  it('distinguishes a missing source day from a real zero day', () => {
-    const result = analyzeConsumption([], coverage('2026-08-12'), {
-      source: 'ALL',
-      rangeStart: new Date('2026-08-07T00:00:00.000Z'),
-      rangeEnd: new Date('2026-08-20T00:00:00.000Z'),
-      lastSyncedAt: null,
-    });
-
-    expect(result.trend.find((day) => day.date === '2026-08-12')?.amount).toBe(
-      0,
+  it('returns null amounts for missing days and zero for covered zero days', () => {
+    const result = analyzeConsumption(
+      [],
+      coverage('2026-08-07', 14, '2026-08-16'),
+      {
+        period: 7,
+        source: 'ALL',
+        anomalyStatus: 'ALL',
+        direction: 'ALL',
+        previousRangeStart: new Date('2026-08-07T00:00:00.000Z'),
+        rangeStart: new Date('2026-08-14T00:00:00.000Z'),
+        rangeEnd: new Date('2026-08-20T00:00:00.000Z'),
+        lastSyncedAt: null,
+      },
     );
-    expect(result.missingDates).toEqual(['2026-08-12']);
-    expect(result.availableDates).toHaveLength(13);
-    expect(result.coverage.find((day) => day.date === '2026-08-12')).toEqual({
-      date: '2026-08-12',
-      domestic: true,
-      overseas: false,
-    });
+
+    expect(
+      result.trend.find((item) => item.currentDate === '2026-08-16')
+        ?.currentAmount,
+    ).toBeNull();
+    expect(
+      result.trend.find((item) => item.currentDate === '2026-08-17')
+        ?.currentAmount,
+    ).toBe(0);
+    expect(result.missingDates).toContain('2026-08-16');
   });
 });
