@@ -55,4 +55,17 @@ describe('AnalysisFilters', () => {
       '已清除账户、产品和负责人筛选',
     )
   })
+
+  it('toggles the secondary mobile filter region', async () => {
+    const wrapper = mountFilters()
+
+    expect(wrapper.get('[data-mobile-filters]').attributes('data-expanded')).toBe(
+      'false',
+    )
+    await wrapper.get('[data-action="toggle-mobile-filters"]').trigger('click')
+
+    expect(wrapper.get('[data-mobile-filters]').attributes('data-expanded')).toBe(
+      'true',
+    )
+  })
 })

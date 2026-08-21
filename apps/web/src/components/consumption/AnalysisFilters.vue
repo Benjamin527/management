@@ -25,6 +25,7 @@ const emit = defineEmits<{
 
 const accountSearch = ref('')
 const announcement = ref('')
+const mobileFiltersOpen = ref(false)
 
 const accountLabel = (account: AccountOption) =>
   `${account.displayName} · ${account.source === 'DOMESTIC' ? '国内' : '海外'}`
@@ -175,9 +176,22 @@ function removeChip(key: keyof ConsumptionFilters) {
         </div>
       </div>
       <span class="filter-result">{{ resultCount }} 个账户</span>
+      <button
+        class="mobile-filter-toggle"
+        data-action="toggle-mobile-filters"
+        :aria-expanded="mobileFiltersOpen"
+        @click="mobileFiltersOpen = !mobileFiltersOpen"
+      >
+        筛选 {{ mobileFiltersOpen ? '收起' : '展开' }}
+      </button>
     </div>
 
-    <div class="filter-secondary-row">
+    <div
+      class="filter-secondary-row"
+      data-mobile-filters
+      :data-expanded="mobileFiltersOpen"
+      :class="{ 'mobile-open': mobileFiltersOpen }"
+    >
       <label>
         <span>消费账户</span>
         <input
@@ -265,6 +279,6 @@ function removeChip(key: keyof ConsumptionFilters) {
 
 <style scoped>
 .analysis-filters{padding:16px 18px;border:1px solid var(--report-line);border-radius:14px;background:var(--report-surface)}
-.filter-primary-row,.filter-secondary-row,.active-filter-row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}.filter-primary-row{align-items:center}.filter-group{display:flex;align-items:center;gap:9px}.filter-group>span,.filter-secondary-row label>span{display:block;color:var(--report-muted);font-size:10px;margin-bottom:6px}.filter-group>span{margin:0}.filter-segmented{display:flex;padding:3px;border-radius:9px;background:#edf2f3}.filter-segmented button{min-height:32px;padding:0 13px;border:0;border-radius:7px;background:transparent;color:var(--report-muted);font-size:11px}.filter-segmented button.active{background:#fff;color:var(--report-ink);box-shadow:0 2px 8px rgba(23,50,71,.08)}.filter-result{margin-left:auto;color:var(--report-muted);font:600 10px ui-monospace,monospace}.filter-secondary-row{margin-top:14px}.filter-secondary-row label{flex:1 1 140px}.filter-secondary-row input,.filter-secondary-row select{width:100%;height:38px;border:1px solid var(--report-line);border-radius:9px;background:#fff;padding:0 11px;color:var(--report-ink);outline:none}.filter-secondary-row input:focus,.filter-secondary-row select:focus{border-color:var(--report-teal);box-shadow:0 0 0 3px rgba(22,142,130,.12)}.active-filter-row{align-items:center;margin-top:13px;padding-top:12px;border-top:1px solid #edf1f2}.filter-chip,.clear-filters{min-height:30px;border:0;border-radius:16px;padding:0 10px;font-size:10px}.filter-chip{background:#eaf4f2;color:#176f67}.filter-chip span{margin-left:4px}.clear-filters{background:transparent;color:var(--report-muted);text-decoration:underline;text-underline-offset:3px}.filter-announcement{height:0;margin:0;overflow:hidden}
-@media(max-width:680px){.filter-result{width:100%;margin:0}.filter-secondary-row{display:grid;grid-template-columns:1fr 1fr}.filter-secondary-row label:first-child{grid-column:1/-1}}
+.filter-primary-row,.filter-secondary-row,.active-filter-row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}.filter-primary-row{align-items:center}.filter-group{display:flex;align-items:center;gap:9px}.filter-group>span,.filter-secondary-row label>span{display:block;color:var(--report-muted);font-size:10px;margin-bottom:6px}.filter-group>span{margin:0}.filter-segmented{display:flex;padding:3px;border-radius:9px;background:#edf2f3}.filter-segmented button{min-height:32px;padding:0 13px;border:0;border-radius:7px;background:transparent;color:var(--report-muted);font-size:11px}.filter-segmented button.active{background:#fff;color:var(--report-ink);box-shadow:0 2px 8px rgba(23,50,71,.08)}.filter-result{margin-left:auto;color:var(--report-muted);font:600 10px ui-monospace,monospace}.mobile-filter-toggle{display:none;min-height:34px;padding:0 11px;border:1px solid var(--report-line);border-radius:8px;background:#fff;color:var(--report-teal);font-size:10px}.filter-secondary-row{margin-top:14px}.filter-secondary-row label{flex:1 1 140px}.filter-secondary-row input,.filter-secondary-row select{width:100%;height:38px;border:1px solid var(--report-line);border-radius:9px;background:#fff;padding:0 11px;color:var(--report-ink);outline:none}.filter-secondary-row input:focus,.filter-secondary-row select:focus{border-color:var(--report-teal);box-shadow:0 0 0 3px rgba(22,142,130,.12)}.active-filter-row{align-items:center;margin-top:13px;padding-top:12px;border-top:1px solid #edf1f2}.filter-chip,.clear-filters{min-height:30px;border:0;border-radius:16px;padding:0 10px;font-size:10px}.filter-chip{background:#eaf4f2;color:#176f67}.filter-chip span{margin-left:4px}.clear-filters{background:transparent;color:var(--report-muted);text-decoration:underline;text-underline-offset:3px}.filter-announcement{height:0;margin:0;overflow:hidden}
+@media(max-width:680px){.filter-result{margin-left:auto}.mobile-filter-toggle{display:block}.filter-secondary-row{display:none;grid-template-columns:1fr 1fr}.filter-secondary-row.mobile-open{display:grid}.filter-secondary-row label:first-child{grid-column:1/-1}}
 </style>
