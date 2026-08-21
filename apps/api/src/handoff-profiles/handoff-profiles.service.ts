@@ -1,12 +1,34 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { HandoffLinkSource } from '../generated/prisma/enums';
+import {
+  HandoffLinkSource,
+  type HandoffLinkSource as HandoffLinkSourceType,
+  UserRole,
+} from '../generated/prisma/enums';
+import { Prisma } from '../generated/prisma/client';
 import { HandoffSecretService } from '../handoff-sync/handoff-secret.service';
 import { PrismaService } from '../prisma/prisma.service';
+
+interface LinkResultRecord {
+  id: string;
+  customerId: string | null;
+  linkSource: HandoffLinkSourceType | null;
+  linkedAt: Date | null;
+}
+
+function toLinkResult(profile: LinkResultRecord) {
+  return {
+    profileId: profile.id,
+    customerId: profile.customerId,
+    linkSource: profile.linkSource,
+    linkedAt: profile.linkedAt,
+  };
+}
 
 @Injectable()
 export class HandoffProfilesService {
@@ -39,6 +61,9 @@ export class HandoffProfilesService {
   async link(profileId: string, customerId: string, userId: string) {
     try {
       return await this.prisma.$transaction(async (transaction) => {
+        await transaction.$queryRaw(
+          Prisma.sql`SELECT id FROM \`FeishuHandoffProfile\` WHERE id = ${profileId} FOR UPDATE`,
+        );
         const profile = await transaction.feishuHandoffProfile.findFirst({
           where: { id: profileId, deletedAt: null },
           select: {
@@ -60,7 +85,14 @@ export class HandoffProfilesService {
           profile.customerId === customerId &&
           profile.linkSource === HandoffLinkSource.MANUAL
         ) {
-          return profile;
+          return toLinkResult(profile);
+        }
+        const canCreateManualLink =
+          (profile.customerId === null && profile.linkSource === null) ||
+          (profile.customerId === customerId &&
+            profile.linkSource === HandoffLinkSource.AUTO);
+        if (!canCreateManualLink) {
+          throw new ConflictException('交接档案已关联其他客户或状态异常');
         }
 
         const occupied = await transaction.feishuHandoffProfile.findFirst({
@@ -73,15 +105,30 @@ export class HandoffProfilesService {
         });
         if (occupied) throw new ConflictException('该客户已关联交接档案');
 
-        return transaction.feishuHandoffProfile.update({
-          where: { id: profileId },
+        const linkedAt = new Date();
+        const updated = await transaction.feishuHandoffProfile.updateMany({
+          where: {
+            id: profileId,
+            deletedAt: null,
+            customerId: profile.customerId,
+            linkSource: profile.linkSource,
+          },
           data: {
             customerId,
             linkSource: HandoffLinkSource.MANUAL,
-            linkedAt: new Date(),
+            linkedAt,
             linkedById: userId,
           },
         });
+        if (updated.count !== 1) {
+          throw new ConflictException('交接档案关联状态已发生变化');
+        }
+        return {
+          profileId,
+          customerId,
+          linkSource: HandoffLinkSource.MANUAL,
+          linkedAt,
+        };
       });
     } catch (error) {
       if ((error as { code?: string }).code === 'P2002') {
@@ -99,6 +146,17 @@ export class HandoffProfilesService {
   ) {
     if (fieldName !== 'deploymentChecklist') {
       throw new BadRequestException('不支持查看该受保护字段');
+    }
+    const currentUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, active: true, role: true },
+    });
+    if (
+      !currentUser ||
+      !currentUser.active ||
+      currentUser.role !== UserRole.ADMIN
+    ) {
+      throw new ForbiddenException('当前账户无权查看受保护字段');
     }
     const profile = await this.prisma.feishuHandoffProfile.findFirst({
       where: { id: profileId, deletedAt: null },

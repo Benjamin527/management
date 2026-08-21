@@ -9,6 +9,7 @@ import type { Request } from 'express';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { JwtAuthGuard, type SessionUser } from '../auth/jwt-auth.guard';
+import { configureTrustProxy } from '../main';
 import { HandoffProfilesController } from './handoff-profiles.controller';
 import { HandoffProfilesService } from './handoff-profiles.service';
 
@@ -71,6 +72,7 @@ describe('HandoffProfilesController', () => {
       .compile();
 
     app = module.createNestApplication();
+    configureTrustProxy(app);
     controller = module.get(HandoffProfilesController);
     app.useGlobalPipes(
       new ValidationPipe({
@@ -153,9 +155,8 @@ describe('HandoffProfilesController', () => {
           'profile-1',
           'deploymentChecklist',
           'user-1',
-          expect.stringMatching(/127\.0\.0\.1$/),
+          '198.51.100.77',
         );
-        expect(profiles.reveal.mock.calls[0][3]).not.toBe('198.51.100.77');
       }
     },
   );
@@ -176,6 +177,36 @@ describe('HandoffProfilesController', () => {
       'deploymentChecklist',
       'user-1',
       'x'.repeat(64),
+    );
+  });
+
+  it('ignores forwarded-for from a non-loopback direct connection', async () => {
+    const expressApp = app.getHttpAdapter().getInstance() as {
+      request: Request;
+      get(setting: string): unknown;
+    };
+    expect(expressApp.get('trust proxy')).toBe('loopback');
+    const untrustedRequest = Object.create(expressApp.request) as Request;
+    Object.defineProperty(untrustedRequest, 'headers', {
+      value: { 'x-forwarded-for': '198.51.100.77' },
+    });
+    Object.defineProperty(untrustedRequest, 'socket', {
+      value: { remoteAddress: '203.0.113.10' },
+    });
+
+    await controller.reveal(
+      'profile-1',
+      'deploymentChecklist',
+      { sub: 'user-1', email: 'user@example.com', role: 'ADMIN' },
+      untrustedRequest,
+    );
+
+    expect(untrustedRequest.ip).toBe('203.0.113.10');
+    expect(profiles.reveal).toHaveBeenCalledWith(
+      'profile-1',
+      'deploymentChecklist',
+      'user-1',
+      '203.0.113.10',
     );
   });
 });

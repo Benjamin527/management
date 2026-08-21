@@ -18,7 +18,12 @@ From the repository root:
 
 ```sh
 npm run test --workspace=api -- handoff-sync.transaction.int-spec.ts --runInBand
+npm run test --workspace=api -- handoff-profiles.concurrent.int-spec.ts --runInBand
 ```
+
+The concurrency suite verifies that two manual-link targets cannot overwrite
+each other and that synchronization cannot overwrite a committed manual link
+from a stale snapshot.
 
 The suite stays skipped during local unit-test runs when `HANDOFF_TEST_DATABASE_URL` is absent. In CI, `CI=true` without that variable is a configuration error and the suite fails with an explicit message rather than silently skipping transaction coverage.
 

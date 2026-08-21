@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   createCipheriv,
@@ -33,6 +33,7 @@ const KEY_CONFIGURATION_ERROR =
   'HANDOFF_SECRET_ENCRYPTION_KEY must be 32 bytes encoded as 64 hexadecimal characters';
 const PREVIOUS_KEYS_CONFIGURATION_ERROR =
   'HANDOFF_SECRET_PREVIOUS_KEYS must contain comma-separated 32-byte keys encoded as 64 hexadecimal characters';
+const SECRET_SERVICE_UNAVAILABLE = 'Protected handoff fields are unavailable';
 
 interface EncryptionKey {
   id: string;
@@ -41,13 +42,16 @@ interface EncryptionKey {
 
 @Injectable()
 export class HandoffSecretService {
-  private readonly currentKey: EncryptionKey;
+  private readonly currentKey: EncryptionKey | null;
   private readonly decryptionKeys: Map<string, Buffer>;
 
   constructor(config: ConfigService<AppEnvironment, true>) {
-    const encodedKey = config.getOrThrow<string>(
-      'HANDOFF_SECRET_ENCRYPTION_KEY',
-    );
+    const encodedKey = config.get<string>('HANDOFF_SECRET_ENCRYPTION_KEY');
+    if (!encodedKey) {
+      this.currentKey = null;
+      this.decryptionKeys = new Map();
+      return;
+    }
     this.currentKey = decodeEncryptionKey(encodedKey, KEY_CONFIGURATION_ERROR);
 
     const previousKeys =
@@ -68,6 +72,9 @@ export class HandoffSecretService {
     context: HandoffSecretContext,
     value: string,
   ): EncryptedHandoffSecret | null {
+    if (!this.currentKey) {
+      throw new ServiceUnavailableException(SECRET_SERVICE_UNAVAILABLE);
+    }
     if (value.trim().length === 0) return null;
 
     const iv = randomBytes(IV_LENGTH);
@@ -91,6 +98,9 @@ export class HandoffSecretService {
     context: HandoffSecretContext,
     payload: PersistedHandoffSecret,
   ): string {
+    if (!this.currentKey) {
+      throw new ServiceUnavailableException(SECRET_SERVICE_UNAVAILABLE);
+    }
     try {
       if (payload.formatVersion !== 1) throw new Error(DECRYPTION_ERROR);
       const key = this.decryptionKeys.get(payload.keyId);

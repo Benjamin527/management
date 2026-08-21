@@ -1,3 +1,4 @@
+import { ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHash } from 'node:crypto';
 import { AppEnvironment } from '../config/env.validation';
@@ -32,6 +33,13 @@ function createService(key = encryptionKey, previousKeys: string[] = []) {
   return new HandoffSecretService(config);
 }
 
+function createServiceWithoutKey() {
+  const config = {
+    get: jest.fn().mockReturnValue(undefined),
+  } as unknown as ConfigService<AppEnvironment, true>;
+  return new HandoffSecretService(config);
+}
+
 function flipFirstByte(value: string) {
   const bytes = Buffer.from(value, 'base64');
   bytes[0] ^= 1;
@@ -48,6 +56,28 @@ function captureError(action: () => unknown) {
 }
 
 describe('HandoffSecretService', () => {
+  it('constructs without a key and fails encrypt and decrypt with a stable 503', () => {
+    const service = createServiceWithoutKey();
+    const payload = {
+      formatVersion: 1,
+      keyId: 'not-sensitive',
+      ciphertext: 'not-sensitive',
+      iv: 'not-sensitive',
+      authTag: 'not-sensitive',
+    };
+
+    for (const action of [
+      () => service.encrypt(context, 'must-not-leak'),
+      () => service.decrypt(context, payload),
+    ]) {
+      const error = captureError(action);
+      expect(error).toBeInstanceOf(ServiceUnavailableException);
+      expect((error as ServiceUnavailableException).getStatus()).toBe(503);
+      expect(error.message).toBe('Protected handoff fields are unavailable');
+      expect(error.message).not.toContain('must-not-leak');
+    }
+  });
+
   it('uses a fresh IV so encrypting the same value produces different output', () => {
     const service = createService();
 

@@ -74,6 +74,7 @@ integrationDescribe('HandoffSyncService transaction integration', () => {
             customer: transaction.customer,
             feishuHandoffProfile: transaction.feishuHandoffProfile,
             feishuHandoffSecret: transaction.feishuHandoffSecret,
+            $queryRaw: transaction.$queryRaw.bind(transaction),
             handoffSyncLease: transaction.handoffSyncLease,
             handoffSyncRun: {
               update: async (input: Prisma.HandoffSyncRunUpdateArgs) => {

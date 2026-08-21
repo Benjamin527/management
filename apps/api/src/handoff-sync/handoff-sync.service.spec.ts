@@ -1,6 +1,5 @@
 import { ConflictException, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { createHandoffSecretProvider } from './handoff-sync.module';
 import { HandoffSyncService } from './handoff-sync.service';
 
 function sourceRecord(
@@ -118,6 +117,7 @@ function createPrismaMock() {
       deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
     },
     $executeRawUnsafe: jest.fn().mockResolvedValue(0),
+    $queryRaw: jest.fn().mockResolvedValue([]),
     $transaction: jest.fn(),
   };
   prisma.$transaction.mockImplementation(
@@ -262,6 +262,24 @@ describe('HandoffSyncService', () => {
       },
     });
     expect(result).toMatchObject({ status: 'SUCCESS', readCount: 2 });
+  });
+
+  it('locks active profiles in stable order before reading reconciliation state', async () => {
+    await service.run();
+
+    expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+    const lockCalls = prisma.$queryRaw.mock.calls as unknown[][];
+    const lockQuery = lockCalls[0][0] as {
+      strings: string[];
+      values: unknown[];
+    };
+    expect(lockQuery.strings.join('?')).toBe(
+      'SELECT id FROM `FeishuHandoffProfile` WHERE deletedAt IS NULL ORDER BY id FOR UPDATE',
+    );
+    expect(lockQuery.values).toEqual([]);
+    expect(prisma.$queryRaw.mock.invocationCallOrder[0]).toBeLessThan(
+      prisma.feishuHandoffProfile.findMany.mock.invocationCallOrder[0],
+    );
   });
 
   it('links only a uniquely normalized active customer and counts zero or multiple matches as unlinked', async () => {
@@ -981,17 +999,5 @@ describe('HandoffSyncService', () => {
       'Scheduled handoff synchronization failed; inspect synchronization history',
     );
     expect(JSON.stringify(logger.error.mock.calls)).not.toContain('secret');
-  });
-});
-
-describe('createHandoffSecretProvider', () => {
-  it('does not require an encryption key while handoff synchronization is disabled', () => {
-    const config = {
-      get: jest.fn().mockReturnValue(false),
-      getOrThrow: jest.fn(),
-    };
-
-    expect(() => createHandoffSecretProvider(config as never)).not.toThrow();
-    expect(config.getOrThrow).not.toHaveBeenCalled();
   });
 });

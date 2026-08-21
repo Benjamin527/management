@@ -281,6 +281,9 @@ export class HandoffSyncService implements OnModuleInit, OnModuleDestroy {
   ): Promise<ReconciliationResult> {
     return this.prisma.$transaction(
       async (transaction) => {
+        await transaction.$queryRaw(
+          Prisma.sql`SELECT id FROM \`FeishuHandoffProfile\` WHERE deletedAt IS NULL ORDER BY id FOR UPDATE`,
+        );
         const [customers, existingProfiles] = await Promise.all([
           transaction.customer.findMany({
             where: { deletedAt: null },
