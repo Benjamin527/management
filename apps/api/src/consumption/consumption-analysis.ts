@@ -106,10 +106,7 @@ function addAmount(map: Map<string, number>, key: string, amount: number) {
   map.set(key, (map.get(key) ?? 0) + amount);
 }
 
-function coverageFor(
-  coverageRows: ConsumptionCoverageRow[],
-  dates: string[],
-) {
+function coverageFor(coverageRows: ConsumptionCoverageRow[], dates: string[]) {
   const result = new Map(
     dates.map((date) => [date, { domestic: false, overseas: false }]),
   );
@@ -144,9 +141,7 @@ function buildSummary(
 ) {
   const summary: string[] = [];
   if (missingDates.length) {
-    summary.push(
-      `${missingDates.length} 个日期数据不完整，经营结论为低置信度`,
-    );
+    summary.push(`${missingDates.length} 个日期数据不完整，经营结论为低置信度`);
   }
   const rate = changeRate(currentAmount, previousAmount);
   if (rate === null) {

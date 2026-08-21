@@ -4,17 +4,9 @@ import { IsIn, IsOptional, IsString } from 'class-validator';
 export type ConsumptionPeriod = 7 | 14;
 export type ConsumptionSourceFilter = 'ALL' | 'DOMESTIC' | 'OVERSEAS';
 export type ConsumptionAnomalyFilter =
-  | 'ALL'
-  | 'SILENT'
-  | 'DROP'
-  | 'RISE'
-  | 'NORMAL';
+  'ALL' | 'SILENT' | 'DROP' | 'RISE' | 'NORMAL';
 export type ConsumptionDirectionFilter =
-  | 'ALL'
-  | 'UP'
-  | 'DOWN'
-  | 'FLAT'
-  | 'UNCOMPARABLE';
+  'ALL' | 'UP' | 'DOWN' | 'FLAT' | 'UNCOMPARABLE';
 
 export class ConsumptionQueryDto {
   @IsOptional()

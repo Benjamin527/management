@@ -9,12 +9,12 @@ describe('consumption window', () => {
   });
 
   it('can build a shorter inclusive analysis window', () => {
-    expect(
-      consumptionWindow(new Date('2026-08-19T00:00:00.000Z'), 14),
-    ).toEqual({
-      start: new Date('2026-08-06T00:00:00.000Z'),
-      end: new Date('2026-08-19T00:00:00.000Z'),
-    });
+    expect(consumptionWindow(new Date('2026-08-19T00:00:00.000Z'), 14)).toEqual(
+      {
+        start: new Date('2026-08-06T00:00:00.000Z'),
+        end: new Date('2026-08-19T00:00:00.000Z'),
+      },
+    );
   });
 
   it('normalizes dates to UTC date-only keys', () => {
