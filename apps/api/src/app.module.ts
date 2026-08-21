@@ -14,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ServiceSyncModule } from './service-sync/service-sync.module';
 import { ServiceAnalysisModule } from './service-analysis/service-analysis.module';
 import { ServiceRecordsModule } from './service-records/service-records.module';
+import { HandoffSyncModule } from './handoff-sync/handoff-sync.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ServiceRecordsModule } from './service-records/service-records.module';
     ServiceSyncModule,
     ServiceAnalysisModule,
     ServiceRecordsModule,
+    HandoffSyncModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],
