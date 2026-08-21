@@ -224,6 +224,10 @@ export type CustomerWhereInput = {
   > | null;
   issues?: Prisma.ServiceIssueListRelationFilter;
   serviceRecords?: Prisma.FeishuServiceRecordListRelationFilter;
+  handoffProfile?: Prisma.XOR<
+    Prisma.FeishuHandoffProfileNullableScalarRelationFilter,
+    Prisma.FeishuHandoffProfileWhereInput
+  > | null;
 };
 
 export type CustomerOrderByWithRelationInput = {
@@ -239,6 +243,7 @@ export type CustomerOrderByWithRelationInput = {
   owner?: Prisma.UserOrderByWithRelationInput;
   issues?: Prisma.ServiceIssueOrderByRelationAggregateInput;
   serviceRecords?: Prisma.FeishuServiceRecordOrderByRelationAggregateInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileOrderByWithRelationInput;
   _relevance?: Prisma.CustomerOrderByRelevanceInput;
 };
 
@@ -264,6 +269,10 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<
     > | null;
     issues?: Prisma.ServiceIssueListRelationFilter;
     serviceRecords?: Prisma.FeishuServiceRecordListRelationFilter;
+    handoffProfile?: Prisma.XOR<
+      Prisma.FeishuHandoffProfileNullableScalarRelationFilter,
+      Prisma.FeishuHandoffProfileWhereInput
+    > | null;
   },
   'id' | 'name'
 >;
@@ -322,6 +331,7 @@ export type CustomerCreateInput = {
   owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
   issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerUncheckedCreateInput = {
@@ -336,6 +346,7 @@ export type CustomerUncheckedCreateInput = {
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerUpdateInput = {
@@ -352,6 +363,7 @@ export type CustomerUpdateInput = {
   owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
   issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerUncheckedUpdateInput = {
@@ -368,6 +380,7 @@ export type CustomerUncheckedUpdateInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerCreateManyInput = {
@@ -575,6 +588,34 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null;
 };
 
+export type CustomerCreateNestedOneWithoutHandoffProfileInput = {
+  create?: Prisma.XOR<
+    Prisma.CustomerCreateWithoutHandoffProfileInput,
+    Prisma.CustomerUncheckedCreateWithoutHandoffProfileInput
+  >;
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutHandoffProfileInput;
+  connect?: Prisma.CustomerWhereUniqueInput;
+};
+
+export type CustomerUpdateOneWithoutHandoffProfileNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.CustomerCreateWithoutHandoffProfileInput,
+    Prisma.CustomerUncheckedCreateWithoutHandoffProfileInput
+  >;
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutHandoffProfileInput;
+  upsert?: Prisma.CustomerUpsertWithoutHandoffProfileInput;
+  disconnect?: Prisma.CustomerWhereInput | boolean;
+  delete?: Prisma.CustomerWhereInput | boolean;
+  connect?: Prisma.CustomerWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.CustomerUpdateToOneWithWhereWithoutHandoffProfileInput,
+      Prisma.CustomerUpdateWithoutHandoffProfileInput
+    >,
+    Prisma.CustomerUncheckedUpdateWithoutHandoffProfileInput
+  >;
+};
+
 export type CustomerCreateNestedOneWithoutServiceRecordsInput = {
   create?: Prisma.XOR<
     Prisma.CustomerCreateWithoutServiceRecordsInput,
@@ -640,6 +681,7 @@ export type CustomerCreateWithoutOwnerInput = {
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerUncheckedCreateWithoutOwnerInput = {
@@ -653,6 +695,7 @@ export type CustomerUncheckedCreateWithoutOwnerInput = {
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerCreateOrConnectWithoutOwnerInput = {
@@ -712,6 +755,94 @@ export type CustomerScalarWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<'Customer'> | Date | string | null;
 };
 
+export type CustomerCreateWithoutHandoffProfileInput = {
+  id?: string;
+  name: string;
+  industry?: string | null;
+  level?: string | null;
+  status?: $Enums.CustomerStatus;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
+  issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
+  serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
+};
+
+export type CustomerUncheckedCreateWithoutHandoffProfileInput = {
+  id?: string;
+  name: string;
+  industry?: string | null;
+  level?: string | null;
+  status?: $Enums.CustomerStatus;
+  ownerId?: string | null;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string | null;
+  issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
+  serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
+};
+
+export type CustomerCreateOrConnectWithoutHandoffProfileInput = {
+  where: Prisma.CustomerWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.CustomerCreateWithoutHandoffProfileInput,
+    Prisma.CustomerUncheckedCreateWithoutHandoffProfileInput
+  >;
+};
+
+export type CustomerUpsertWithoutHandoffProfileInput = {
+  update: Prisma.XOR<
+    Prisma.CustomerUpdateWithoutHandoffProfileInput,
+    Prisma.CustomerUncheckedUpdateWithoutHandoffProfileInput
+  >;
+  create: Prisma.XOR<
+    Prisma.CustomerCreateWithoutHandoffProfileInput,
+    Prisma.CustomerUncheckedCreateWithoutHandoffProfileInput
+  >;
+  where?: Prisma.CustomerWhereInput;
+};
+
+export type CustomerUpdateToOneWithWhereWithoutHandoffProfileInput = {
+  where?: Prisma.CustomerWhereInput;
+  data: Prisma.XOR<
+    Prisma.CustomerUpdateWithoutHandoffProfileInput,
+    Prisma.CustomerUncheckedUpdateWithoutHandoffProfileInput
+  >;
+};
+
+export type CustomerUpdateWithoutHandoffProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  level?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  status?:
+    Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
+  issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
+  serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
+};
+
+export type CustomerUncheckedUpdateWithoutHandoffProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  level?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  status?:
+    Prisma.EnumCustomerStatusFieldUpdateOperationsInput | $Enums.CustomerStatus;
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  deletedAt?:
+    Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+  issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
+  serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
+};
+
 export type CustomerCreateWithoutServiceRecordsInput = {
   id?: string;
   name: string;
@@ -723,6 +854,7 @@ export type CustomerCreateWithoutServiceRecordsInput = {
   deletedAt?: Date | string | null;
   owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
   issues?: Prisma.ServiceIssueCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerUncheckedCreateWithoutServiceRecordsInput = {
@@ -736,6 +868,7 @@ export type CustomerUncheckedCreateWithoutServiceRecordsInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerCreateOrConnectWithoutServiceRecordsInput = {
@@ -779,6 +912,7 @@ export type CustomerUpdateWithoutServiceRecordsInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
   issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerUncheckedUpdateWithoutServiceRecordsInput = {
@@ -794,6 +928,7 @@ export type CustomerUncheckedUpdateWithoutServiceRecordsInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerCreateWithoutIssuesInput = {
@@ -807,6 +942,7 @@ export type CustomerCreateWithoutIssuesInput = {
   deletedAt?: Date | string | null;
   owner?: Prisma.UserCreateNestedOneWithoutOwnedCustomersInput;
   serviceRecords?: Prisma.FeishuServiceRecordCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerUncheckedCreateWithoutIssuesInput = {
@@ -820,6 +956,7 @@ export type CustomerUncheckedCreateWithoutIssuesInput = {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedCreateNestedManyWithoutCustomerInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedCreateNestedOneWithoutCustomerInput;
 };
 
 export type CustomerCreateOrConnectWithoutIssuesInput = {
@@ -863,6 +1000,7 @@ export type CustomerUpdateWithoutIssuesInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   owner?: Prisma.UserUpdateOneWithoutOwnedCustomersNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerUncheckedUpdateWithoutIssuesInput = {
@@ -878,6 +1016,7 @@ export type CustomerUncheckedUpdateWithoutIssuesInput = {
   deletedAt?:
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerCreateManyOwnerInput = {
@@ -904,6 +1043,7 @@ export type CustomerUpdateWithoutOwnerInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerUncheckedUpdateWithoutOwnerInput = {
@@ -919,6 +1059,7 @@ export type CustomerUncheckedUpdateWithoutOwnerInput = {
     Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
   issues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutCustomerNestedInput;
   serviceRecords?: Prisma.FeishuServiceRecordUncheckedUpdateManyWithoutCustomerNestedInput;
+  handoffProfile?: Prisma.FeishuHandoffProfileUncheckedUpdateOneWithoutCustomerNestedInput;
 };
 
 export type CustomerUncheckedUpdateManyWithoutOwnerInput = {
@@ -1001,6 +1142,7 @@ export type CustomerSelect<
     owner?: boolean | Prisma.Customer$ownerArgs<ExtArgs>;
     issues?: boolean | Prisma.Customer$issuesArgs<ExtArgs>;
     serviceRecords?: boolean | Prisma.Customer$serviceRecordsArgs<ExtArgs>;
+    handoffProfile?: boolean | Prisma.Customer$handoffProfileArgs<ExtArgs>;
     _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['customer']
@@ -1040,6 +1182,7 @@ export type CustomerInclude<
   owner?: boolean | Prisma.Customer$ownerArgs<ExtArgs>;
   issues?: boolean | Prisma.Customer$issuesArgs<ExtArgs>;
   serviceRecords?: boolean | Prisma.Customer$serviceRecordsArgs<ExtArgs>;
+  handoffProfile?: boolean | Prisma.Customer$handoffProfileArgs<ExtArgs>;
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>;
 };
 
@@ -1052,6 +1195,7 @@ export type $CustomerPayload<
     owner: Prisma.$UserPayload<ExtArgs> | null;
     issues: Prisma.$ServiceIssuePayload<ExtArgs>[];
     serviceRecords: Prisma.$FeishuServiceRecordPayload<ExtArgs>[];
+    handoffProfile: Prisma.$FeishuHandoffProfilePayload<ExtArgs> | null;
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1576,6 +1720,19 @@ export interface Prisma__CustomerClient<
         GlobalOmitOptions
       >
     | Null
+  >;
+  handoffProfile<T extends Prisma.Customer$handoffProfileArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.Customer$handoffProfileArgs<ExtArgs>>,
+  ): Prisma.Prisma__FeishuHandoffProfileClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$FeishuHandoffProfilePayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
   >;
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2106,6 +2263,28 @@ export type Customer$serviceRecordsArgs<
   distinct?:
     | Prisma.FeishuServiceRecordScalarFieldEnum
     | Prisma.FeishuServiceRecordScalarFieldEnum[];
+};
+
+/**
+ * Customer.handoffProfile
+ */
+export type Customer$handoffProfileArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the FeishuHandoffProfile
+   */
+  select?: Prisma.FeishuHandoffProfileSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the FeishuHandoffProfile
+   */
+  omit?: Prisma.FeishuHandoffProfileOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeishuHandoffProfileInclude<ExtArgs> | null;
+  where?: Prisma.FeishuHandoffProfileWhereInput;
 };
 
 /**

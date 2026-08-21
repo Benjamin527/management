@@ -56,6 +56,10 @@ export const AnyNull = runtime.AnyNull;
 export const ModelName = {
   User: 'User',
   Customer: 'Customer',
+  FeishuHandoffProfile: 'FeishuHandoffProfile',
+  FeishuHandoffSecret: 'FeishuHandoffSecret',
+  SensitiveAccessAudit: 'SensitiveAccessAudit',
+  HandoffSyncRun: 'HandoffSyncRun',
   FeishuServiceRecord: 'FeishuServiceRecord',
   ServiceSyncRun: 'ServiceSyncRun',
   ServiceIssue: 'ServiceIssue',
@@ -110,6 +114,87 @@ export const CustomerScalarFieldEnum = {
 
 export type CustomerScalarFieldEnum =
   (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum];
+
+export const FeishuHandoffProfileScalarFieldEnum = {
+  id: 'id',
+  externalRecordId: 'externalRecordId',
+  customerId: 'customerId',
+  customerName: 'customerName',
+  normalizedCustomerName: 'normalizedCustomerName',
+  deploymentType: 'deploymentType',
+  deploymentChecklistMasked: 'deploymentChecklistMasked',
+  saasSites: 'saasSites',
+  featureUsage: 'featureUsage',
+  logCollection: 'logCollection',
+  apmProbes: 'apmProbes',
+  rumApps: 'rumApps',
+  handoffPeople: 'handoffPeople',
+  logCollectionNotes: 'logCollectionNotes',
+  apmNotes: 'apmNotes',
+  rumNotes: 'rumNotes',
+  customFeatures: 'customFeatures',
+  importantIssues: 'importantIssues',
+  legacyIssues: 'legacyIssues',
+  communicationChannel: 'communicationChannel',
+  contactInfo: 'contactInfo',
+  handoffAt: 'handoffAt',
+  handoffStatus: 'handoffStatus',
+  rawFieldsMasked: 'rawFieldsMasked',
+  sourceCreatedAt: 'sourceCreatedAt',
+  sourceUpdatedAt: 'sourceUpdatedAt',
+  syncedAt: 'syncedAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type FeishuHandoffProfileScalarFieldEnum =
+  (typeof FeishuHandoffProfileScalarFieldEnum)[keyof typeof FeishuHandoffProfileScalarFieldEnum];
+
+export const FeishuHandoffSecretScalarFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  fieldName: 'fieldName',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type FeishuHandoffSecretScalarFieldEnum =
+  (typeof FeishuHandoffSecretScalarFieldEnum)[keyof typeof FeishuHandoffSecretScalarFieldEnum];
+
+export const SensitiveAccessAuditScalarFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  userId: 'userId',
+  fieldName: 'fieldName',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt',
+} as const;
+
+export type SensitiveAccessAuditScalarFieldEnum =
+  (typeof SensitiveAccessAuditScalarFieldEnum)[keyof typeof SensitiveAccessAuditScalarFieldEnum];
+
+export const HandoffSyncRunScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  readCount: 'readCount',
+  createdCount: 'createdCount',
+  updatedCount: 'updatedCount',
+  unlinkedCount: 'unlinkedCount',
+  deletedCount: 'deletedCount',
+  failedCount: 'failedCount',
+  errorSummary: 'errorSummary',
+  requestedById: 'requestedById',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt',
+} as const;
+
+export type HandoffSyncRunScalarFieldEnum =
+  (typeof HandoffSyncRunScalarFieldEnum)[keyof typeof HandoffSyncRunScalarFieldEnum];
 
 export const FeishuServiceRecordScalarFieldEnum = {
   id: 'id',
@@ -274,13 +359,6 @@ export const SortOrder = {
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull,
-} as const;
-
-export type JsonNullValueInput =
-  (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -288,6 +366,13 @@ export const NullableJsonNullValueInput = {
 
 export type NullableJsonNullValueInput =
   (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull,
+} as const;
+
+export type JsonNullValueInput =
+  (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
@@ -332,6 +417,60 @@ export const QueryMode = {
 } as const;
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode];
+
+export const FeishuHandoffProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  externalRecordId: 'externalRecordId',
+  customerId: 'customerId',
+  customerName: 'customerName',
+  normalizedCustomerName: 'normalizedCustomerName',
+  deploymentType: 'deploymentType',
+  deploymentChecklistMasked: 'deploymentChecklistMasked',
+  logCollectionNotes: 'logCollectionNotes',
+  apmNotes: 'apmNotes',
+  rumNotes: 'rumNotes',
+  customFeatures: 'customFeatures',
+  importantIssues: 'importantIssues',
+  legacyIssues: 'legacyIssues',
+  communicationChannel: 'communicationChannel',
+  contactInfo: 'contactInfo',
+  handoffStatus: 'handoffStatus',
+} as const;
+
+export type FeishuHandoffProfileOrderByRelevanceFieldEnum =
+  (typeof FeishuHandoffProfileOrderByRelevanceFieldEnum)[keyof typeof FeishuHandoffProfileOrderByRelevanceFieldEnum];
+
+export const FeishuHandoffSecretOrderByRelevanceFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  fieldName: 'fieldName',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+} as const;
+
+export type FeishuHandoffSecretOrderByRelevanceFieldEnum =
+  (typeof FeishuHandoffSecretOrderByRelevanceFieldEnum)[keyof typeof FeishuHandoffSecretOrderByRelevanceFieldEnum];
+
+export const SensitiveAccessAuditOrderByRelevanceFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  userId: 'userId',
+  fieldName: 'fieldName',
+  ipAddress: 'ipAddress',
+} as const;
+
+export type SensitiveAccessAuditOrderByRelevanceFieldEnum =
+  (typeof SensitiveAccessAuditOrderByRelevanceFieldEnum)[keyof typeof SensitiveAccessAuditOrderByRelevanceFieldEnum];
+
+export const HandoffSyncRunOrderByRelevanceFieldEnum = {
+  id: 'id',
+  errorSummary: 'errorSummary',
+  requestedById: 'requestedById',
+} as const;
+
+export type HandoffSyncRunOrderByRelevanceFieldEnum =
+  (typeof HandoffSyncRunOrderByRelevanceFieldEnum)[keyof typeof HandoffSyncRunOrderByRelevanceFieldEnum];
 
 export const FeishuServiceRecordOrderByRelevanceFieldEnum = {
   id: 'id',

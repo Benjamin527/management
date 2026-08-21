@@ -27,6 +27,26 @@ export type User = Prisma.UserModel;
  */
 export type Customer = Prisma.CustomerModel;
 /**
+ * Model FeishuHandoffProfile
+ *
+ */
+export type FeishuHandoffProfile = Prisma.FeishuHandoffProfileModel;
+/**
+ * Model FeishuHandoffSecret
+ *
+ */
+export type FeishuHandoffSecret = Prisma.FeishuHandoffSecretModel;
+/**
+ * Model SensitiveAccessAudit
+ *
+ */
+export type SensitiveAccessAudit = Prisma.SensitiveAccessAuditModel;
+/**
+ * Model HandoffSyncRun
+ *
+ */
+export type HandoffSyncRun = Prisma.HandoffSyncRunModel;
+/**
  * Model FeishuServiceRecord
  *
  */

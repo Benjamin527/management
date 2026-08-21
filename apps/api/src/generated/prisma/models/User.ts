@@ -212,6 +212,7 @@ export type UserWhereInput = {
   ownedCustomers?: Prisma.CustomerListRelationFilter;
   assignedIssues?: Prisma.ServiceIssueListRelationFilter;
   activities?: Prisma.IssueActivityListRelationFilter;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditListRelationFilter;
 };
 
 export type UserOrderByWithRelationInput = {
@@ -226,6 +227,7 @@ export type UserOrderByWithRelationInput = {
   ownedCustomers?: Prisma.CustomerOrderByRelationAggregateInput;
   assignedIssues?: Prisma.ServiceIssueOrderByRelationAggregateInput;
   activities?: Prisma.IssueActivityOrderByRelationAggregateInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditOrderByRelationAggregateInput;
   _relevance?: Prisma.UserOrderByRelevanceInput;
 };
 
@@ -245,6 +247,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
     ownedCustomers?: Prisma.CustomerListRelationFilter;
     assignedIssues?: Prisma.ServiceIssueListRelationFilter;
     activities?: Prisma.IssueActivityListRelationFilter;
+    sensitiveAccessAudits?: Prisma.SensitiveAccessAuditListRelationFilter;
   },
   'id' | 'email'
 >;
@@ -293,6 +296,7 @@ export type UserCreateInput = {
   ownedCustomers?: Prisma.CustomerCreateNestedManyWithoutOwnerInput;
   assignedIssues?: Prisma.ServiceIssueCreateNestedManyWithoutAssigneeInput;
   activities?: Prisma.IssueActivityCreateNestedManyWithoutActorInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateInput = {
@@ -307,6 +311,7 @@ export type UserUncheckedCreateInput = {
   ownedCustomers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOwnerInput;
   assignedIssues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutAssigneeInput;
   activities?: Prisma.IssueActivityUncheckedCreateNestedManyWithoutActorInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserUpdateInput = {
@@ -321,6 +326,7 @@ export type UserUpdateInput = {
   ownedCustomers?: Prisma.CustomerUpdateManyWithoutOwnerNestedInput;
   assignedIssues?: Prisma.ServiceIssueUpdateManyWithoutAssigneeNestedInput;
   activities?: Prisma.IssueActivityUpdateManyWithoutActorNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateInput = {
@@ -335,6 +341,7 @@ export type UserUncheckedUpdateInput = {
   ownedCustomers?: Prisma.CustomerUncheckedUpdateManyWithoutOwnerNestedInput;
   assignedIssues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutAssigneeNestedInput;
   activities?: Prisma.IssueActivityUncheckedUpdateManyWithoutActorNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 export type UserCreateManyInput = {
@@ -416,6 +423,11 @@ export type UserNullableScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput | null;
 };
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput;
+  isNot?: Prisma.UserWhereInput;
+};
+
 export type StringFieldUpdateOperationsInput = {
   set?: string;
 };
@@ -457,6 +469,32 @@ export type UserUpdateOneWithoutOwnedCustomersNestedInput = {
       Prisma.UserUpdateWithoutOwnedCustomersInput
     >,
     Prisma.UserUncheckedUpdateWithoutOwnedCustomersInput
+  >;
+};
+
+export type UserCreateNestedOneWithoutSensitiveAccessAuditsInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutSensitiveAccessAuditsInput,
+    Prisma.UserUncheckedCreateWithoutSensitiveAccessAuditsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSensitiveAccessAuditsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+};
+
+export type UserUpdateOneRequiredWithoutSensitiveAccessAuditsNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.UserCreateWithoutSensitiveAccessAuditsInput,
+    Prisma.UserUncheckedCreateWithoutSensitiveAccessAuditsInput
+  >;
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSensitiveAccessAuditsInput;
+  upsert?: Prisma.UserUpsertWithoutSensitiveAccessAuditsInput;
+  connect?: Prisma.UserWhereUniqueInput;
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.UserUpdateToOneWithWhereWithoutSensitiveAccessAuditsInput,
+      Prisma.UserUpdateWithoutSensitiveAccessAuditsInput
+    >,
+    Prisma.UserUncheckedUpdateWithoutSensitiveAccessAuditsInput
   >;
 };
 
@@ -527,6 +565,7 @@ export type UserCreateWithoutOwnedCustomersInput = {
   updatedAt?: Date | string;
   assignedIssues?: Prisma.ServiceIssueCreateNestedManyWithoutAssigneeInput;
   activities?: Prisma.IssueActivityCreateNestedManyWithoutActorInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateWithoutOwnedCustomersInput = {
@@ -540,6 +579,7 @@ export type UserUncheckedCreateWithoutOwnedCustomersInput = {
   updatedAt?: Date | string;
   assignedIssues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutAssigneeInput;
   activities?: Prisma.IssueActivityUncheckedCreateNestedManyWithoutActorInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserCreateOrConnectWithoutOwnedCustomersInput = {
@@ -581,6 +621,7 @@ export type UserUpdateWithoutOwnedCustomersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   assignedIssues?: Prisma.ServiceIssueUpdateManyWithoutAssigneeNestedInput;
   activities?: Prisma.IssueActivityUpdateManyWithoutActorNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutOwnedCustomersInput = {
@@ -592,6 +633,91 @@ export type UserUncheckedUpdateWithoutOwnedCustomersInput = {
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  assignedIssues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutAssigneeNestedInput;
+  activities?: Prisma.IssueActivityUncheckedUpdateManyWithoutActorNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedUpdateManyWithoutUserNestedInput;
+};
+
+export type UserCreateWithoutSensitiveAccessAuditsInput = {
+  id?: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  role?: $Enums.UserRole;
+  active?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  ownedCustomers?: Prisma.CustomerCreateNestedManyWithoutOwnerInput;
+  assignedIssues?: Prisma.ServiceIssueCreateNestedManyWithoutAssigneeInput;
+  activities?: Prisma.IssueActivityCreateNestedManyWithoutActorInput;
+};
+
+export type UserUncheckedCreateWithoutSensitiveAccessAuditsInput = {
+  id?: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  role?: $Enums.UserRole;
+  active?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  ownedCustomers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOwnerInput;
+  assignedIssues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutAssigneeInput;
+  activities?: Prisma.IssueActivityUncheckedCreateNestedManyWithoutActorInput;
+};
+
+export type UserCreateOrConnectWithoutSensitiveAccessAuditsInput = {
+  where: Prisma.UserWhereUniqueInput;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutSensitiveAccessAuditsInput,
+    Prisma.UserUncheckedCreateWithoutSensitiveAccessAuditsInput
+  >;
+};
+
+export type UserUpsertWithoutSensitiveAccessAuditsInput = {
+  update: Prisma.XOR<
+    Prisma.UserUpdateWithoutSensitiveAccessAuditsInput,
+    Prisma.UserUncheckedUpdateWithoutSensitiveAccessAuditsInput
+  >;
+  create: Prisma.XOR<
+    Prisma.UserCreateWithoutSensitiveAccessAuditsInput,
+    Prisma.UserUncheckedCreateWithoutSensitiveAccessAuditsInput
+  >;
+  where?: Prisma.UserWhereInput;
+};
+
+export type UserUpdateToOneWithWhereWithoutSensitiveAccessAuditsInput = {
+  where?: Prisma.UserWhereInput;
+  data: Prisma.XOR<
+    Prisma.UserUpdateWithoutSensitiveAccessAuditsInput,
+    Prisma.UserUncheckedUpdateWithoutSensitiveAccessAuditsInput
+  >;
+};
+
+export type UserUpdateWithoutSensitiveAccessAuditsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  ownedCustomers?: Prisma.CustomerUpdateManyWithoutOwnerNestedInput;
+  assignedIssues?: Prisma.ServiceIssueUpdateManyWithoutAssigneeNestedInput;
+  activities?: Prisma.IssueActivityUpdateManyWithoutActorNestedInput;
+};
+
+export type UserUncheckedUpdateWithoutSensitiveAccessAuditsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string;
+  email?: Prisma.StringFieldUpdateOperationsInput | string;
+  name?: Prisma.StringFieldUpdateOperationsInput | string;
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+  ownedCustomers?: Prisma.CustomerUncheckedUpdateManyWithoutOwnerNestedInput;
   assignedIssues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutAssigneeNestedInput;
   activities?: Prisma.IssueActivityUncheckedUpdateManyWithoutActorNestedInput;
 };
@@ -607,6 +733,7 @@ export type UserCreateWithoutAssignedIssuesInput = {
   updatedAt?: Date | string;
   ownedCustomers?: Prisma.CustomerCreateNestedManyWithoutOwnerInput;
   activities?: Prisma.IssueActivityCreateNestedManyWithoutActorInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateWithoutAssignedIssuesInput = {
@@ -620,6 +747,7 @@ export type UserUncheckedCreateWithoutAssignedIssuesInput = {
   updatedAt?: Date | string;
   ownedCustomers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOwnerInput;
   activities?: Prisma.IssueActivityUncheckedCreateNestedManyWithoutActorInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserCreateOrConnectWithoutAssignedIssuesInput = {
@@ -661,6 +789,7 @@ export type UserUpdateWithoutAssignedIssuesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   ownedCustomers?: Prisma.CustomerUpdateManyWithoutOwnerNestedInput;
   activities?: Prisma.IssueActivityUpdateManyWithoutActorNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutAssignedIssuesInput = {
@@ -674,6 +803,7 @@ export type UserUncheckedUpdateWithoutAssignedIssuesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   ownedCustomers?: Prisma.CustomerUncheckedUpdateManyWithoutOwnerNestedInput;
   activities?: Prisma.IssueActivityUncheckedUpdateManyWithoutActorNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 export type UserCreateWithoutActivitiesInput = {
@@ -687,6 +817,7 @@ export type UserCreateWithoutActivitiesInput = {
   updatedAt?: Date | string;
   ownedCustomers?: Prisma.CustomerCreateNestedManyWithoutOwnerInput;
   assignedIssues?: Prisma.ServiceIssueCreateNestedManyWithoutAssigneeInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditCreateNestedManyWithoutUserInput;
 };
 
 export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -700,6 +831,7 @@ export type UserUncheckedCreateWithoutActivitiesInput = {
   updatedAt?: Date | string;
   ownedCustomers?: Prisma.CustomerUncheckedCreateNestedManyWithoutOwnerInput;
   assignedIssues?: Prisma.ServiceIssueUncheckedCreateNestedManyWithoutAssigneeInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedCreateNestedManyWithoutUserInput;
 };
 
 export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -741,6 +873,7 @@ export type UserUpdateWithoutActivitiesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   ownedCustomers?: Prisma.CustomerUpdateManyWithoutOwnerNestedInput;
   assignedIssues?: Prisma.ServiceIssueUpdateManyWithoutAssigneeNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUpdateManyWithoutUserNestedInput;
 };
 
 export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -754,6 +887,7 @@ export type UserUncheckedUpdateWithoutActivitiesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
   ownedCustomers?: Prisma.CustomerUncheckedUpdateManyWithoutOwnerNestedInput;
   assignedIssues?: Prisma.ServiceIssueUncheckedUpdateManyWithoutAssigneeNestedInput;
+  sensitiveAccessAudits?: Prisma.SensitiveAccessAuditUncheckedUpdateManyWithoutUserNestedInput;
 };
 
 /**
@@ -764,6 +898,7 @@ export type UserCountOutputType = {
   ownedCustomers: number;
   assignedIssues: number;
   activities: number;
+  sensitiveAccessAudits: number;
 };
 
 export type UserCountOutputTypeSelect<
@@ -773,6 +908,8 @@ export type UserCountOutputTypeSelect<
   ownedCustomers?: boolean | UserCountOutputTypeCountOwnedCustomersArgs;
   assignedIssues?: boolean | UserCountOutputTypeCountAssignedIssuesArgs;
   activities?: boolean | UserCountOutputTypeCountActivitiesArgs;
+  sensitiveAccessAudits?:
+    boolean | UserCountOutputTypeCountSensitiveAccessAuditsArgs;
 };
 
 /**
@@ -818,6 +955,16 @@ export type UserCountOutputTypeCountActivitiesArgs<
   where?: Prisma.IssueActivityWhereInput;
 };
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSensitiveAccessAuditsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  where?: Prisma.SensitiveAccessAuditWhereInput;
+};
+
 export type UserSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs =
     runtime.Types.Extensions.DefaultArgs,
@@ -834,6 +981,8 @@ export type UserSelect<
     ownedCustomers?: boolean | Prisma.User$ownedCustomersArgs<ExtArgs>;
     assignedIssues?: boolean | Prisma.User$assignedIssuesArgs<ExtArgs>;
     activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>;
+    sensitiveAccessAudits?:
+      boolean | Prisma.User$sensitiveAccessAuditsArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
   },
   ExtArgs['result']['user']
@@ -871,6 +1020,8 @@ export type UserInclude<
   ownedCustomers?: boolean | Prisma.User$ownedCustomersArgs<ExtArgs>;
   assignedIssues?: boolean | Prisma.User$assignedIssuesArgs<ExtArgs>;
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>;
+  sensitiveAccessAudits?:
+    boolean | Prisma.User$sensitiveAccessAuditsArgs<ExtArgs>;
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 
@@ -883,6 +1034,7 @@ export type $UserPayload<
     ownedCustomers: Prisma.$CustomerPayload<ExtArgs>[];
     assignedIssues: Prisma.$ServiceIssuePayload<ExtArgs>[];
     activities: Prisma.$IssueActivityPayload<ExtArgs>[];
+    sensitiveAccessAudits: Prisma.$SensitiveAccessAuditPayload<ExtArgs>[];
   };
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1399,6 +1551,19 @@ export interface Prisma__UserClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$IssueActivityPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >;
+  sensitiveAccessAudits<
+    T extends Prisma.User$sensitiveAccessAuditsArgs<ExtArgs> = {},
+  >(
+    args?: Prisma.Subset<T, Prisma.User$sensitiveAccessAuditsArgs<ExtArgs>>,
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$SensitiveAccessAuditPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -1924,6 +2089,37 @@ export type User$activitiesArgs<
   skip?: number;
   distinct?:
     Prisma.IssueActivityScalarFieldEnum | Prisma.IssueActivityScalarFieldEnum[];
+};
+
+/**
+ * User.sensitiveAccessAudits
+ */
+export type User$sensitiveAccessAuditsArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs =
+    runtime.Types.Extensions.DefaultArgs,
+> = {
+  /**
+   * Select specific fields to fetch from the SensitiveAccessAudit
+   */
+  select?: Prisma.SensitiveAccessAuditSelect<ExtArgs> | null;
+  /**
+   * Omit specific fields from the SensitiveAccessAudit
+   */
+  omit?: Prisma.SensitiveAccessAuditOmit<ExtArgs> | null;
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SensitiveAccessAuditInclude<ExtArgs> | null;
+  where?: Prisma.SensitiveAccessAuditWhereInput;
+  orderBy?:
+    | Prisma.SensitiveAccessAuditOrderByWithRelationInput
+    | Prisma.SensitiveAccessAuditOrderByWithRelationInput[];
+  cursor?: Prisma.SensitiveAccessAuditWhereUniqueInput;
+  take?: number;
+  skip?: number;
+  distinct?:
+    | Prisma.SensitiveAccessAuditScalarFieldEnum
+    | Prisma.SensitiveAccessAuditScalarFieldEnum[];
 };
 
 /**

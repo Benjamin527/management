@@ -117,3 +117,12 @@ export const ConsumptionSyncStatus = {
 
 export type ConsumptionSyncStatus =
   (typeof ConsumptionSyncStatus)[keyof typeof ConsumptionSyncStatus];
+
+export const HandoffSyncStatus = {
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+} as const;
+
+export type HandoffSyncStatus =
+  (typeof HandoffSyncStatus)[keyof typeof HandoffSyncStatus];

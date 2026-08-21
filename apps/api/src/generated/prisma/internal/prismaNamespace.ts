@@ -429,6 +429,10 @@ type FieldRefInputType<Model, FieldType> = Model extends never
 export const ModelName = {
   User: 'User',
   Customer: 'Customer',
+  FeishuHandoffProfile: 'FeishuHandoffProfile',
+  FeishuHandoffSecret: 'FeishuHandoffSecret',
+  SensitiveAccessAudit: 'SensitiveAccessAudit',
+  HandoffSyncRun: 'HandoffSyncRun',
   FeishuServiceRecord: 'FeishuServiceRecord',
   ServiceSyncRun: 'ServiceSyncRun',
   ServiceIssue: 'ServiceIssue',
@@ -461,6 +465,10 @@ export type TypeMap<
     modelProps:
       | 'user'
       | 'customer'
+      | 'feishuHandoffProfile'
+      | 'feishuHandoffSecret'
+      | 'sensitiveAccessAudit'
+      | 'handoffSyncRun'
       | 'feishuServiceRecord'
       | 'serviceSyncRun'
       | 'serviceIssue'
@@ -604,6 +612,278 @@ export type TypeMap<
           args: Prisma.CustomerCountArgs<ExtArgs>;
           result:
             | runtime.Types.Utils.Optional<Prisma.CustomerCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    FeishuHandoffProfile: {
+      payload: Prisma.$FeishuHandoffProfilePayload<ExtArgs>;
+      fields: Prisma.FeishuHandoffProfileFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.FeishuHandoffProfileFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.FeishuHandoffProfileFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>;
+        };
+        findFirst: {
+          args: Prisma.FeishuHandoffProfileFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.FeishuHandoffProfileFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>;
+        };
+        findMany: {
+          args: Prisma.FeishuHandoffProfileFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>[];
+        };
+        create: {
+          args: Prisma.FeishuHandoffProfileCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>;
+        };
+        createMany: {
+          args: Prisma.FeishuHandoffProfileCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.FeishuHandoffProfileDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>;
+        };
+        update: {
+          args: Prisma.FeishuHandoffProfileUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>;
+        };
+        deleteMany: {
+          args: Prisma.FeishuHandoffProfileDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.FeishuHandoffProfileUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.FeishuHandoffProfileUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffProfilePayload>;
+        };
+        aggregate: {
+          args: Prisma.FeishuHandoffProfileAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeishuHandoffProfile>;
+        };
+        groupBy: {
+          args: Prisma.FeishuHandoffProfileGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.FeishuHandoffProfileGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.FeishuHandoffProfileCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.FeishuHandoffProfileCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    FeishuHandoffSecret: {
+      payload: Prisma.$FeishuHandoffSecretPayload<ExtArgs>;
+      fields: Prisma.FeishuHandoffSecretFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.FeishuHandoffSecretFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.FeishuHandoffSecretFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>;
+        };
+        findFirst: {
+          args: Prisma.FeishuHandoffSecretFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.FeishuHandoffSecretFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>;
+        };
+        findMany: {
+          args: Prisma.FeishuHandoffSecretFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>[];
+        };
+        create: {
+          args: Prisma.FeishuHandoffSecretCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>;
+        };
+        createMany: {
+          args: Prisma.FeishuHandoffSecretCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.FeishuHandoffSecretDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>;
+        };
+        update: {
+          args: Prisma.FeishuHandoffSecretUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>;
+        };
+        deleteMany: {
+          args: Prisma.FeishuHandoffSecretDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.FeishuHandoffSecretUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.FeishuHandoffSecretUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeishuHandoffSecretPayload>;
+        };
+        aggregate: {
+          args: Prisma.FeishuHandoffSecretAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeishuHandoffSecret>;
+        };
+        groupBy: {
+          args: Prisma.FeishuHandoffSecretGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.FeishuHandoffSecretGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.FeishuHandoffSecretCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.FeishuHandoffSecretCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    SensitiveAccessAudit: {
+      payload: Prisma.$SensitiveAccessAuditPayload<ExtArgs>;
+      fields: Prisma.SensitiveAccessAuditFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.SensitiveAccessAuditFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.SensitiveAccessAuditFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>;
+        };
+        findFirst: {
+          args: Prisma.SensitiveAccessAuditFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.SensitiveAccessAuditFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>;
+        };
+        findMany: {
+          args: Prisma.SensitiveAccessAuditFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>[];
+        };
+        create: {
+          args: Prisma.SensitiveAccessAuditCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>;
+        };
+        createMany: {
+          args: Prisma.SensitiveAccessAuditCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.SensitiveAccessAuditDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>;
+        };
+        update: {
+          args: Prisma.SensitiveAccessAuditUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>;
+        };
+        deleteMany: {
+          args: Prisma.SensitiveAccessAuditDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.SensitiveAccessAuditUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.SensitiveAccessAuditUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SensitiveAccessAuditPayload>;
+        };
+        aggregate: {
+          args: Prisma.SensitiveAccessAuditAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSensitiveAccessAudit>;
+        };
+        groupBy: {
+          args: Prisma.SensitiveAccessAuditGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.SensitiveAccessAuditGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.SensitiveAccessAuditCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.SensitiveAccessAuditCountAggregateOutputType>
+            | number;
+        };
+      };
+    };
+    HandoffSyncRun: {
+      payload: Prisma.$HandoffSyncRunPayload<ExtArgs>;
+      fields: Prisma.HandoffSyncRunFieldRefs;
+      operations: {
+        findUnique: {
+          args: Prisma.HandoffSyncRunFindUniqueArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload> | null;
+        };
+        findUniqueOrThrow: {
+          args: Prisma.HandoffSyncRunFindUniqueOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>;
+        };
+        findFirst: {
+          args: Prisma.HandoffSyncRunFindFirstArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload> | null;
+        };
+        findFirstOrThrow: {
+          args: Prisma.HandoffSyncRunFindFirstOrThrowArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>;
+        };
+        findMany: {
+          args: Prisma.HandoffSyncRunFindManyArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>[];
+        };
+        create: {
+          args: Prisma.HandoffSyncRunCreateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>;
+        };
+        createMany: {
+          args: Prisma.HandoffSyncRunCreateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        delete: {
+          args: Prisma.HandoffSyncRunDeleteArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>;
+        };
+        update: {
+          args: Prisma.HandoffSyncRunUpdateArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>;
+        };
+        deleteMany: {
+          args: Prisma.HandoffSyncRunDeleteManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        updateMany: {
+          args: Prisma.HandoffSyncRunUpdateManyArgs<ExtArgs>;
+          result: BatchPayload;
+        };
+        upsert: {
+          args: Prisma.HandoffSyncRunUpsertArgs<ExtArgs>;
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HandoffSyncRunPayload>;
+        };
+        aggregate: {
+          args: Prisma.HandoffSyncRunAggregateArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHandoffSyncRun>;
+        };
+        groupBy: {
+          args: Prisma.HandoffSyncRunGroupByArgs<ExtArgs>;
+          result: runtime.Types.Utils.Optional<Prisma.HandoffSyncRunGroupByOutputType>[];
+        };
+        count: {
+          args: Prisma.HandoffSyncRunCountArgs<ExtArgs>;
+          result:
+            | runtime.Types.Utils.Optional<Prisma.HandoffSyncRunCountAggregateOutputType>
             | number;
         };
       };
@@ -1220,6 +1500,87 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum =
   (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum];
 
+export const FeishuHandoffProfileScalarFieldEnum = {
+  id: 'id',
+  externalRecordId: 'externalRecordId',
+  customerId: 'customerId',
+  customerName: 'customerName',
+  normalizedCustomerName: 'normalizedCustomerName',
+  deploymentType: 'deploymentType',
+  deploymentChecklistMasked: 'deploymentChecklistMasked',
+  saasSites: 'saasSites',
+  featureUsage: 'featureUsage',
+  logCollection: 'logCollection',
+  apmProbes: 'apmProbes',
+  rumApps: 'rumApps',
+  handoffPeople: 'handoffPeople',
+  logCollectionNotes: 'logCollectionNotes',
+  apmNotes: 'apmNotes',
+  rumNotes: 'rumNotes',
+  customFeatures: 'customFeatures',
+  importantIssues: 'importantIssues',
+  legacyIssues: 'legacyIssues',
+  communicationChannel: 'communicationChannel',
+  contactInfo: 'contactInfo',
+  handoffAt: 'handoffAt',
+  handoffStatus: 'handoffStatus',
+  rawFieldsMasked: 'rawFieldsMasked',
+  sourceCreatedAt: 'sourceCreatedAt',
+  sourceUpdatedAt: 'sourceUpdatedAt',
+  syncedAt: 'syncedAt',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type FeishuHandoffProfileScalarFieldEnum =
+  (typeof FeishuHandoffProfileScalarFieldEnum)[keyof typeof FeishuHandoffProfileScalarFieldEnum];
+
+export const FeishuHandoffSecretScalarFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  fieldName: 'fieldName',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+} as const;
+
+export type FeishuHandoffSecretScalarFieldEnum =
+  (typeof FeishuHandoffSecretScalarFieldEnum)[keyof typeof FeishuHandoffSecretScalarFieldEnum];
+
+export const SensitiveAccessAuditScalarFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  userId: 'userId',
+  fieldName: 'fieldName',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt',
+} as const;
+
+export type SensitiveAccessAuditScalarFieldEnum =
+  (typeof SensitiveAccessAuditScalarFieldEnum)[keyof typeof SensitiveAccessAuditScalarFieldEnum];
+
+export const HandoffSyncRunScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  readCount: 'readCount',
+  createdCount: 'createdCount',
+  updatedCount: 'updatedCount',
+  unlinkedCount: 'unlinkedCount',
+  deletedCount: 'deletedCount',
+  failedCount: 'failedCount',
+  errorSummary: 'errorSummary',
+  requestedById: 'requestedById',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt',
+} as const;
+
+export type HandoffSyncRunScalarFieldEnum =
+  (typeof HandoffSyncRunScalarFieldEnum)[keyof typeof HandoffSyncRunScalarFieldEnum];
+
 export const FeishuServiceRecordScalarFieldEnum = {
   id: 'id',
   externalRecordId: 'externalRecordId',
@@ -1383,13 +1744,6 @@ export const SortOrder = {
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull,
-} as const;
-
-export type JsonNullValueInput =
-  (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -1397,6 +1751,13 @@ export const NullableJsonNullValueInput = {
 
 export type NullableJsonNullValueInput =
   (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull,
+} as const;
+
+export type JsonNullValueInput =
+  (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
@@ -1441,6 +1802,60 @@ export const QueryMode = {
 } as const;
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode];
+
+export const FeishuHandoffProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  externalRecordId: 'externalRecordId',
+  customerId: 'customerId',
+  customerName: 'customerName',
+  normalizedCustomerName: 'normalizedCustomerName',
+  deploymentType: 'deploymentType',
+  deploymentChecklistMasked: 'deploymentChecklistMasked',
+  logCollectionNotes: 'logCollectionNotes',
+  apmNotes: 'apmNotes',
+  rumNotes: 'rumNotes',
+  customFeatures: 'customFeatures',
+  importantIssues: 'importantIssues',
+  legacyIssues: 'legacyIssues',
+  communicationChannel: 'communicationChannel',
+  contactInfo: 'contactInfo',
+  handoffStatus: 'handoffStatus',
+} as const;
+
+export type FeishuHandoffProfileOrderByRelevanceFieldEnum =
+  (typeof FeishuHandoffProfileOrderByRelevanceFieldEnum)[keyof typeof FeishuHandoffProfileOrderByRelevanceFieldEnum];
+
+export const FeishuHandoffSecretOrderByRelevanceFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  fieldName: 'fieldName',
+  ciphertext: 'ciphertext',
+  iv: 'iv',
+  authTag: 'authTag',
+} as const;
+
+export type FeishuHandoffSecretOrderByRelevanceFieldEnum =
+  (typeof FeishuHandoffSecretOrderByRelevanceFieldEnum)[keyof typeof FeishuHandoffSecretOrderByRelevanceFieldEnum];
+
+export const SensitiveAccessAuditOrderByRelevanceFieldEnum = {
+  id: 'id',
+  profileId: 'profileId',
+  userId: 'userId',
+  fieldName: 'fieldName',
+  ipAddress: 'ipAddress',
+} as const;
+
+export type SensitiveAccessAuditOrderByRelevanceFieldEnum =
+  (typeof SensitiveAccessAuditOrderByRelevanceFieldEnum)[keyof typeof SensitiveAccessAuditOrderByRelevanceFieldEnum];
+
+export const HandoffSyncRunOrderByRelevanceFieldEnum = {
+  id: 'id',
+  errorSummary: 'errorSummary',
+  requestedById: 'requestedById',
+} as const;
+
+export type HandoffSyncRunOrderByRelevanceFieldEnum =
+  (typeof HandoffSyncRunOrderByRelevanceFieldEnum)[keyof typeof HandoffSyncRunOrderByRelevanceFieldEnum];
 
 export const FeishuServiceRecordOrderByRelevanceFieldEnum = {
   id: 'id',
@@ -1583,20 +1998,6 @@ export type EnumCustomerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 >;
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<
-  $PrismaModel,
-  'Int'
->;
-
-/**
- * Reference to a field of type 'ServiceRecordStatus'
- */
-export type EnumServiceRecordStatusFieldRefInput<$PrismaModel> =
-  FieldRefInputType<$PrismaModel, 'ServiceRecordStatus'>;
-
-/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -1611,6 +2012,26 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<
   $PrismaModel,
   'QueryMode'
 >;
+
+/**
+ * Reference to a field of type 'HandoffSyncStatus'
+ */
+export type EnumHandoffSyncStatusFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'HandoffSyncStatus'>;
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<
+  $PrismaModel,
+  'Int'
+>;
+
+/**
+ * Reference to a field of type 'ServiceRecordStatus'
+ */
+export type EnumServiceRecordStatusFieldRefInput<$PrismaModel> =
+  FieldRefInputType<$PrismaModel, 'ServiceRecordStatus'>;
 
 /**
  * Reference to a field of type 'ServiceSyncMode'
@@ -1843,6 +2264,10 @@ export type PrismaClientOptions =
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit;
   customer?: Prisma.CustomerOmit;
+  feishuHandoffProfile?: Prisma.FeishuHandoffProfileOmit;
+  feishuHandoffSecret?: Prisma.FeishuHandoffSecretOmit;
+  sensitiveAccessAudit?: Prisma.SensitiveAccessAuditOmit;
+  handoffSyncRun?: Prisma.HandoffSyncRunOmit;
   feishuServiceRecord?: Prisma.FeishuServiceRecordOmit;
   serviceSyncRun?: Prisma.ServiceSyncRunOmit;
   serviceIssue?: Prisma.ServiceIssueOmit;

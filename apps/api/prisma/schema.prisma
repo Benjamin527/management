@@ -91,6 +91,12 @@ enum ConsumptionSyncStatus {
   FAILED
 }
 
+enum HandoffSyncStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
 model User {
   id             String          @id @default(cuid())
   email          String          @unique
@@ -101,6 +107,7 @@ model User {
   ownedCustomers Customer[]      @relation("CustomerOwner")
   assignedIssues ServiceIssue[]  @relation("IssueAssignee")
   activities     IssueActivity[] @relation("ActivityActor")
+  sensitiveAccessAudits SensitiveAccessAudit[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 }
@@ -115,12 +122,99 @@ model Customer {
   owner          User?                 @relation("CustomerOwner", fields: [ownerId], references: [id])
   issues         ServiceIssue[]
   serviceRecords FeishuServiceRecord[]
+  handoffProfile FeishuHandoffProfile?
   createdAt      DateTime              @default(now())
   updatedAt      DateTime              @updatedAt
   deletedAt      DateTime?
 
   @@index([ownerId, status])
   @@index([deletedAt])
+}
+
+model FeishuHandoffProfile {
+  id                        String                  @id @default(cuid())
+  externalRecordId          String                  @unique
+  customerId                String?                 @unique
+  customer                  Customer?               @relation(fields: [customerId], references: [id])
+  customerName              String
+  normalizedCustomerName    String
+  deploymentType            String
+  deploymentChecklistMasked String                  @db.Text
+  saasSites                 Json?
+  featureUsage              Json?
+  logCollection             Json?
+  apmProbes                 Json?
+  rumApps                   Json?
+  handoffPeople             Json?
+  logCollectionNotes        String?                 @db.Text
+  apmNotes                  String?                 @db.Text
+  rumNotes                  String?                 @db.Text
+  customFeatures            String?                 @db.Text
+  importantIssues           String?                 @db.Text
+  legacyIssues              String?                 @db.Text
+  communicationChannel      String?                 @db.Text
+  contactInfo               String?                 @db.Text
+  handoffAt                 DateTime
+  handoffStatus             String
+  rawFieldsMasked           Json
+  sourceCreatedAt           DateTime?
+  sourceUpdatedAt           DateTime?
+  syncedAt                  DateTime                @default(now())
+  deletedAt                 DateTime?
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+  secrets                   FeishuHandoffSecret[]
+  audits                    SensitiveAccessAudit[]
+
+  @@index([customerId, deletedAt])
+  @@index([normalizedCustomerName, deletedAt])
+  @@index([handoffStatus, handoffAt])
+}
+
+model FeishuHandoffSecret {
+  id         String                @id @default(cuid())
+  profileId  String
+  profile    FeishuHandoffProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  fieldName  String
+  ciphertext String                @db.Text
+  iv         String
+  authTag    String
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+
+  @@unique([profileId, fieldName])
+}
+
+model SensitiveAccessAudit {
+  id        String                @id @default(cuid())
+  profileId String
+  profile   FeishuHandoffProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User                  @relation(fields: [userId], references: [id])
+  fieldName String
+  ipAddress String?
+  createdAt DateTime              @default(now())
+
+  @@index([profileId, createdAt])
+  @@index([userId, createdAt])
+}
+
+model HandoffSyncRun {
+  id             String            @id @default(cuid())
+  status         HandoffSyncStatus
+  readCount      Int               @default(0)
+  createdCount   Int               @default(0)
+  updatedCount   Int               @default(0)
+  unlinkedCount  Int               @default(0)
+  deletedCount   Int               @default(0)
+  failedCount    Int               @default(0)
+  errorSummary   String?           @db.Text
+  requestedById  String?
+  startedAt      DateTime          @default(now())
+  finishedAt     DateTime?
+  createdAt      DateTime          @default(now())
+
+  @@index([status, startedAt])
 }
 
 model FeishuServiceRecord {
